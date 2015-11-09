@@ -3,13 +3,13 @@ rvm:
 - 2.2.3
 cache: bundler
 sudo: false
-script: 
-  - bundle exec rake db:migrate
-  - bundle exec rake
+script:
+- bundle exec rake db:migrate
+- bundle exec rake
 deploy:
   provider: heroku
   api_key:
-    secure: dCKj2iC6wPo26sfUw09iPyAM46useaY3W0zorWuSRhIonESVHwsktptzLHPrdznLzJDanetkWIHxorgug36RiwLXOlLpHvuX/H0JDWUNFIVHdTxDzZqVQaXHKdZLKcLL6MKLEHOkR86ikoNdi64tCfZBuqUw5d2jrc8ZU3TB9mQ=
+    secure: pnKMqT6HTe9GrBtxSQeHJk4IseluLO7lInIlQvoADV+w4DFAWErxgAOduJZKKAf1CEDbt+BKlRwY870I6Hl/vNPtnXVhAG4TJSPqngFy7hv5T9JtnBHqilDrBxW6etzxgo8GlRCK7h4hEHAQAfQZ7eRur11qCxpp7o1tMQCQ4hbhDfIYdoOp9VWvCmnQsrU4OP5uhJaAdmPDs74ns71ImIFuR3pEg7XLr6J9jTny2FEoF3wqyXLxJlaHHRwpQQ+Wavy16BO+uGEumwhviAOGg7E/+c1k95fZtoR30PgOaHSIfgXIE06R96Cd8of8N6a8gG38m7eVsheUzrC2lQTOUcK3b+PRjwAQ4RBHOtrdJ8DH2/MYDQ54bRbKYilH6mMwtQkZKcJvOYiS1rngoESn6qWxw45sRkzAPdl5+kf79KF44zAaemg+UBFZN2mchBa2E4tFNVg3JZ7AzsBgSaN8cCvwipWGLqeVOiG9lqIYCsCk6YJRI1G1dpYwrbcXw5QIPesEIb4MPiZMDy342MtxeEYKaWfeB0DtWoKfLK6uwJaj3b+nOQxPOKKZVTeakl9haWMVW5GI+yuTLJpmoSklCUBGEOl1w1f3OQ4GoLrnfZo+P1M74RJwwqJ3Id2Lvsfr6VzCroy6LypneKLErKNQUrOFJXW9Ym7n7U2EvMrEvzM=
   run: rake db:migrate
   app: jos-octo
   on:
