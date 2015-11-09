@@ -1,0 +1,16 @@
+language: ruby
+rvm:
+- 2.2.3
+cache: bundler
+sudo: false
+script: 
+  - bundle exec rake db:migrate
+  - bundle exec rake
+deploy:
+  provider: heroku
+  api_key:
+    secure: dCKj2iC6wPo26sfUw09iPyAM46useaY3W0zorWuSRhIonESVHwsktptzLHPrdznLzJDanetkWIHxorgug36RiwLXOlLpHvuX/H0JDWUNFIVHdTxDzZqVQaXHKdZLKcLL6MKLEHOkR86ikoNdi64tCfZBuqUw5d2jrc8ZU3TB9mQ=
+  run: rake db:migrate
+  app: jos-octo
+  on:
+    repo: octo-online/jos
