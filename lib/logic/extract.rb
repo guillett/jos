@@ -40,15 +40,27 @@ class Extractor
   end
 
   def get_section_links_content list
+    unless list.is_a?(Array)
+      list = [list]
+    end
+
     list.map{ |section| section.content }
   end
 
   def extract_section_links_one_struct_xml xml
-    get_section_links( xml ).map {|link| Section.create!( title: link.content,
-                                                          level: link["niv"],
-                                                          state: link["etat"],
-                                                          start_date: link["debut"],
-                                                          end_date: link["fin"])}
-  end
+    links = get_section_links( xml )
 
+    unless links.is_a?(Array)
+      links = [links]
+    end
+
+    links.map.with_index {|link, index| Section.create!(  id_section_origin: link["id"],
+                                        title: link.content,
+                                        level: link["niv"],
+                                        state: link["etat"],
+                                        start_date: link["debut"],
+                                        end_date: link["fin"],
+                                        order: index,
+                                        id_section_parent_origin: "")}
+   end
 end
