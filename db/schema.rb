@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110102736) do
+ActiveRecord::Schema.define(version: 20151110134939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,10 @@ ActiveRecord::Schema.define(version: 20151110102736) do
     t.datetime "end_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "code_id"
   end
 
+  add_index "sections", ["code_id"], name: "index_sections_on_code_id", using: :btree
+
+  add_foreign_key "sections", "codes"
 end
