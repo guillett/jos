@@ -14,3 +14,8 @@ deploy:
   app: jos-octo
   on:
     repo: octo-online/jos
+notifications:
+  email:
+    recipients:
+      - sle@octo.com
+      - nin@octo.com
