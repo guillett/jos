@@ -47,6 +47,12 @@ FOO
       expect(code_titre).to  eq('Code des marchés publics')
     end
 
+    it 'create the code model' do
+      extract_codes(LEGI_ROOT_PATH)
+      expect(Code.all.length).to eq(2)
+      expect(Code.all.map{|c| c.title}).to contain_exactly('Code des marchés publics', "Code de la consommation") # pass
+    end
+
   end
 
 end

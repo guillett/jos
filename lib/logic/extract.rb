@@ -29,6 +29,10 @@ def get_code_titles path
   code_titles.uniq!.sort!
 end
 
+def extract_codes path
+  get_code_titles(path).map {|title| Code.create!(title: title)}
+end
+
 def get_section_links xml
   xml.TEXTELR.STRUCT.LIEN_SECTION_TA
 end
