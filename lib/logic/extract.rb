@@ -40,3 +40,11 @@ end
 def get_section_links_content list
   list.map{ |section| section.content }
 end
+
+def extract_section_links_one_struct_xml xml
+  get_section_links( xml ).map {|link| Section.create!( title: link.content,
+                                                    level: link["niv"],
+                                                    state: link["etat"],
+                                                    start_date: link["debut"],
+                                                    end_date: link["fin"])}
+end
