@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
 
 	def index
-		@titres = File.open('./codes_titles.txt').readlines
-	end
+    @codes = Code.all
+  end
 
 end

@@ -1,3 +1,4 @@
 %h1 Codes LEGI :
-- @titres.each do |t|
-    %h2= t
+- @codes.each do |c|
+    %h2
+        %a{href: "codes/#{c.id}"}=c.title
