@@ -33,6 +33,10 @@ ActiveRecord::Schema.define(version: 20151110144806) do
     t.string   "id_section_origin"
     t.integer  "order"
     t.string   "id_section_parent_origin"
+    t.integer  "code_id"
   end
 
+  add_index "sections", ["code_id"], name: "index_sections_on_code_id", using: :btree
+
+  add_foreign_key "sections", "codes"
 end
