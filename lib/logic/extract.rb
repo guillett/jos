@@ -1,15 +1,21 @@
 require 'nokogiri'
 
 def load_xml path
-  Nokogiri.Slop(File.open(path).read)
+  f = File.open(path)
+  xml = Nokogiri.Slop(f.read)
+  f.close()
+  xml
 end
 
 def load_version_xmls path
   Dir.glob(path + '/**/version/*.xml').map do |version_file|
-    f = File.open(version_file)
-    xml = Nokogiri.Slop(f.read)
-    f.close()
-    xml
+    load_xml version_file
+  end
+end
+
+def load_structure_xmls path
+  Dir.glob(path + '/**/struct/*.xml').map do |struct_file|
+    load_xml struct_file
   end
 end
 
@@ -21,4 +27,12 @@ def get_code_titles path
   version_xmls = load_version_xmls(path)
   code_titles = version_xmls.map { |version_xml| get_code_title (version_xml)}
   code_titles.uniq!.sort!
+end
+
+def get_section_links xml
+  xml.TEXTELR.STRUCT.LIEN_SECTION_TA
+end
+
+def get_section_links_content list
+  list.map{ |section| section.content }
 end
