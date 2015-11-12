@@ -3,16 +3,15 @@ class SectionMap
 
   tag 'LIEN_SECTION_TA'
   content :title, String
-  attribute :niv, Integer
-  attribute :etat, String
-  attribute :debut, DateTime
-  attribute :fin, DateTime
-  attribute :id, String
+  attribute :level, Integer, :tag => 'niv'
+  attribute :state, String, :tag => 'etat'
+  attribute :start_date, DateTime, :tag => 'debut'
+  attribute :end_date, DateTime, :tag => 'fin'
+  attribute :id_section_origin, String, :tag => 'id'
 
   def to_hash
-    attributes = { "title" => "title", "niv" => "level", "etat" => "state", "debut" => "start_date", "fin" => "end_date", "id" => "id_section_origin" }
     hash = {}
-    instance_variables.each { |var| hash[attributes[var.to_s.delete("@")]] = instance_variable_get(var) }
+    instance_variables.each { |var| hash[var.to_s.delete("@")] = instance_variable_get(var) }
     hash
   end
 end

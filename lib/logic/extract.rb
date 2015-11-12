@@ -39,7 +39,13 @@ class Extractor
 
       code = Code.new(title: get_code_title( Nokogiri.Slop(File.read(version_path))))
       structMap = StructMap.parse(File.read(structure_path), :single => true)
-      structMap.sections.each {|s| code.sections.push(Section.new(s.to_hash)) }
+
+      structMap.sections.each.with_index do |s, i|
+        section = Section.new(s.to_hash)
+        section.order = i
+        section.id_section_parent_origin = structMap.ID
+        code.sections.push(section)
+      end
 
       puts "#{code.title} is built"
       code
