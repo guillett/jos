@@ -36,16 +36,26 @@ describe 'mapping of sections links' do
                                                 start_date: "2006-09-01",
                                                 end_date: "2999-01-01"}, 1))
       @structMap = StructMap.parse(@xml, :single => true)
+      @sectionLinkHash = @structMap.sections.first.to_hash
     end
 
     it 'maps correctly the section link' do
-      sectionLinkHash = @structMap.sections.first.to_hash
-      expect(sectionLinkHash["title"]).to  eq("PREMIÈRE PARTIE : DISPOSITIONS APPLICABLES AUX POUVOIRS ADJUDICATEURS")
-      expect(sectionLinkHash["niv"]).to  eq(1)
-      expect(sectionLinkHash["etat"]).to  eq("VIGUEUR")
-      expect(sectionLinkHash["debut"]).to  eq("2006-09-01")
-      expect(sectionLinkHash["fin"]).to  eq("2999-01-01")
-      expect(sectionLinkHash["id"]).to  eq("LEGISCTA000006083133")
+      expect(@sectionLinkHash["title"]).to  eq("PREMIÈRE PARTIE : DISPOSITIONS APPLICABLES AUX POUVOIRS ADJUDICATEURS")
+      expect(@sectionLinkHash["level"]).to  eq(1)
+      expect(@sectionLinkHash["state"]).to  eq("VIGUEUR")
+      expect(@sectionLinkHash["start_date"]).to  eq("2006-09-01")
+      expect(@sectionLinkHash["end_date"]).to  eq("2999-01-01")
+      expect(@sectionLinkHash["id_section_origin"]).to  eq("LEGISCTA000006083133")
+    end
+
+    it 'create correctly the section model' do
+      section = Section.new(@sectionLinkHash)
+      expect(section.title).to  eq("PREMIÈRE PARTIE : DISPOSITIONS APPLICABLES AUX POUVOIRS ADJUDICATEURS")
+      expect(section.level).to  eq(1)
+      expect(section.state).to  eq("VIGUEUR")
+      expect(section.start_date).to  eq("2006-09-01")
+      expect(section.end_date).to  eq("2999-01-01")
+      expect(section.id_section_origin).to  eq("LEGISCTA000006083133")
     end
 
   end
