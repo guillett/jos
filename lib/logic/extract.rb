@@ -22,7 +22,7 @@ class Extractor
     xml.TEXTE_VERSION.META.META_SPEC.META_TEXTE_VERSION.TITRE.content
   end
 
-  def extract_codes_and_sections2 path
+  def extract_codes_and_sections path
     texte_folders = extract_text_folder_paths(path)
     puts "#{texte_folders.length} text folders detected"
 

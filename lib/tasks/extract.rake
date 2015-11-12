@@ -12,7 +12,7 @@ namespace :extract do
 
     path = File.absolute_path(ENV["TARGET"])
     extractor = Extractor.new
-    codes = extractor.extract_codes_and_sections2(path)
+    codes = extractor.extract_codes_and_sections(path)
 
     puts "#{codes.length} codes built"
 
