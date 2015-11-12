@@ -3,7 +3,11 @@ class SectionMap
 
   tag 'LIEN_SECTION_TA'
   content :title, String
-  # attribute :debut, DateTime
+  attribute :niv, Integer
+  attribute :etat, String
+  attribute :debut, DateTime
+  attribute :fin, DateTime
+  attribute :id, String
 
   def to_hash
     hash = {}
