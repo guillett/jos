@@ -1,4 +1,4 @@
-require './lib/logic/section_map'
+require './lib/logic/map/section_map'
 
 class LegisctaMap
   include HappyMapper
