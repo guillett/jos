@@ -1,5 +1,4 @@
 Dir.glob('./lib/logic/**/*.rb').each{|f| require(f) }
-require 'pp'
 
 namespace :extract do
 
@@ -17,8 +16,7 @@ namespace :extract do
 
     puts "#{codes.length} codes built"
 
-
-    codes.select{|c| !c.nil?}.each { |c| c.save!() }
+    codes.each { |c| c.save!() }
   end
 
 end
