@@ -6,7 +6,7 @@ namespace :extract do
   task :code => :environment do
 
     if ENV["TARGET"].nil?
-      puts "precise target folder with TARGET='../legi/global/code_et_TNC_en_vigueur/code_en_vigueur'"
+      puts "define target folder with TARGET='../legi/global/code_et_TNC_en_vigueur/code_en_vigueur' rake extract:code"
       exit 1
     end
 
