@@ -23,17 +23,19 @@ class Extractor
   end
 
   def extract_codes_and_sections2 path
-    puts "je vais ici ! #{path}"
     texte_folders = extract_text_folder_paths(path)
-    puts "texte_folders: #{texte_folders}"
+    puts "#{texte_folders.length} text folders detected"
 
     texte_folders.map do |folder|
-      puts folder
+      puts "processing #{folder}"
 
       version_path = extract_version_xml_path(folder)
       structure_path = extract_struct_xml_path(folder)
 
-      next if folder_invalid?(structure_path, version_path)
+      if folder_invalid?(structure_path, version_path)
+        $stderr.puts "invalid texte folder: #{folder}"
+        next
+      end
 
       code = Code.new(title: get_code_title( Nokogiri.Slop(File.read(version_path))))
       structMap = StructMap.parse(File.read(structure_path), :single => true)
