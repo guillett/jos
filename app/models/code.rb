@@ -1,5 +1,5 @@
 class Code < ActiveRecord::Base
-  has_many :sections
+  has_many :sections, :dependent => :delete_all
 
   def summary
     level1 = sections.where(level: 1, state: 'VIGUEUR').order(:order)
