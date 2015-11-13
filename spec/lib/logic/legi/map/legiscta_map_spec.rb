@@ -25,7 +25,7 @@ describe 'mapping of sections links' do
   end
 
 
-  describe "when we have two section link" do
+  describe "when we have a scta file with two section link" do
 
     before do
       @legisctaMap = LegisctaMap.parse(fake_scta_file, :single => true)
@@ -33,6 +33,10 @@ describe 'mapping of sections links' do
 
     it 'maps correctly two section link' do
       expect(@legisctaMap.sections.length).to eq(2)
+    end
+
+    it 'maps correctly the id' do
+      expect(@legisctaMap.id).to eq("LEGISCTA000006088000")
     end
 
   end

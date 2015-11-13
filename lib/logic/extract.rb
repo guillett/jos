@@ -2,20 +2,25 @@ require 'nokogiri'
 
 class Extractor
 
-  VERSION_PATTERN = 'version/*.xml'
-  STRUCTURE_PATTERN = 'struct/*.xml'
-  TEXTE_PATTERN = '/**/texte/'
+  VERSION_PATTERN = 'texte/version/*.xml'
+  STRUCTURE_PATTERN = 'texte/struct/*.xml'
+  TEXTE_PATTERN = '**/LEGITEXT*/'
+  SECTION_TA_PATTERN = 'section_ta/**/*.xml'
 
   def extract_text_folder_paths path
-    Dir.glob(path + TEXTE_PATTERN)
+    Dir.glob(File.join(path, TEXTE_PATTERN))
   end
 
   def extract_struct_xml_path path
-    Dir.glob(path + STRUCTURE_PATTERN).first
+    Dir.glob(File.join(path, STRUCTURE_PATTERN)).first
   end
 
   def extract_version_xml_path path
-    Dir.glob(path + VERSION_PATTERN).first
+    Dir.glob(File.join(path, VERSION_PATTERN)).first
+  end
+
+  def extract_sections_ta_xml_paths path
+    Dir.glob(File.join(path, SECTION_TA_PATTERN))
   end
 
   def get_code_title xml
@@ -46,6 +51,17 @@ class Extractor
         section.id_section_parent_origin = structMap.ID
         code.sections.push(section)
       end
+
+      sections_ta_paths = extract_sections_ta_xml_paths(folder)
+      sections_ta_paths.each do |section_ta|
+        legisctaMap= LegisctaMap.parse(File.read(section_ta), :single => true)
+        legisctaMap.sections.each_with_index do |sectionMap, i|
+          section = Section.new(sectionMap.to_hash)
+          section.order = i
+          section.id_section_parent_origin = legisctaMap.id
+          code.sections.push(section)
+        end
+     end
 
       puts "#{code.title} is built"
       code
