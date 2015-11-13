@@ -18,6 +18,20 @@ RSpec.describe Code, type: :model do
       end
     end
 
+    describe "with a code with one section not in state VIGUEUR" do
+      before do
+        code = Code.new()
+        @section_1 = Section.new({level: 1, title: "1", id_section_origin: "id", state: 'PLOP'})
+        code.sections.push(@section_1)
+        code.save()
+        @summary = code.summary
+      end
+
+      it "displays no section" do
+        expect(@summary.length).to eq(0)
+      end
+    end
+
     describe "with a code with 2 sections of level 1" do
       before do
         code = Code.new()
@@ -77,7 +91,7 @@ RSpec.describe Code, type: :model do
         @summary = code.summary
       end
 
-      it "display one section" do
+      it "display one section lvl1 and one lvl2" do
         expect(@summary).to eq([@section_1])
         expect(@summary[0].sections[0]).to eq(@section_1_1)
       end
@@ -97,7 +111,7 @@ RSpec.describe Code, type: :model do
         @summary = code.summary
       end
 
-      it "display two sections in ascending order" do
+      it "display 1 lvl1 and 2 lvl2 in order" do
         expect(@summary).to eq([@section_1])
         expect(@summary[0].sections.length).to eq(2)
         expect(@summary[0].sections[1]).to eq(@section_1_2)

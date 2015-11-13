@@ -2,15 +2,22 @@ class Code < ActiveRecord::Base
   has_many :sections, :dependent => :delete_all
 
   def summary
-    level1 = sections.where(level: 1, state: 'VIGUEUR').order(:order)
+    sections_vigueur = sections.where(state: 'VIGUEUR')
+    level1 = sections_vigueur.select{ |s| s.level == 1 }.sort_by { |s| s.order }
+    level1.each{|l1| fetch_children(l1, sections_vigueur)}
+    level1
+  end
 
-    sections.where(level: 2, state: 'VIGUEUR').order(:order).each do |level2|
-      s = level1.find{|s| s.id_section_origin = level2.id_section_parent_origin }
-      s.sections = [] if s.sections.nil?
-      s.sections.push(level2)
+
+  private
+  def fetch_children(father, sections)
+    children = sections.select{|s| s.level == (father.level + 1) && s.id_section_parent_origin == father.id_section_origin }.sort_by{|s| s.order}
+
+    if !children.empty?
+      children.each{|c| fetch_children(c, sections)}
     end
 
-    level1
+    father.sections = children
   end
 
 end
