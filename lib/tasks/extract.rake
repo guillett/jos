@@ -18,7 +18,7 @@ namespace :extract do
 
     puts "#{codes.length} codes built"
 
-    codes.each { |c| c.save!() }
+    Parallel.each(codes) { |c| c.save!() }
   end
 
   desc "Download legi global"

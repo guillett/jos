@@ -1,4 +1,6 @@
 require 'nokogiri'
+require './app/models/section'
+require './app/models/code'
 
 class Extractor
 
@@ -31,7 +33,7 @@ class Extractor
     texte_folders = extract_text_folder_paths(path)
     puts "#{texte_folders.length} text folders detected"
 
-    codes = texte_folders.map do |folder|
+    codes = Parallel.map(texte_folders) do |folder|
       puts "processing #{folder}"
 
       version_path = extract_version_xml_path(folder)

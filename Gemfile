@@ -29,6 +29,7 @@ gem 'puma'
 gem 'haml-rails'
 
 gem 'nokogiri-happymapper', :require => 'happymapper'
+gem 'parallel'
 
 gem 'bootstrap-sass'
 
