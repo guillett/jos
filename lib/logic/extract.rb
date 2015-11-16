@@ -29,6 +29,10 @@ class Extractor
     xml.TEXTE_VERSION.META.META_SPEC.META_TEXTE_VERSION.TITRE.content
   end
 
+  def escape_title title
+    ActiveSupport::Inflector.transliterate(title).downcase.gsub(/[,'\s\(\)]/,'_').gsub(/_+/,'_').gsub(/\W/,'').gsub(/_$/,'')
+  end
+
   def extract_codes_and_sections path
     texte_folders = extract_text_folder_paths(path)
     puts "#{texte_folders.length} text folders detected"
@@ -44,7 +48,9 @@ class Extractor
         next
       end
 
-      code = Code.new(title: get_code_title( Nokogiri.Slop(File.read(version_path))))
+      code_title =get_code_title( Nokogiri.Slop(File.read(version_path)))
+
+      code = Code.new(title: code_title, escape_title: escape_title(code_title))
       structMap = StructMap.parse(File.read(structure_path), :single => true)
 
       structMap.sections.each.with_index do |s, i|
