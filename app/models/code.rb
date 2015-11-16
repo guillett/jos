@@ -10,7 +10,6 @@ class Code < ActiveRecord::Base
 
     sections_vigueur.each do |s|
       next if s.id_section_parent_origin.nil? || hash[s.id_section_parent_origin].nil?
-      hash[s.id_section_parent_origin].sections = [] if hash[s.id_section_parent_origin].sections.nil?
       hash[s.id_section_parent_origin].sections.push(s)
     end
 
