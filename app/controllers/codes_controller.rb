@@ -1,6 +1,6 @@
 class CodesController < ApplicationController
 
   def show
-    @code = Code.includes(:sections).find(params[:id])
+    @code = Code.joins(:sections).where(sections: {state: 'VIGUEUR'}).find(params[:id])
   end
 end

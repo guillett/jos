@@ -1,15 +1,22 @@
 require 'rails_helper'
 
-# Specs in this file have access to a helper object that includes
-# the CodesHelper. For example:
-#
-# describe CodesHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
 RSpec.describe CodesHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "display summary" do
+
+    before do
+      section1_1 =Section.create({title: "1.1"})
+      section1 =Section.create({title: "1"})
+      section2 =Section.create({title: "2"})
+
+      section1.sections = [section1_1]
+      sections=[section1, section2]
+
+      @summary = display_summary(sections)
+    end
+
+    it "display one ul li by level" do
+      expect(@summary).to eq("<ul><li>1</li><ul><li>1.1</li></ul><li>2</li></ul>")
+    end
+
+  end
 end

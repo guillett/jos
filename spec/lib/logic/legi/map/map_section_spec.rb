@@ -1,7 +1,7 @@
 require 'rails_helper'
 require './lib/logic/extract'
-require './lib/logic/section_map'
-require './lib/logic/struct_map'
+require './lib/logic/map/section_map'
+require './lib/logic/map/struct_map'
 
 def fake_struct_file section, nb_of_link
   header = <<-FOO

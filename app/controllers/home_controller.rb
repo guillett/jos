@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
 
 	def index
-    @codes = Code.all
+    @codes = Code.order(:title)
   end
 
 end

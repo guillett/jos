@@ -29,6 +29,9 @@ gem 'puma'
 gem 'haml-rails'
 
 gem 'nokogiri-happymapper', :require => 'happymapper'
+gem 'parallel'
+
+gem 'bootstrap-sass'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

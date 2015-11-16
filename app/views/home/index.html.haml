@@ -1,4 +1,4 @@
-%h1 Codes LEGI :
+%h1= "#{@codes.count} Codes LEGI"
 - @codes.each do |c|
     %h2
         %a{href: "codes/#{c.id}"}=c.title

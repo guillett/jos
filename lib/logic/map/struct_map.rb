@@ -1,3 +1,5 @@
+require './lib/logic/map/section_map'
+
 class StructMap
   include HappyMapper
   tag 'TEXTELR'
