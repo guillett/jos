@@ -1,4 +1,5 @@
 require 'nokogiri'
+require './app/models/article'
 require './app/models/section'
 require './app/models/code'
 
@@ -8,6 +9,7 @@ class Extractor
   STRUCTURE_PATTERN = 'texte/struct/*.xml'
   TEXTE_PATTERN = '**/LEGITEXT*/'
   SECTION_TA_PATTERN = 'section_ta/**/*.xml'
+  ARTICLE_PATTERN = 'article/**/*.xml'
 
   def extract_text_folder_paths path
     Dir.glob(File.join(path, TEXTE_PATTERN))
@@ -23,6 +25,10 @@ class Extractor
 
   def extract_sections_ta_xml_paths path
     Dir.glob(File.join(path, SECTION_TA_PATTERN))
+  end
+
+  def extract_articles_xml_paths path
+    Dir.glob(File.join(path, ARTICLE_PATTERN))
   end
 
   def get_code_title xml
@@ -56,14 +62,24 @@ class Extractor
 
       sections_ta_paths = extract_sections_ta_xml_paths(folder)
       sections_ta_paths.each do |section_ta|
-        legisctaMap= LegisctaMap.parse(File.read(section_ta), :single => true)
+        legisctaMap = LegisctaMap.parse(File.read(section_ta), :single => true)
         legisctaMap.sections.each_with_index do |sectionMap, i|
           section = Section.new(sectionMap.to_hash)
           section.order = i
           section.id_section_parent_origin = legisctaMap.id
           code.sections.push(section)
         end
-     end
+
+        legisctaMap.articles.each_with_index do |sectionArticleMap, i|
+          article = Article.new(sectionArticleMap.to_hash)
+          article.order = i
+          section = code.sections.find{|s| s.id_section_origin == legisctaMap.id }
+          unless section.nil?
+            section.articles.push(article)
+          end
+        end
+
+      end
 
       puts "#{code.title} is built"
       code

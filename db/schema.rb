@@ -11,10 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151110144806) do
+ActiveRecord::Schema.define(version: 20151116142259) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "articles", force: :cascade do |t|
+    t.string   "id_article_origin"
+    t.string   "state"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.string   "nota"
+    t.string   "text"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "section_id"
+    t.integer  "order"
+  end
+
+  add_index "articles", ["section_id"], name: "index_articles_on_section_id", using: :btree
 
   create_table "codes", force: :cascade do |t|
     t.string   "title"
@@ -38,5 +53,6 @@ ActiveRecord::Schema.define(version: 20151110144806) do
 
   add_index "sections", ["code_id"], name: "index_sections_on_code_id", using: :btree
 
+  add_foreign_key "articles", "sections"
   add_foreign_key "sections", "codes"
 end

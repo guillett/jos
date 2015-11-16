@@ -12,7 +12,8 @@ describe 'mapping of sections links' do
   <ID>LEGISCTA000006088000</ID>
   <TITRE_TA>Partie législative</TITRE_TA>
   <STRUCTURE_TA>
-    <LIEN_SECTION_TA cid="LEGISCTA000006116627" debut="1996-02-24" etat="VIGUEUR" fin="2999-01-01" id="LEGISCTA000006116627" niv="2" url="/LEGI/SCTA/00/00/06/11/66/LEGISCTA000006116627.xml">PREMIÈRE PARTIE : DISPOSITIONS GÉNÉRALES</LIEN_SECTION_TA>
+    <LIEN_ART debut="2002-03-28" etat="MODIFIE" fin="2002-12-14" id="LEGIARTI000006391999" num="L3534-7" origine="LEGI"/>
+  <LIEN_SECTION_TA cid="LEGISCTA000006116627" debut="1996-02-24" etat="VIGUEUR" fin="2999-01-01" id="LEGISCTA000006116627" niv="2" url="/LEGI/SCTA/00/00/06/11/66/LEGISCTA000006116627.xml">PREMIÈRE PARTIE : DISPOSITIONS GÉNÉRALES</LIEN_SECTION_TA>
     <LIEN_SECTION_TA cid="LEGISCTA000024405340" debut="2222-02-22" etat="VIGUEUR_DIFF" fin="2999-01-01" id="LEGISCTA000024405340" niv="2" url="/LEGI/SCTA/00/00/24/40/53/LEGISCTA000024405340.xml">SEPTIEME PARTIE : AUTRES COLLECTIVITES REGIES PAR L'ARTICLE 73 DE LA CONSTITUTION</LIEN_SECTION_TA>
   </STRUCTURE_TA>
   <CONTEXTE>
@@ -25,7 +26,7 @@ describe 'mapping of sections links' do
   end
 
 
-  describe "when we have a scta file with two section link" do
+  describe "when we have a scta file with two section link and one article section link" do
 
     before do
       @legisctaMap = LegisctaMap.parse(fake_scta_file, :single => true)
@@ -33,6 +34,10 @@ describe 'mapping of sections links' do
 
     it 'maps correctly two section link' do
       expect(@legisctaMap.sections.length).to eq(2)
+    end
+
+    it 'maps correctly one article section link' do
+      expect(@legisctaMap.articles.length).to eq(1)
     end
 
     it 'maps correctly the id' do
