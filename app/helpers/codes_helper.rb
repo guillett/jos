@@ -5,7 +5,7 @@ module CodesHelper
     content = "<ul>"
     sections.each do |s|
       content += "<li>" + s.title + "</li>"
-      if !s.sections.nil?
+      if !s.sections.empty?
         content += display_summary(s.sections)
       end
     end

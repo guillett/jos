@@ -3,4 +3,8 @@ class Section < ActiveRecord::Base
 
   attr_accessor :sections
 
+  after_initialize do
+    @sections=[]
+  end
+
 end
