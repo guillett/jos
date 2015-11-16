@@ -1,9 +1,6 @@
 require 'rails_helper'
 require './lib/logic/extract'
-require './lib/logic/meta_article_map'
-require './lib/logic/link_article_map'
-require './lib/logic/article_map'
-
+require './lib/logic/map/article_map'
 
 def fake_article_file article, nb_of_link
   header = <<-FOO
@@ -26,7 +23,6 @@ def fake_article_file article, nb_of_link
 
   header + body + footer
 end
-
 
 describe 'mapping of articles' do
 
