@@ -33,8 +33,9 @@ ActiveRecord::Schema.define(version: 20151116142259) do
 
   create_table "codes", force: :cascade do |t|
     t.string   "title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "escape_title"
   end
 
   create_table "sections", force: :cascade do |t|
