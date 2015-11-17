@@ -14,5 +14,9 @@ class ArticleMap
     instance_variables.each { |var| hash[var.to_s.delete("@")] = instance_variable_get(var) }
     hash
   end
+
+  def self.parse_with_escape_br xml, options
+    self.parse(xml.gsub( /<br\/?>/, "\n"), options)
+  end
 end
 

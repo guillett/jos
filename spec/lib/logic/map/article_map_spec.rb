@@ -1,7 +1,6 @@
 require 'rails_helper'
 require './lib/logic/extract'
 require './lib/logic/map/article_map'
-require './lib/logic/helpers/article_helper'
 
 def fake_article_file article, nb_of_link
   header = <<-FOO
@@ -37,7 +36,7 @@ describe 'mapping of articles' do
                                },
                               1)
 
-      @articleMap = ArticleMap.parse(replace_br_tags(@xml), :single => true)
+      @articleMap = ArticleMap.parse_with_escape_br(@xml, :single => true)
     end
 
     it 'maps correctly the article' do

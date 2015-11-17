@@ -2,7 +2,6 @@ require 'nokogiri'
 require './app/models/article'
 require './app/models/section'
 require './app/models/code'
-require './lib/logic/helpers/article_helper'
 
 class Extractor
 
@@ -64,7 +63,7 @@ class Extractor
 
       article_paths = extract_article_xml_paths(folder)
       article_maps = article_paths.map do |article_path|
-        ArticleMap.parse(replace_br_tags(File.read(article_path)), :single => true)
+        ArticleMap.parse_with_escape_br(File.read(article_path), :single => true)
       end
 
       sections_ta_paths = extract_sections_ta_xml_paths(folder)
