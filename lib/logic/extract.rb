@@ -60,12 +60,7 @@ class Extractor
       code = Code.new(title: code_title, escape_title: escape_title(code_title))
       structMap = StructMap.parse(File.read(structure_path), :single => true)
 
-      structMap.sections.each.with_index do |s, i|
-        section = Section.new(s.to_hash)
-        section.order = i
-        section.id_section_parent_origin = structMap.ID
-        code.sections.push(section)
-      end
+      code.sections = structMap.extract_sections()
 
       article_paths = extract_article_xml_paths(folder)
       article_maps = article_paths.map do |article_path|
@@ -75,22 +70,12 @@ class Extractor
       sections_ta_paths = extract_sections_ta_xml_paths(folder)
       sections_ta_paths.each do |section_ta|
         legisctaMap = LegisctaMap.parse(File.read(section_ta), :single => true)
-        legisctaMap.sections.each_with_index do |sectionMap, i|
-          section = Section.new(sectionMap.to_hash)
-          section.order = i
-          section.id_section_parent_origin = legisctaMap.id
-          code.sections.push(section)
-        end
 
-        legisctaMap.articles.each_with_index do |sectionArticleMap, i|
-          article = Article.new(sectionArticleMap.to_hash)
-          article.order = i
-          article_map = article_maps.find{|a| a.id == sectionArticleMap.id_article_origin }
-          unless article_map.nil?
-            article.nota = article_map.nota
-            article.text = article_map.text
-          end
+        code.sections += legisctaMap.extract_sections()
 
+        articles = legisctaMap.extract_articles(article_maps)
+
+        articles.each do |article|
           section = code.sections.find{|s| s.id_section_origin == legisctaMap.id }
           unless section.nil?
             section.articles.push(article)

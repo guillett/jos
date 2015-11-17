@@ -23,5 +23,3 @@ describe 'mapping of sections article links' do
   end
 
 end
-
-

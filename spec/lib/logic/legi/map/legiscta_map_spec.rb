@@ -12,8 +12,8 @@ describe 'mapping of sections links' do
   <ID>LEGISCTA000006088000</ID>
   <TITRE_TA>Partie législative</TITRE_TA>
   <STRUCTURE_TA>
-    <LIEN_ART debut="2002-03-28" etat="MODIFIE" fin="2002-12-14" id="LEGIARTI000006391999" num="L3534-7" origine="LEGI"/>
-  <LIEN_SECTION_TA cid="LEGISCTA000006116627" debut="1996-02-24" etat="VIGUEUR" fin="2999-01-01" id="LEGISCTA000006116627" niv="2" url="/LEGI/SCTA/00/00/06/11/66/LEGISCTA000006116627.xml">PREMIÈRE PARTIE : DISPOSITIONS GÉNÉRALES</LIEN_SECTION_TA>
+    <LIEN_ART debut="2002-03-28" etat="MODIFIE" fin="2002-12-14" id="1" num="L3534-7" origine="LEGI"/>
+    <LIEN_SECTION_TA cid="LEGISCTA000006116627" debut="1996-02-24" etat="VIGUEUR" fin="2999-01-01" id="LEGISCTA000006116627" niv="2" url="/LEGI/SCTA/00/00/06/11/66/LEGISCTA000006116627.xml">PREMIÈRE PARTIE : DISPOSITIONS GÉNÉRALES</LIEN_SECTION_TA>
     <LIEN_SECTION_TA cid="LEGISCTA000024405340" debut="2222-02-22" etat="VIGUEUR_DIFF" fin="2999-01-01" id="LEGISCTA000024405340" niv="2" url="/LEGI/SCTA/00/00/24/40/53/LEGISCTA000024405340.xml">SEPTIEME PARTIE : AUTRES COLLECTIVITES REGIES PAR L'ARTICLE 73 DE LA CONSTITUTION</LIEN_SECTION_TA>
   </STRUCTURE_TA>
   <CONTEXTE>
@@ -42,6 +42,23 @@ describe 'mapping of sections links' do
 
     it 'maps correctly the id' do
       expect(@legisctaMap.id).to eq("LEGISCTA000006088000")
+    end
+
+    it 'extracts 2 sections' do
+      sections = @legisctaMap.extract_sections()
+      expect(sections.length).to eq(2)
+    end
+
+    it 'extracts 1 article' do
+      article_map = ArticleMap.new()
+      article_map.nota = "nota"
+      article_map.text = "text"
+      article_map.id = '1'
+
+      articles = @legisctaMap.extract_articles([article_map])
+      expect(articles.length).to eq(1)
+      expect(articles[0].text).to eq('text')
+      expect(articles[0].nota).to eq('nota')
     end
 
   end
