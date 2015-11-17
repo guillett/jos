@@ -9,6 +9,14 @@ class ArticleMap
   has_one :text, String, :xpath => 'BLOC_TEXTUEL/CONTENU'
   #has_many :links, LinkArticleMap, :xpath => 'LIENS'
 
+  def nota
+    @nota.gsub(/\n/, "<br/>")
+  end
+
+  def text
+    @text.gsub(/\n/, "<br/>")
+  end
+
   def to_hash
     hash = {}
     instance_variables.each { |var| hash[var.to_s.delete("@")] = instance_variable_get(var) }

@@ -41,8 +41,8 @@ describe 'mapping of articles' do
 
     it 'maps correctly the article' do
       expect(@articleMap.id).to   eq("LEGIARTI000006204293")
-      expect(@articleMap.nota).to eq("Décret n° 2006-975 du 1er août 2006 art. 8 :\n I.-Les dispositions du présent décret entrent en vigueur le 1er septembre 2006.")
-      expect(@articleMap.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :\n")
+      expect(@articleMap.nota).to eq("Décret n° 2006-975 du 1er août 2006 art. 8 :<br/> I.-Les dispositions du présent décret entrent en vigueur le 1er septembre 2006.")
+      expect(@articleMap.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>")
       #expect(@articleMap.links.length).to eq(1)
     end
 
