@@ -23,7 +23,7 @@ RSpec.describe CodesHelper, type: :helper do
     describe "with one link" do
       before do
         section =Section.create({title: "1"})
-        article = Article.new(id:3)
+        article = Article.new(id:3, state: "VIGUEUR")
 
         section.articles << article
 
@@ -34,6 +34,23 @@ RSpec.describe CodesHelper, type: :helper do
 
       it "display one ul li by level with a for link" do
         expect(@summary).to eq("<ul><li><a href=\"/sections/1\">1</a></li></ul>")
+      end
+    end
+
+    describe "with one link" do
+      before do
+        section =Section.create({title: "1"})
+        article = Article.new(id:3, state: "MODIFIE")
+
+        section.articles << article
+
+        sections=[section]
+
+        @summary = display_summary(sections)
+      end
+
+      it "display one ul li by level with a for link" do
+        expect(@summary).to eq("<ul><li>1</li></ul>")
       end
     end
 
