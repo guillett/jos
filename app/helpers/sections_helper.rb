@@ -1,6 +1,6 @@
 module SectionsHelper
 
-  def display_article_summary(articles)
+  def display_section_summary(articles)
 
     content = "<ul>"
     articles.each do |a|
