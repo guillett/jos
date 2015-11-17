@@ -2,6 +2,7 @@ require 'nokogiri'
 require './app/models/article'
 require './app/models/section'
 require './app/models/code'
+require './lib/logic/helpers/article_helper'
 
 class Extractor
 
@@ -27,7 +28,7 @@ class Extractor
     Dir.glob(File.join(path, SECTION_TA_PATTERN))
   end
 
-  def extract_articles_xml_paths path
+  def extract_article_xml_paths path
     Dir.glob(File.join(path, ARTICLE_PATTERN))
   end
 
@@ -66,6 +67,11 @@ class Extractor
         code.sections.push(section)
       end
 
+      article_paths = extract_article_xml_paths(folder)
+      article_maps = article_paths.map do |article_path|
+        ArticleMap.parse(replace_br_tags(File.read(article_path)), :single => true)
+      end
+
       sections_ta_paths = extract_sections_ta_xml_paths(folder)
       sections_ta_paths.each do |section_ta|
         legisctaMap = LegisctaMap.parse(File.read(section_ta), :single => true)
@@ -79,6 +85,12 @@ class Extractor
         legisctaMap.articles.each_with_index do |sectionArticleMap, i|
           article = Article.new(sectionArticleMap.to_hash)
           article.order = i
+          article_map = article_maps.find{|a| a.id == sectionArticleMap.id_article_origin }
+          unless article_map.nil?
+            article.nota = article_map.nota
+            article.text = article_map.text
+          end
+
           section = code.sections.find{|s| s.id_section_origin == legisctaMap.id }
           unless section.nil?
             section.articles.push(article)

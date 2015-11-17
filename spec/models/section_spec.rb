@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe Section, type: :model do
 
-  describe "summary" do
+  describe "#summary" do
 
-    describe "with a section with one article" do
+    context "with a section with one article" do
       before do
         section = Section.new()
         @article = Article.new({id_article_origin: "LEGIARTI000024562054", state: 'VIGUEUR'})

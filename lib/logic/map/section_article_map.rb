@@ -6,6 +6,7 @@ class SectionArticleMap
   attribute :start_date, DateTime, :tag => 'debut'
   attribute :end_date, DateTime, :tag => 'fin'
   attribute :id_article_origin, String, :tag => 'id'
+  attribute :number, String, :tag => 'num'
 
   def to_hash
     hash = {}
