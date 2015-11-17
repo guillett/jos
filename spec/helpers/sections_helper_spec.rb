@@ -8,7 +8,7 @@ RSpec.describe SectionsHelper, type: :helper do
       article2 = Article.create({id_article_origin: "LEGIARTI000006204469"})
       articles = [article1, article2]
 
-      @summary = display_summary(articles)
+      @summary = display_article_summary(articles)
     end
 
     it "display one ul and as many li as article" do
