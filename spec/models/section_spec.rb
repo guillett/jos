@@ -1,5 +1,23 @@
 require 'rails_helper'
 
 RSpec.describe Section, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  describe "summary" do
+
+    describe "with a section with one article" do
+      before do
+        section = Section.new()
+        @article = Article.new({id_article_origin: "LEGIARTI000024562054", state: 'VIGUEUR'})
+        section.articles.push(@article)
+        section.save()
+        @summary = section.summary
+      end
+
+      it "displays one article" do
+        expect(@summary).to eq([@article])
+      end
+    end
+
+  end
+
 end

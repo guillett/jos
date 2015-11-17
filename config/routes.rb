@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   resources :codes, :only => [:show]
+  resources :sections, :only => [:show]
   root 'home#index'
 
 
