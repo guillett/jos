@@ -1,3 +1,4 @@
 %h1=@section.title
-
-=raw display_section_summary(@section.summary)
+%<ul>=
+  - @section.summary.each do |a|
+    %li= a.id_article_origin
