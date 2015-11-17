@@ -97,6 +97,22 @@ RSpec.describe Code, type: :model do
       end
     end
 
+    describe "with a code with 2 section of level 1 and SAME ID and two sections of level 2" do
+      before do
+        code = createCodeWithSection [
+                                         {title:"1", order:1, id_section_origin: '1'},
+                                         {title:"2", order:1, id_section_origin: '1'},
+                                         {title:"*.1", level: 2, order:1, id_section_parent_origin: '1'},
+                                         {title:"*.2", level: 2, order:2, id_section_parent_origin: '1'}]
+        @summary = code.summary
+      end
+
+      it "display two sections level2 for each level1" do
+        expect(@summary[0].sections.length).to eq(2)
+        expect(@summary[1].sections.length).to eq(2)
+      end
+    end
+
   end
 
 end
