@@ -18,7 +18,10 @@ namespace :extract do
 
     puts "#{codes.length} codes built"
 
-    codes.each { |c| c.save!() }
+    codes.each do |c|
+      c.save!()
+      p "#{c.title} is saved."
+    end
   end
 
   desc "Download legi global"
