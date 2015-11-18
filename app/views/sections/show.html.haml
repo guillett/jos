@@ -1,5 +1,5 @@
 %h1=@section.title
-- @section.summary.each do |a|
+- @section.articles.each do |a|
   %h2
     %a{href: "/articles/#{a.id_article_origin}"}="#{a.nature}  #{a.number}"
   %h3= "Texte "

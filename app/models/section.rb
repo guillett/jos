@@ -8,14 +8,4 @@ class Section < ActiveRecord::Base
     @sections=[]
   end
 
-  def summary
-    hash = {}
-
-    articles_vigueur = articles.where(state: 'VIGUEUR')
-       .sort_by { |a| a.order }
-       .each { |a| hash[a.id_article_origin] = a }
-
-    articles_vigueur
-  end
-
 end
