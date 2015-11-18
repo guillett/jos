@@ -68,21 +68,7 @@ class Extractor
       end
 
       sections_ta_paths = extract_sections_ta_xml_paths(folder)
-      sections_ta_paths.each do |section_ta|
-        legisctaMap = LegisctaMap.parse(File.read(section_ta), :single => true)
-
-        code.sections += legisctaMap.extract_sections()
-
-        articles = legisctaMap.extract_articles(article_maps)
-
-        articles.each do |article|
-          section = code.sections.find{|s| s.id_section_origin == legisctaMap.id }
-          unless section.nil?
-            section.articles.push(article)
-          end
-        end
-
-      end
+      extract_sections_and_articles(article_maps, code, sections_ta_paths)
 
       puts "#{code.title} is built; #{Time.now - start} (#{folder})"
       
@@ -95,6 +81,23 @@ class Extractor
     end
 
     codes.compact
+  end
+
+  def extract_sections_and_articles(article_maps, code, sections_ta_paths)
+    sections_ta_paths.each do |section_ta|
+      legisctaMap = LegisctaMap.parse(File.read(section_ta), :single => true)
+      code.sections += legisctaMap.extract_sections()
+
+      articles = legisctaMap.extract_articles(article_maps)
+
+      if !articles.empty?
+        sections = code.sections.find_all { |s| s.id_section_origin == legisctaMap.id }
+        if !sections.empty?
+          sections.each{ |s| s.articles += articles  }
+        end
+      end
+
+    end
   end
 
   def folder_invalid?(structure_path, version_path)
