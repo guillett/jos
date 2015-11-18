@@ -63,6 +63,9 @@ class Extractor
       code.sections = structMap.extract_sections()
 
       article_paths = extract_article_xml_paths(folder)
+
+      puts "code: #{code.title} articles paths: #{article_paths.length}"
+
       article_maps = article_paths.map do |article_path|
         ArticleMap.parse_with_escape_br(File.read(article_path), :single => true)
       end
@@ -87,14 +90,16 @@ class Extractor
     sections_ta_paths.each do |section_ta|
       legisctaMap = LegisctaMap.parse(File.read(section_ta), :single => true)
       code.sections += legisctaMap.extract_sections()
-
+    # end
+    #
+    # sections_ta_paths.each do |section_ta|
+    #   legisctaMap = LegisctaMap.parse(File.read(section_ta), :single => true)
       articles = legisctaMap.extract_articles(article_maps)
 
       if !articles.empty?
         sections = code.sections.find_all { |s| s.id_section_origin == legisctaMap.id }
-        if !sections.empty?
-          sections.each{ |s| s.articles += articles  }
-        end
+        puts "!!!!! section #{legisctaMap.id} not found for articles #{articles.map{|a| a.id_article_origin}.join(', ')} !!!!" if sections.empty?
+        sections.each{ |s| s.articles += articles  }
       end
 
     end
