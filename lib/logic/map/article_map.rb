@@ -5,6 +5,7 @@ class ArticleMap
   tag 'ARTICLE'
 
   has_one :id, String, :xpath => 'META/META_COMMUN/ID'
+  has_one :nature, String, :xpath => 'META/META_COMMUN/NATURE'
   has_one :nota, String, :xpath => 'NOTA/CONTENU'
   has_one :text, String, :xpath => 'BLOC_TEXTUEL/CONTENU'
   #has_many :links, LinkArticleMap, :xpath => 'LIENS'

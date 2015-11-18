@@ -53,12 +53,14 @@ describe 'mapping of sections links' do
       article_map = ArticleMap.new()
       article_map.nota = "nota"
       article_map.text = "text"
+      article_map.nature = "nature"
       article_map.id = '1'
 
       articles = @legisctaMap.extract_articles([article_map])
       expect(articles.length).to eq(1)
       expect(articles[0].text).to eq('text')
       expect(articles[0].nota).to eq('nota')
+      expect(articles[0].nature).to eq('nature')
     end
 
   end

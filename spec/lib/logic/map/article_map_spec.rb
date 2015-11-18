@@ -9,7 +9,7 @@ def fake_article_file article, nb_of_link
   <META_COMMUN>
   FOO
 
-  body = "<ID>#{article[:id_article_origin]}</ID></META_COMMUN></META><NOTA><CONTENU>#{article[:nota_content]}</CONTENU></NOTA><BLOC_TEXTUEL><CONTENU>#{article[:text_content]}</CONTENU></BLOC_TEXTUEL><LIENS>"
+  body = "<ID>#{article[:id_article_origin]}</ID><NATURE>#{article[:nature]}</NATURE></META_COMMUN></META><NOTA><CONTENU>#{article[:nota_content]}</CONTENU></NOTA><BLOC_TEXTUEL><CONTENU>#{article[:text_content]}</CONTENU></BLOC_TEXTUEL><LIENS>"
 
   nb_of_link.times do
     body += "<LIEN cidtexte='LEGITEXT000005627819' datesignatexte='2999-01-01' id='#{article[:link_id]}' naturetexte='CODE' nortexte='' num='150' numtexte='' sens='cible' typelien='CITATION'>#{article[:link_title]}</LIEN>"
@@ -31,6 +31,7 @@ describe 'mapping of articles' do
       @xml = fake_article_file({  id_article_origin: "LEGIARTI000006204293",
                                   nota_content: "Décret n° 2006-975 du 1er août 2006 art. 8 :<br/> I.-Les dispositions du présent décret entrent en vigueur le 1er septembre 2006.",
                                   text_content: "I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>",
+                                  nature: "ARTICLE",
                                   link_id: "LEGIARTI000017843672",
                                   link_title: "Code des marchés publics - art. 150 (V)"
                                },
@@ -41,7 +42,8 @@ describe 'mapping of articles' do
 
     it 'maps correctly the article' do
       expect(@articleMap.id).to   eq("LEGIARTI000006204293")
-      expect(@articleMap.nota).to eq("Décret n° 2006-975 du 1er août 2006 art. 8 :<br/> I.-Les dispositions du présent décret entrent en vigueur le 1er septembre 2006.")
+      expect(@articleMap.nature).to eq("ARTICLE")
+      expect(@articleMap.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>")
       expect(@articleMap.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>")
       #expect(@articleMap.links.length).to eq(1)
     end

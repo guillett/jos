@@ -25,6 +25,7 @@ class LegisctaMap
 
       article_map = article_maps.find{|a| a.id == article.id_article_origin }
       unless article_map.nil?
+        article.nature = article_map.nature
         article.nota = article_map.nota
         article.text = article_map.text
       end
