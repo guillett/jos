@@ -100,7 +100,9 @@ class Extractor
       sections = code.sections.find_all { |s| s.id_section_origin == legisctas_map.id }
 
       if sections.empty?
-        raise "section #{legisctas_map.id} not found for articles #{articles.map{|a| a.id_article_origin}.join(', ')}"
+        puts "!!!!"
+        puts "!!!! section #{legisctas_map.id} not found for articles #{articles.map{|a| a.id_article_origin}.join(', ')}"
+        puts "!!!!"
       end
 
       sections.each{ |s| s.articles += articles  }
