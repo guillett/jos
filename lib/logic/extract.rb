@@ -56,7 +56,7 @@ class Extractor
       end
 
       code_title =get_code_title( Nokogiri.Slop(File.read(version_path)))
-
+      puts "Building #{code_title}; #{Time.now - start} (#{folder})"
       code = Code.new(title: code_title, escape_title: escape_title(code_title))
       structMap = StructMap.parse(File.read(structure_path), :single => true)
 
@@ -84,13 +84,13 @@ class Extractor
 
       end
 
-      puts "#{code.title} is built, #{Time.now - start} (#{folder})"
+      puts "#{code.title} is built; #{Time.now - start} (#{folder})"
       
       if code.nil?
-        puts "#{code.title} is nil, do not save"
+        puts "#{code.title} is nil; do not save"
       else
         code.save!
-        puts "#{code.title} saved, #{Time.now - start} (#{folder})"
+        puts "#{code.title} saved; #{Time.now - start} (#{folder})"
       end
     end
 
