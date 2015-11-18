@@ -84,14 +84,13 @@ class Extractor
 
       end
 
-      puts "#{code.title} is built, #{Time.now - start}"
+      puts "#{code.title} is built, #{Time.now - start} (#{folder})"
       
       if code.nil?
         puts "#{code.title} is nil, do not save"
       else
-        puts "Saving #{code.title}, #{Time.now - start}"
         code.save!
-        puts "#{code.title} saved, #{Time.now - start}"
+        puts "#{code.title} saved, #{Time.now - start} (#{folder})"
       end
     end
 
