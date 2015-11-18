@@ -5,7 +5,7 @@ module CodesHelper
     content = "<ul>"
     sections.each do |s|
 
-      if s.articles.where(state: "VIGUEUR").empty?
+      if s.articles.to_ary.all? {|a| a.state != 'VIGUEUR'}
         content += "<li>" + s.title + "</li>"
       else
         content += "<li>" + link_to(s.title, section_path(s)) + "</li>"

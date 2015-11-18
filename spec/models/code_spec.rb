@@ -115,4 +115,42 @@ RSpec.describe Code, type: :model do
 
   end
 
+  describe '.with_vigueur_section_and_articles' do
+
+    context 'when one vigueur section with one article' do
+      before do
+        article = Article.create()
+        section = Section.create(title: 1, state: 'VIGUEUR')
+        section.articles << article
+        code = Code.create!(escape_title: 'code_civil')
+        code.sections << section
+        code.save
+      end
+
+      it "should retrieve one section and one article" do
+        code = Code.with_vigueur_sections_and_articles 'code_civil'
+        expect(code.sections.length).to eq(1)
+        expect(code.sections[0].articles.length).to eq(1)
+      end
+
+    end
+
+    context 'when one vigueur section with no article' do
+      before do
+        section = Section.create(title: 1, state: 'VIGUEUR')
+        code = Code.create!(escape_title: 'code_civil')
+        code.sections << section
+        code.save
+      end
+
+      it "should retrieve one section" do
+        code = Code.with_vigueur_sections_and_articles 'code_civil'
+        expect(code.sections.length).to eq(1)
+        expect(code.sections[0].articles.length).to eq(0)
+      end
+
+    end
+
+  end
+
 end
