@@ -12,13 +12,20 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.cookie-1.3.1
 //= require bootstrap-sprockets
 //= require jquery.navgoco.0.2.1
 //= require_tree .
 
 $(document).ready(function() {
     // Initialize navgoco with default options
-    $("#accordion").navgoco();
+    $("#accordion").navgoco({
+        cookie: {
+            name: 'navgoco',
+            expires: false,
+            path: '/'
+        }
+    });
 
     $(".collapseAll").click(function(e) {
         e.preventDefault();
