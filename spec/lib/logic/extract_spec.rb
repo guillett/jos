@@ -28,7 +28,7 @@ describe 'escape title' do
     @extractor = Extractor.new()
   end
 
-  it 'escpapge title nicely' do
+  it 'escape title nicely' do
     expect(@extractor.escape_title("Code de l'entrée (tip,top) du séjour.()")).to eq("code_de_l_entree_tip_top_du_sejour")
   end
 end
