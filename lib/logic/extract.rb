@@ -60,7 +60,7 @@ class Extractor
       code = Code.new(title: code_title, escape_title: escape_title(code_title))
       structMap = StructMap.parse(File.read(structure_path), :single => true)
 
-      code.sections = structMap.extract_sections()
+      code.sections = structMap.extract_linked_sections()
 
       article_paths = extract_article_xml_paths(folder)
 

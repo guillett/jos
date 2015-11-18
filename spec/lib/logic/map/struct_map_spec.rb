@@ -36,7 +36,7 @@ describe 'mapping of structure file' do
     end
 
     it 'extracts 2 sections' do
-      sections = @structMap.extract_sections()
+      sections = @structMap.extract_linked_sections()
       expect(sections.length).to eq(2)
     end
 

@@ -9,7 +9,7 @@ class LegisctaMap
   has_many :sections, SectionMap, :xpath => 'STRUCTURE_TA'
   has_many :articles, SectionArticleMap, :xpath => 'STRUCTURE_TA'
 
-  def extract_sections
+  def extract_linked_sections
     @sections.map.with_index do |sectionMap, i|
       section = Section.new(sectionMap.to_hash)
       section.order = i
