@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151118113934) do
+ActiveRecord::Schema.define(version: 20151118114211) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,13 @@ ActiveRecord::Schema.define(version: 20151118113934) do
     t.string   "number"
     t.string   "nature"
   end
+
+  create_table "articles_sections", id: false, force: :cascade do |t|
+    t.integer "section_id", null: false
+    t.integer "article_id", null: false
+  end
+
+  add_index "articles_sections", ["section_id", "article_id"], name: "index_articles_sections_on_section_id_and_article_id", using: :btree
 
   create_table "codes", force: :cascade do |t|
     t.string   "title"
