@@ -44,6 +44,7 @@ class Extractor
     puts "#{texte_folders.length} text folders detected"
 
     codes = Parallel.map(texte_folders) do |folder|
+      start = Time.now
       puts "processing #{folder}"
 
       version_path = extract_version_xml_path(folder)
@@ -83,14 +84,14 @@ class Extractor
 
       end
 
-      puts "#{code.title} is built"
+      puts "#{code.title} is built, #{Time.now - start}"
       
       if code.nil?
         puts "#{code.title} is nil, do not save"
       else
-        puts "Saving #{code.title}"
+        puts "Saving #{code.title}, #{Time.now - start}"
         code.save!
-        puts "#{code.title} saved"
+        puts "#{code.title} saved, #{Time.now - start}"
       end
     end
 
