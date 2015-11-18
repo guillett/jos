@@ -12,11 +12,11 @@ RSpec.describe CodesHelper, type: :helper do
         section1.sections = [section1_1]
         sections=[section1, section2]
 
-        @summary = display_summary(sections)
+        @summary = display_summary(sections, 'accordion')
       end
 
       it "display one ul li by level" do
-        expect(@summary).to eq("<ul><li>1</li><ul><li>1.1</li></ul><li>2</li></ul>")
+        expect(@summary).to eq("<ul id='accordion' class='nav'><li><a href='#'>1</a><ul id='' class='nav'><li><a href='#'>1.1</a></li></ul></li><li><a href='#'>2</a></li></ul>")
       end
     end
 
@@ -33,7 +33,7 @@ RSpec.describe CodesHelper, type: :helper do
       end
 
       it "display one ul li by level with a for link" do
-        expect(@summary).to eq("<ul><li><a href=\"/sections/1\">1</a></li></ul>")
+        expect(@summary).to eq("<ul id='' class='nav'><li><a href=\"/sections/1\">1</a></li></ul>")
       end
     end
 
@@ -50,7 +50,7 @@ RSpec.describe CodesHelper, type: :helper do
       end
 
       it "display one ul li by level with a for link" do
-        expect(@summary).to eq("<ul><li>1</li></ul>")
+        expect(@summary).to eq("<ul id='' class='nav'><li><a href='#'>1</a></li></ul>")
       end
     end
 
