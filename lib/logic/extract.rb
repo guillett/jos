@@ -84,10 +84,17 @@ class Extractor
       end
 
       puts "#{code.title} is built"
-      code
+      
+      if code.nil?
+        puts "#{code.title} is nil, do not save"
+      else
+        puts "Saving #{code.title}"
+        code.save!
+        puts "#{code.title} saved"
+      end
     end
 
-    codes.select{|c| !c.nil? }
+    codes.compact
   end
 
   def folder_invalid?(structure_path, version_path)

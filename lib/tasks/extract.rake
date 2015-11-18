@@ -7,6 +7,8 @@ namespace :extract do
   desc "extract laws"
   task :code => :environment do
 
+    puts "start extract"
+
     if ENV["TARGET"].nil?
       puts "define target folder with TARGET='../legi/global/code_et_TNC_en_vigueur/code_en_vigueur' rake extract:code"
       exit 1
@@ -17,11 +19,6 @@ namespace :extract do
     codes = extractor.extract_codes_and_sections(path)
 
     puts "#{codes.length} codes built"
-
-    codes.each do |c|
-      c.save!()
-      p "#{c.title} is saved."
-    end
   end
 
   desc "Download legi global"
