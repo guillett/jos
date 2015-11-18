@@ -1,3 +1,14 @@
 %h1=@code.title
 
-=raw display_summary(@code.summary)
+%p.external
+  %a.collapseAll{href:"#", id: ""} Collapse All
+  |
+  %a.expandAll{href:"#", id: ""} Expand All
+
+
+=raw display_summary(@code.summary, 'accordion')
+
+%p.external
+  %a.collapseAll{href:"#", id: ""} Collapse All
+  |
+  %a.expandAll{href:"#", id: ""} Expand All

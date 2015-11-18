@@ -1,18 +1,17 @@
 module CodesHelper
 
-  def display_summary(sections)
-
-    content = "<ul>"
+  def display_summary(sections, id=nil)
+    content = "<ul id='#{id}' class='nav'>"
     sections.each do |s|
-
       if s.articles.to_ary.all? {|a| a.state != 'VIGUEUR'}
-        content += "<li>" + s.title + "</li>"
+        content += '<li><a href="#">' + s.title + '</a>'
       else
-        content += "<li>" + link_to(s.title, section_path(s)) + "</li>"
+        content += "<li>" + link_to(s.title, section_path(s))
       end
       if !s.sections.empty?
         content += display_summary(s.sections)
       end
+      content += "</li>"
     end
     content += "</ul>"
 

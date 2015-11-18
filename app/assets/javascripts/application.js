@@ -13,5 +13,20 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap-sprockets
-//= require turbolinks
+//= require jquery.navgoco.0.2.1
 //= require_tree .
+
+$(document).ready(function() {
+    // Initialize navgoco with default options
+    $("#accordion").navgoco();
+
+    $(".collapseAll").click(function(e) {
+        e.preventDefault();
+        $("#accordion").navgoco('toggle', false);
+    });
+
+    $(".expandAll").click(function(e) {
+        e.preventDefault();
+        $("#accordion").navgoco('toggle', true);
+    });
+});
