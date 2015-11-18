@@ -34,42 +34,20 @@ describe 'escape title' do
   end
 end
 
-describe '.extract_sections_and_articles' do
+describe '.add_articles_to_sections' do
 
   before do
-    allow(File).to receive(:read).with(anything()).and_return("")
-
     @legisctaMapInstanceMock = instance_double("LegisctaMap")
-    LegisctaMapMock = class_double("LegisctaMap").as_stubbed_const()
-    allow(LegisctaMapMock).to receive(:parse).with(anything(), anything()).and_return(@legisctaMapInstanceMock)
-
     allow(@legisctaMapInstanceMock).to receive(:id).and_return("1")
   end
 
-  context 'with one section in Legiscta' do
-    before do
-      section = Section.new()
-      allow(@legisctaMapInstanceMock).to receive(:extract_sections).and_return([section])
-      allow(@legisctaMapInstanceMock).to receive(:extract_articles).with(anything()).and_return([])
-
-      extractor = Extractor.new()
-      @code = Code.new()
-      extractor.extract_sections_and_articles([], @code, ["1"])
-    end
-
-    it 'add one section in the code' do
-      expect(@code.sections.length).to eq(1)
-    end
-  end
 
   context 'with 2 articles belonging to two sections each in Legiscta' do
     before do
       a1 = Article.new()
       a2 = Article.new()
 
-      allow(@legisctaMapInstanceMock).to receive(:extract_sections).and_return([])
       allow(@legisctaMapInstanceMock).to receive(:extract_articles).with(anything()).and_return([a1, a2])
-
 
       s1 = Section.new(id_section_origin: "1")
       s2 = Section.new(id_section_origin: "1")
@@ -78,7 +56,7 @@ describe '.extract_sections_and_articles' do
       @code.sections += [s1,s2]
 
       extractor = Extractor.new()
-      extractor.extract_sections_and_articles([], @code, ["1"])
+      extractor.add_articles_to_sections(@code, @code, @legisctaMapInstanceMock)
     end
 
     it 'add two articles each 2 sections' do

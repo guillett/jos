@@ -71,8 +71,12 @@ class Extractor
       end
 
       sections_ta_paths = extract_sections_ta_xml_paths(folder)
-      extract_sections_and_articles(article_maps, code, sections_ta_paths)
 
+      legisctas = parse_all_legiscta sections_ta_paths
+      legisctas.each{ |l| code.sections += l.extract_linked_sections() }
+      legisctas.each{ |l| add_articles_to_sections(code, article_maps, l) }
+
+      code.sections
       puts "#{code.title} is built; #{Time.now - start} (#{folder})"
       
       if code.nil?
@@ -86,22 +90,20 @@ class Extractor
     codes.compact
   end
 
-  def extract_sections_and_articles(article_maps, code, sections_ta_paths)
-    sections_ta_paths.each do |section_ta|
-      legisctaMap = LegisctaMap.parse(File.read(section_ta), :single => true)
-      code.sections += legisctaMap.extract_sections()
-    # end
-    #
-    # sections_ta_paths.each do |section_ta|
-    #   legisctaMap = LegisctaMap.parse(File.read(section_ta), :single => true)
-      articles = legisctaMap.extract_articles(article_maps)
+  def parse_all_legiscta paths
+    paths.map { |p| LegisctaMap.parse(File.read(p), :single => true) }
+  end
 
-      if !articles.empty?
-        sections = code.sections.find_all { |s| s.id_section_origin == legisctaMap.id }
-        puts "!!!!! section #{legisctaMap.id} not found for articles #{articles.map{|a| a.id_article_origin}.join(', ')} !!!!" if sections.empty?
-        sections.each{ |s| s.articles += articles  }
+  def add_articles_to_sections(code, article_maps, legisctas_map)
+    articles = legisctas_map.extract_articles(article_maps)
+    if !articles.empty?
+      sections = code.sections.find_all { |s| s.id_section_origin == legisctas_map.id }
+
+      if sections.empty?
+        raise "section #{legisctas_map.id} not found for articles #{articles.map{|a| a.id_article_origin}.join(', ')}"
       end
 
+      sections.each{ |s| s.articles += articles  }
     end
   end
 
