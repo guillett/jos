@@ -1,8 +1,7 @@
 %h1=@section.title
 - @section.summary.each do |a|
   %h2= "#{a.nature}  #{a.number}"
-  %h3= "Texte "
-  %p= a.text
+  %p= raw(a.text)
   -unless a.nota.blank?
     %h3= "Nota "
-    %p= a.nota
+    %p= raw(a.nota)
