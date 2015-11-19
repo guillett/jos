@@ -20,7 +20,7 @@ RSpec.describe CodesHelper, type: :helper do
       end
     end
 
-    describe "with one link" do
+    describe "with one section article in VIGUEUR" do
       before do
         section =Section.create({title: "1"})
         article = Article.new(id:3, state: "VIGUEUR")
@@ -37,7 +37,24 @@ RSpec.describe CodesHelper, type: :helper do
       end
     end
 
-    describe "with one link" do
+    describe "with one section article in ABROGE_DIFF" do
+      before do
+        section =Section.create({title: "1"})
+        article = Article.new(id:3, state: "ABROGE_DIFF")
+
+        section.articles << article
+
+        sections=[section]
+
+        @summary = display_summary(sections)
+      end
+
+      it "display one ul li by level with a for link" do
+        expect(@summary).to eq("<ul id='' class='nav'><li><a href=\"/sections/1\">1</a></li></ul>")
+      end
+    end
+
+    describe "with one section no article displayable" do
       before do
         section =Section.create({title: "1"})
         article = Article.new(id:3, state: "MODIFIE")
@@ -49,7 +66,7 @@ RSpec.describe CodesHelper, type: :helper do
         @summary = display_summary(sections)
       end
 
-      it "display one ul li by level with a for link" do
+      it "display one ul li by level with no link" do
         expect(@summary).to eq("<ul id='' class='nav'><li><a href='#'>1</a></li></ul>")
       end
     end

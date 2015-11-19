@@ -45,7 +45,7 @@ describe 'mapping of sections links' do
     end
 
     it 'extracts 2 sections' do
-      sections = @legisctaMap.extract_sections()
+      sections = @legisctaMap.extract_linked_sections()
       expect(sections.length).to eq(2)
     end
 
