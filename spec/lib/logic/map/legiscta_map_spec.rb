@@ -37,7 +37,7 @@ describe 'mapping of sections links' do
     end
 
     it 'maps correctly one article section link' do
-      expect(@legisctaMap.articles.length).to eq(1)
+      expect(@legisctaMap.article_links.length).to eq(1)
     end
 
     it 'maps correctly the id' do
