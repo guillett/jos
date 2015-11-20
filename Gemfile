@@ -30,6 +30,7 @@ gem 'haml-rails'
 
 gem 'nokogiri-happymapper', :require => 'happymapper'
 gem 'parallel'
+gem 'wombat'
 
 gem 'bootstrap-sass'
 
