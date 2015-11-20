@@ -9,7 +9,25 @@ def fake_article_file article, nb_of_link
   <META_COMMUN>
   FOO
 
-  body = "<ID>#{article[:id_article_origin]}</ID><NATURE>#{article[:nature]}</NATURE></META_COMMUN></META><NOTA><CONTENU>#{article[:nota_content]}</CONTENU></NOTA><BLOC_TEXTUEL><CONTENU>#{article[:text_content]}</CONTENU></BLOC_TEXTUEL><LIENS>"
+  body = "<ID>#{article[:id_article_origin]}</ID>
+<NATURE>#{article[:nature]}</NATURE>
+</META_COMMUN>
+    <META_SPEC>
+      <META_ARTICLE>
+        <NUM>L711-23</NUM>
+        <ETAT>VIGUEUR</ETAT>
+        <DATE_DEBUT>2015-01-01</DATE_DEBUT>
+        <DATE_FIN>2999-01-01</DATE_FIN>
+        <TYPE>AUTONOME</TYPE>
+      </META_ARTICLE>
+    </META_SPEC>
+</META>
+<NOTA>
+<CONTENU>#{article[:nota_content]}</CONTENU>
+</NOTA>
+<BLOC_TEXTUEL>
+<CONTENU>#{article[:text_content]}</CONTENU>
+</BLOC_TEXTUEL><LIENS>"
 
   nb_of_link.times do
     body += "<LIEN cidtexte='LEGITEXT000005627819' datesignatexte='2999-01-01' id='#{article[:link_id]}' naturetexte='CODE' nortexte='' num='150' numtexte='' sens='cible' typelien='CITATION'>#{article[:link_title]}</LIEN>"
@@ -44,8 +62,10 @@ describe 'mapping of articles' do
       expect(@articleMap.id).to   eq("LEGIARTI000006204293")
       expect(@articleMap.nature).to eq("ARTICLE")
       expect(@articleMap.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>")
-      expect(@articleMap.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>")
-      #expect(@articleMap.links.length).to eq(1)
+      expect(@articleMap.state).to eq("VIGUEUR")
+      expect(@articleMap.start_date).to eq("2015-01-01")
+      expect(@articleMap.end_date).to eq("2999-01-01")
+      expect(@articleMap.number).to eq("L711-23")
     end
 
     xit 'maps correctly the article link' do
