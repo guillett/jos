@@ -37,8 +37,18 @@ class Code < ActiveRecord::Base
     sections_vigueur.select{ |s| s.id == id }
   end
 
-  def self.with_displayable_sections_and_articles escape_title
-    Code.includes(sections: :articles).where(sections: { state: ['VIGUEUR','ABROGE_DIFF'] }).find_by escape_title: escape_title
+  def self.with_displayable_sections_and_articles_by_escape_title escape_title
+    with_displayable_sections_and_articles().find_by escape_title: escape_title
+  end
+
+  def self.with_displayable_sections_and_articles_by_code_id code_id
+    with_displayable_sections_and_articles().find(code_id)
+  end
+
+  private
+
+  def self.with_displayable_sections_and_articles
+    Code.includes(sections: :articles).where(sections: { state: ['VIGUEUR','ABROGE_DIFF'] })
   end
 
 end

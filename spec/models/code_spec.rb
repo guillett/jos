@@ -113,7 +113,7 @@ RSpec.describe Code, type: :model do
       end
 
       it "should retrieve one section and one article" do
-        code = Code.with_displayable_sections_and_articles 'code_civil'
+        code = Code.with_displayable_sections_and_articles_by_escape_title 'code_civil'
         expect(code.sections.length).to eq(1)
         expect(code.sections[0].articles.length).to eq(1)
       end
@@ -131,7 +131,7 @@ RSpec.describe Code, type: :model do
       end
 
       it "should retrieve two sections" do
-        code = Code.with_displayable_sections_and_articles 'code_civil'
+        code = Code.with_displayable_sections_and_articles_by_escape_title 'code_civil'
         expect(code.sections.length).to eq(2)
       end
 
