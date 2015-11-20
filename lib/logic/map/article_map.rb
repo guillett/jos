@@ -1,4 +1,5 @@
-require './lib/logic/map/link_article_map'
+require './lib/logic/map/version_article_map'
+#require './lib/logic/map/link_article_map'
 
 class ArticleMap
   include HappyMapper
@@ -8,6 +9,7 @@ class ArticleMap
   has_one :nature, String, :xpath => 'META/META_COMMUN/NATURE'
   has_one :nota, String, :xpath => 'NOTA/CONTENU'
   has_one :text, String, :xpath => 'BLOC_TEXTUEL/CONTENU'
+  has_many :versions, VersionArticleMap, :xpath => 'VERSIONS'
   #has_many :links, LinkArticleMap, :xpath => 'LIENS'
 
   def nota
@@ -26,6 +28,16 @@ class ArticleMap
 
   def self.parse_with_escape_br xml, options
     self.parse(xml.gsub( /<br\/?>/, "\n"), options)
+  end
+
+  def extract_linked_versions
+    article_version = []
+    unless @versions.nil?
+      @versions.map do |v|
+        article_version = Article.find(v.id_article_origin)
+      end
+    end
+    article_version
   end
 end
 

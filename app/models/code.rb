@@ -18,7 +18,7 @@ class Code < ActiveRecord::Base
 
     sections_vigueur.select{ |s| s.level == 1 }
   end
-  
+
   def summary_start_id id
     hash = {}
 

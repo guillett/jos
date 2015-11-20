@@ -28,6 +28,7 @@ class LegisctaMap
         article.nature = article_map.nature
         article.nota = article_map.nota
         article.text = article_map.text
+        article.versions = article_map.extract_linked_versions
       end
 
       article
