@@ -9,7 +9,7 @@ RSpec.describe Article, type: :model do
       @article_1.save()
     end
 
-    it "retrieves all versions of article" do
+    it "retrieves fisrt version of 1 article" do
       article_1 = Article.find(@article_1.id)
       expect(article_1.versions.first).to eq(@article_2)
     end
