@@ -1,6 +1,6 @@
 require 'rails_helper'
 require './lib/logic/extract'
-require './lib/logic/map/section_map'
+require './lib/logic/map/link_section_map'
 require './lib/logic/map/legiscta_map'
 
 describe 'mapping of sections links' do

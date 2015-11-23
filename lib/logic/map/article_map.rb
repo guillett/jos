@@ -42,19 +42,18 @@ class ArticleMap
     self.parse(xml.gsub( /<br\/?>/, "\n"), options)
   end
 
-  def extract_linked_versions
-    article_version = []
-    unless @versions.nil?
-      @versions.map do |v|
-        article_version = Article.find(v.id_article_origin)
-      end
-    end
-    article_version
-  end
-
   def to_article
     Article.new(to_hash)
   end
 
+  def to_article_versions_hash
+    unless @versions.nil?
+      @versions.map do |versionArticleMap|
+        h = versionArticleMap.to_hash
+        h['source_id_article_origin'] = @id_article_origin
+        h
+      end
+    end
+  end
 end
 

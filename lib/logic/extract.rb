@@ -58,28 +58,28 @@ class Extractor
       code_title =get_code_title( Nokogiri.Slop(File.read(version_path)))
       puts "Building #{code_title}; #{Time.now - start} (#{folder})"
       code = Code.new(title: code_title, escape_title: escape_title(code_title))
+
+      #puts "code: #{code.title} articles paths: #{article_paths.length}"
+
       structMap = StructMap.parse(File.read(structure_path), :single => true)
-
-      article_paths = extract_article_xml_paths(folder)
-      sections_ta_paths = extract_sections_ta_xml_paths(folder)
-
-      puts "code: #{code.title} articles paths: #{article_paths.length}"
-
-      article_maps = parse_all_legiarti(article_paths)
-      legisctas = parse_all_legiscta sections_ta_paths
-
-      # articles = article_maps.map { |a| a.to_article() }
-
-      sections = legisctas.map { |s| s.to_section() }
-
       code_section_link_hashs = structMap.to_section_links_hash()
+      sections_ta_paths = extract_sections_ta_xml_paths(folder)
+      legisctas = parse_all_legiscta(sections_ta_paths)
+      sections = legisctas.map { |s| s.to_section() }
       section_link_hashs = legisctas.map { |s| s.to_section_links_hash() }.compact.flatten
-
-      # article_link_hashs = legisctas.map { |s| s.to_article_links_hash() }
-
       link_code_sections(code, sections, code_section_link_hashs)
       link_sections(sections, section_link_hashs)
-      # link_articles
+
+      article_paths = extract_article_xml_paths(folder)
+      article_maps = parse_all_legiarti(article_paths)
+      articles = article_maps.map { |a| a.to_article() }
+
+      puts "#{code.title} has #{articles.length} articles"
+
+      article_version_hashs = article_maps.map { |a| a.to_article_versions_hash() }.compact.flatten
+      version_articles(articles, article_version_hashs)
+      article_link_hashs = legisctas.map { |s| s.to_article_links_hash() }.compact.flatten
+      link_articles(sections, articles, article_link_hashs)
 
       code.sections += sections
 
@@ -123,27 +123,32 @@ class Extractor
     end
   end
 
+  def version_articles(articles, article_version_hashs)
+    articles_hash = articles.reduce({}) { |h, a| h[a.id_article_origin] = a; h }
+
+    article_version_hashs.each do |av|
+      articles_hash[av["source_id_article_origin"]].versions << articles_hash[av["id_article_origin"]]
+    end
+  end
+
+  def link_articles(sections, articles, article_link_hashs)
+    sections_hash = sections.reduce({}) { |h, s| h[s.id_section_origin] = s; h }
+    articles_hash = articles.reduce({}) { |h, a| h[a.id_article_origin] = a; h }
+
+    article_link_hashs.each do |al|
+      section_source = sections_hash[al["source_id_section_origin"]]
+      article_target = articles_hash[al["target_id_article_origin"]]
+      article_link = SectionArticleLink.new(section: section_source, article: article_target, state: al['state'], start_date: al['start_date'], end_date: al['end_date'], order: al['order'])
+      section_source.section_article_links << article_link
+    end
+  end
+
   def parse_all_legiarti(article_paths)
     article_paths.map { |article_path| ArticleMap.parse_with_escape_br(File.read(article_path), :single => true) }
   end
 
   def parse_all_legiscta paths
     paths.map { |p| LegisctaMap.parse(File.read(p), :single => true) }
-  end
-
-  def add_articles_to_sections(code, article_maps, legisctas_map)
-    articles = legisctas_map.extract_articles(article_maps)
-    if !articles.empty?
-      sections = code.sections.find_all { |s| s.id_section_origin == legisctas_map.id }
-
-      if sections.empty?
-        puts "!!!!"
-        puts "!!!! section #{legisctas_map.id} not found for articles #{articles.map{|a| a.id_article_origin}.join(', ')}"
-        puts "!!!!"
-      end
-
-      sections.each{ |s| s.articles += articles  }
-    end
   end
 
   def folder_invalid?(structure_path, version_path)

@@ -1,5 +1,5 @@
 require 'rails_helper'
-require './lib/logic/map/section_map'
+require './lib/logic/map/link_section_map'
 require './lib/logic/map/struct_map'
 
 describe 'mapping of structure file' do

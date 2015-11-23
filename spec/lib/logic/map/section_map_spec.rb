@@ -1,6 +1,6 @@
 require 'rails_helper'
 require './lib/logic/extract'
-require './lib/logic/map/section_map'
+require './lib/logic/map/link_section_map'
 require './lib/logic/map/struct_map'
 
 def fake_struct_file section, nb_of_link
@@ -26,7 +26,7 @@ describe 'mapping of sections links' do
                                                 id_section_parent_origin: "LEGITEXT000005627819"},
                                             1)
 
-      @sectionLinkHash = SectionMap.parse(@xml, :single => true).to_hash
+      @sectionLinkHash = LinkSectionMap.parse(@xml, :single => true).to_hash
     end
 
     it 'maps correctly the section link' do

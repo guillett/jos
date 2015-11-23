@@ -1,4 +1,4 @@
-require './lib/logic/map/section_article_map'
+require './lib/logic/map/link_article_section_map'
 
 def fake_section_article_link
   '<LIEN_ART debut="2002-03-28" etat="MODIFIE" fin="2002-12-14" id="LEGIARTI000006391999" num="L3534-7" origine="LEGI"/>'

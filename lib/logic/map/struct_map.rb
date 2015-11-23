@@ -1,11 +1,11 @@
-require './lib/logic/map/section_map'
+require './lib/logic/map/link_section_map'
 
 class StructMap
   include HappyMapper
   tag 'TEXTELR'
 
   has_one :id_section_origin, String, :xpath => 'META/META_COMMUN/ID'
-  has_many :section_links, SectionMap, :xpath => 'STRUCT'
+  has_many :section_links, LinkSectionMap, :xpath => 'STRUCT'
 
   # def extract_linked_sections
   #   @sections.map.with_index do |s, i|
