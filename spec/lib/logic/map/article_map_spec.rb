@@ -2,7 +2,7 @@ require 'rails_helper'
 require './lib/logic/extract'
 require './lib/logic/map/article_map'
 
-def fake_article_file article, nb_of_link
+def fake_article_file article, nb_of_versions
   header = <<-FOO
   <ARTICLE>
   <META>
@@ -14,27 +14,31 @@ def fake_article_file article, nb_of_link
 </META_COMMUN>
     <META_SPEC>
       <META_ARTICLE>
-        <NUM>L711-23</NUM>
-        <ETAT>VIGUEUR</ETAT>
-        <DATE_DEBUT>2015-01-01</DATE_DEBUT>
-        <DATE_FIN>2999-01-01</DATE_FIN>
+        <NUM>#{article[:number]}</NUM>
+        <ETAT>#{article[:state]}</ETAT>
+        <DATE_DEBUT>#{article[:start_date]}</DATE_DEBUT>
+        <DATE_FIN>#{article[:end_date]}</DATE_FIN>
         <TYPE>AUTONOME</TYPE>
       </META_ARTICLE>
     </META_SPEC>
 </META>
+<VERSIONS>"
+
+  nb_of_versions.times do
+    body += "<VERSION etat='MODIFIE'>
+<LIEN_ART debut='2000-09-21' etat='MODIFIE' fin='2009-11-01' id='#{article[:id_article_origin_version]}' num='L110-1' origine='LEGI'/>
+</VERSION>"
+  end
+
+body += "</VERSIONS>
 <NOTA>
 <CONTENU>#{article[:nota_content]}</CONTENU>
 </NOTA>
 <BLOC_TEXTUEL>
 <CONTENU>#{article[:text_content]}</CONTENU>
-</BLOC_TEXTUEL><LIENS>"
-
-  nb_of_link.times do
-    body += "<LIEN cidtexte='LEGITEXT000005627819' datesignatexte='2999-01-01' id='#{article[:link_id]}' naturetexte='CODE' nortexte='' num='150' numtexte='' sens='cible' typelien='CITATION'>#{article[:link_title]}</LIEN>"
-  end
+</BLOC_TEXTUEL>"
 
   footer = <<-FOO
-  </LIENS>
   </ARTICLE>
   FOO
 
@@ -43,36 +47,57 @@ end
 
 describe 'mapping of articles' do
 
-  describe "when we have one article" do
+  context "when we have one article without versions" do
 
     before do
       @xml = fake_article_file({  id_article_origin: "LEGIARTI000006204293",
                                   nota_content: "Décret n° 2006-975 du 1er août 2006 art. 8 :<br/> I.-Les dispositions du présent décret entrent en vigueur le 1er septembre 2006.",
                                   text_content: "I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>",
+                                  number: "L711-23",
                                   nature: "ARTICLE",
-                                  link_id: "LEGIARTI000017843672",
-                                  link_title: "Code des marchés publics - art. 150 (V)"
-                               },
-                              1)
+                                  start_date: "2015-01-01",
+                                  end_date: "2999-01-01",
+                                  state: "VIGUEUR",
+                                  id_article_origin_version: ""
+                               }, 0)
 
-      articleMap = ArticleMap.parse_with_escape_br(@xml, :single => true)
-      @article = articleMap.to_article
+      @articleMap = ArticleMap.parse_with_escape_br(@xml, :single => true)
     end
 
     it 'maps correctly the article' do
-      expect(@article.id_article_origin).to   eq("LEGIARTI000006204293")
-      expect(@article.nature).to eq("ARTICLE")
-      expect(@article.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>")
-      expect(@article.state).to eq("VIGUEUR")
-      expect(@article.start_date).to eq("2015-01-01")
-      expect(@article.end_date).to eq("2999-01-01")
-      expect(@article.number).to eq("L711-23")
+      expect(@articleMap.id_article_origin).to   eq("LEGIARTI000006204293")
+      expect(@articleMap.nature).to eq("ARTICLE")
+      expect(@articleMap.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>")
+      expect(@articleMap.nota).to eq("Décret n° 2006-975 du 1er août 2006 art. 8 :<br/> I.-Les dispositions du présent décret entrent en vigueur le 1er septembre 2006.")
+      expect(@articleMap.state).to eq("VIGUEUR")
+      expect(@articleMap.start_date).to eq("2015-01-01")
+      expect(@articleMap.end_date).to eq("2999-01-01")
+      expect(@articleMap.number).to eq("L711-23")
+      expect(@articleMap.versions.length).to eq(0)
     end
 
-    xit 'maps correctly the article link' do
-      articleLinkHash = @article.links.first.to_hash
-      expect(articleLinkHash["id_link_origin"]).to  eq("LEGIARTI000017843672")
-      expect(articleLinkHash["title"]).to           eq("Code des marchés publics - art. 150 (V)")
+  end
+
+  context "when we have one article with 1 version" do
+
+    before do
+      @xml = fake_article_file({  id_article_origin: "LEGIARTI000006204293",
+                                  nota_content: "Décret n° 2006-975 du 1er août 2006 art. 8 :<br/> I.-Les dispositions du présent décret entrent en vigueur le 1er septembre 2006.",
+                                  text_content: "I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>",
+                                  number: "L711-23",
+                                  nature: "ARTICLE",
+                                  start_date: "2015-01-01",
+                                  end_date: "2015-01-01",
+                                  state: "VIGUEUR",
+                                  id_article_origin_version: "LEGIARTI000006219125"
+                               }, 1)
+
+      @articleMap = ArticleMap.parse_with_escape_br(@xml, :single => true)
+    end
+
+    it 'maps correctly the article version' do
+      expect(@articleMap.versions.length).to eq(1)
+      expect(@articleMap.versions[0].id_article_origin).to eq("LEGIARTI000006219125")
     end
 
   end
