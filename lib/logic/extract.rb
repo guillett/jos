@@ -72,11 +72,12 @@ class Extractor
 
       sections = legisctas.map { |s| s.to_section() }
 
-      section_link_hashs = structMap.to_section_links_hash()
-      section_link_hashs += legisctas.map { |s| s.to_section_links_hash() }.compact.flatten
+      code_section_link_hashs = structMap.to_section_links_hash()
+      section_link_hashs = legisctas.map { |s| s.to_section_links_hash() }.compact.flatten
 
       # article_link_hashs = legisctas.map { |s| s.to_article_links_hash() }
 
+      link_code_sections(code, sections, code_section_link_hashs)
       link_sections(sections, section_link_hashs)
       # link_articles
 
@@ -95,8 +96,16 @@ class Extractor
     codes.compact
   end
 
-  def link_sections(sections, section_link_hashs)
+  def link_code_sections(code, sections, code_section_link_hashs)
+    sections_hash = sections.reduce({}) { |h, s| h[s.id_section_origin] = s; h }
+    code_section_link_hashs.each do |csl|
+      target = sections_hash[csl["target_id_section_origin"]]
+      code_section_link = CodeSectionLink.new(code: code, section: target, state: csl['state'], start_date: csl['start_date'], end_date: csl['end_date'], order: csl['order'])
+      code.code_section_links << code_section_link
+    end
+  end
 
+  def link_sections(sections, section_link_hashs)
     sections_hash = sections.reduce({}) { |h, s| h[s.id_section_origin] = s; h }
 
     section_link_hashs.each do |sl|

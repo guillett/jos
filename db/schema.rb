@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151120162856) do
+ActiveRecord::Schema.define(version: 20151123123006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,20 @@ ActiveRecord::Schema.define(version: 20151120162856) do
   end
 
   add_index "articles_sections", ["section_id", "article_id"], name: "index_articles_sections_on_section_id_and_article_id", using: :btree
+
+  create_table "code_section_links", force: :cascade do |t|
+    t.integer  "code_id"
+    t.integer  "section_id"
+    t.string   "state"
+    t.integer  "order"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "code_section_links", ["code_id"], name: "index_code_section_links_on_code_id", using: :btree
+  add_index "code_section_links", ["section_id"], name: "index_code_section_links_on_section_id", using: :btree
 
   create_table "codes", force: :cascade do |t|
     t.string   "title"

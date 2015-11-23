@@ -1,5 +1,6 @@
 class Code < ActiveRecord::Base
   has_many :sections, :dependent => :delete_all
+  has_many :code_section_links, :dependent => :delete_all
 
   def summary
     hash = {}

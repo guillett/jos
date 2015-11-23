@@ -100,6 +100,38 @@ describe '.link_sections' do
   end
 end
 
+describe '.link_code_sections' do
+  context 'with 2 section and one section_link_hash' do
+
+    before do
+      extractor = Extractor.new()
+      @code = Code.new()
+      @s1 = Section.new(id_section_origin: '1')
+      @s2 = Section.new(id_section_origin: '2')
+      section_link_hash = {
+          'source_id_section_origin'=> 'idDuCode', 'target_id_section_origin'=> '1',
+          'state' => 'vigueur',
+          'start_date' => DateTime.parse('1996-01-01'),
+          'end_date' => DateTime.parse('1997-01-01'),
+          'order' => 1
+      }
+      extractor.link_code_sections(@code, [@s1,@s2],[section_link_hash])
+    end
+
+    it 'links correctly the 2 sections' do
+      expect(@code.code_section_links.first.section).to be(@s1)
+    end
+
+    it "the link has all the value" do
+      expect(@code.code_section_links.first.state).to eq('vigueur')
+      expect(@code.code_section_links.first.start_date).to eq('1996-01-01')
+      expect(@code.code_section_links.first.end_date).to eq('1997-01-01')
+      expect(@code.code_section_links.first.order).to eq(1)
+    end
+
+  end
+end
+
 describe 'truc' do
   context 'yop' do
 
@@ -129,8 +161,6 @@ describe 'truc' do
 
     def buildIt sections, links
       sections_hash = sections.reduce({}) { |h, s| h[s.id]=s; h }
-
-      pp sections_hash
 
       links.each do |l|
         source = sections_hash[l.source_id]
