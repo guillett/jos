@@ -1,4 +1,4 @@
-class SectionMap
+class LinkSectionMap
   include HappyMapper
 
   tag 'LIEN_SECTION_TA'
