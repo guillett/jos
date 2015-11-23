@@ -5,7 +5,9 @@ class LegisctaMap
   include HappyMapper
 
   tag 'SECTION_TA'
-  element :id, String, :xpath => 'ID'
+  element :id_section_origin, String, :xpath => 'ID'
+  element :title, String, :xpath => 'TITRE_TA'
+
   has_many :sections, SectionMap, :xpath => 'STRUCTURE_TA'
   has_many :article_links, SectionArticleMap, :xpath => 'STRUCTURE_TA'
 
@@ -33,6 +35,10 @@ class LegisctaMap
 
       article
     end
+  end
+
+  def to_section
+    Section.new(id_section_origin: id_section_origin, title: title)
   end
 
 end

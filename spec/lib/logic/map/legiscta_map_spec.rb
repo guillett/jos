@@ -63,6 +63,12 @@ describe 'mapping of sections links' do
       expect(articles[0].nature).to eq('nature')
     end
 
+    it 'extracts to section' do
+      section = @legisctaMap.to_section
+      expect(section.title).to eq('Partie législative')
+      expect(section.id_section_origin).to eq('LEGISCTA000006088000')
+    end
+
   end
 
 end
