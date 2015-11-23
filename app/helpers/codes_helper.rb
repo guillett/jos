@@ -8,8 +8,13 @@ module CodesHelper
       else
         content += "<li>" + link_to(s.title, section_path(s))
       end
-      if !s.sections.empty?
-        content += display_summary(s.sections)
+      if !s.section_links.empty?
+        child_sections = s.section_links
+          .select{|sl| %w{VIGUEUR ABROGE_DIFF}.include?(sl.state) }
+          .sort_by{ |sl| sl.order }
+          .map{ |sl| sl.target }
+
+        content += display_summary(child_sections)
       end
       content += "</li>"
     end

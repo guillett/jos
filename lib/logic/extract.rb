@@ -118,7 +118,7 @@ class Extractor
 
       source = sections_hash[sl["source_id_section_origin"]]
       target = sections_hash[sl["target_id_section_origin"]]
-      section_link = SectionLink.new(source: source, target: target, state: sl['state'], start_date: sl['start_date'], end_date: sl['end_date'])
+      section_link = SectionLink.new(source: source, target: target, state: sl['state'], start_date: sl['start_date'], end_date: sl['end_date'], order: sl['order'])
       source.section_links << section_link
     end
   end

@@ -81,7 +81,8 @@ describe '.link_sections' do
       'source_id_section_origin'=> '1', 'target_id_section_origin'=> '2',
       'state' => 'vigueur',
       'start_date' => DateTime.parse('1996-01-01'),
-      'end_date' => DateTime.parse('1997-01-01')
+      'end_date' => DateTime.parse('1997-01-01'),
+      'order' => 1
       }
       extractor.link_sections([@s1,@s2],[section_link_hash])
     end
@@ -94,7 +95,7 @@ describe '.link_sections' do
       expect(@s1.section_links.first.state).to eq('vigueur')
       expect(@s1.section_links.first.start_date).to eq('1996-01-01')
       expect(@s1.section_links.first.end_date).to eq('1997-01-01')
-
+      expect(@s1.section_links.first.order).to eq(1)
     end
 
   end

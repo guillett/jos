@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 20151123162957) do
     t.integer  "target_id",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "order"
   end
 
   create_table "sections", force: :cascade do |t|
