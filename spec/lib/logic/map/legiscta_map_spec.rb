@@ -32,8 +32,8 @@ describe 'mapping of sections links' do
       @legisctaMap = LegisctaMap.parse(fake_scta_file, :single => true)
     end
 
-    it 'maps correctly two section link' do
-      expect(@legisctaMap.sections.length).to eq(2)
+    it 'maps correctly two section links' do
+      expect(@legisctaMap.section_links.length).to eq(2)
     end
 
     it 'maps correctly one article section link' do
@@ -41,26 +41,17 @@ describe 'mapping of sections links' do
     end
 
     it 'maps correctly the id' do
-      expect(@legisctaMap.id).to eq("LEGISCTA000006088000")
+      expect(@legisctaMap.id_section_origin).to eq("LEGISCTA000006088000")
     end
 
-    it 'extracts 2 sections' do
-      sections = @legisctaMap.extract_linked_sections()
-      expect(sections.length).to eq(2)
+    it 'extracts 2 section links' do
+      section_links = @legisctaMap.to_section_links_hash()
+      expect(section_links.length).to eq(2)
     end
 
-    it 'extracts 1 article' do
-      article_map = ArticleMap.new()
-      article_map.nota = "nota"
-      article_map.text = "text"
-      article_map.nature = "nature"
-      article_map.id = '1'
-
-      articles = @legisctaMap.extract_articles([article_map])
-      expect(articles.length).to eq(1)
-      expect(articles[0].text).to eq('text')
-      expect(articles[0].nota).to eq('nota')
-      expect(articles[0].nature).to eq('nature')
+    it 'extracts 1 article link' do
+      article_link = @legisctaMap.to_article_links_hash
+      expect(article_link.length).to eq(1)
     end
 
     it 'extracts to section' do
