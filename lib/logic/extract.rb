@@ -63,10 +63,13 @@ class Extractor
 
       structMap = StructMap.parse(File.read(structure_path), :single => true)
       code_section_link_hashs = structMap.to_section_links_hash()
+
       sections_ta_paths = extract_sections_ta_xml_paths(folder)
       legisctas = parse_all_legiscta(sections_ta_paths)
+
       sections = legisctas.map { |s| s.to_section() }
       section_link_hashs = legisctas.map { |s| s.to_section_links_hash() }.compact.flatten
+
       link_code_sections(code, sections, code_section_link_hashs)
       link_sections(sections, section_link_hashs)
 
@@ -78,7 +81,9 @@ class Extractor
 
       article_version_hashs = article_maps.map { |a| a.to_article_versions_hash() }.compact.flatten
       version_articles(articles, article_version_hashs)
+
       article_link_hashs = legisctas.map { |s| s.to_article_links_hash() }.compact.flatten
+
       link_articles(sections, articles, article_link_hashs)
 
       code.sections += sections
