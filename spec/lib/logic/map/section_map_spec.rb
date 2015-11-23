@@ -18,13 +18,13 @@ describe 'mapping of sections links' do
 
     before do
       @xml = fake_struct_file({   id_section_origin: "LEGISCTA000006083133",
-                                                title: "PREMIÈRE PARTIE : DISPOSITIONS APPLICABLES AUX POUVOIRS ADJUDICATEURS",
-                                                level: 1,
-                                                state: "VIGUEUR",
-                                                start_date: "2006-09-01",
-                                                end_date: "2999-01-01",
-                                                id_section_parent_origin: "LEGITEXT000005627819"},
-                                            1)
+                                  title: "PREMIÈRE PARTIE : DISPOSITIONS APPLICABLES AUX POUVOIRS ADJUDICATEURS",
+                                  level: 1,
+                                  state: "VIGUEUR",
+                                  start_date: "2006-09-01",
+                                  end_date: "2999-01-01",
+                                  id_section_parent_origin: "LEGITEXT000005627819"},
+                              1)
 
       @sectionLinkHash = LinkSectionMap.parse(@xml, :single => true).to_hash
     end
@@ -35,17 +35,7 @@ describe 'mapping of sections links' do
       expect(@sectionLinkHash["state"]).to                    eq("VIGUEUR")
       expect(@sectionLinkHash["start_date"]).to               eq("2006-09-01")
       expect(@sectionLinkHash["end_date"]).to                 eq("2999-01-01")
-      expect(@sectionLinkHash["id_section_origin"]).to        eq("LEGISCTA000006083133")
-    end
-
-    it 'create correctly the section model' do
-      section = Section.new(@sectionLinkHash)
-      expect(section.title).to                    eq("PREMIÈRE PARTIE : DISPOSITIONS APPLICABLES AUX POUVOIRS ADJUDICATEURS")
-      expect(section.level).to                    eq(1)
-      expect(section.state).to                    eq("VIGUEUR")
-      expect(section.start_date).to               eq("2006-09-01")
-      expect(section.end_date).to                 eq("2999-01-01")
-      expect(section.id_section_origin).to        eq("LEGISCTA000006083133")
+      expect(@sectionLinkHash["target_id_section_origin"]).to eq("LEGISCTA000006083133")
     end
 
   end
