@@ -60,23 +60,28 @@ class Extractor
       code = Code.new(title: code_title, escape_title: escape_title(code_title))
       structMap = StructMap.parse(File.read(structure_path), :single => true)
 
-      code.sections = structMap.extract_linked_sections()
-
       article_paths = extract_article_xml_paths(folder)
+      sections_ta_paths = extract_sections_ta_xml_paths(folder)
 
       puts "code: #{code.title} articles paths: #{article_paths.length}"
 
-      article_maps = article_paths.map do |article_path|
-        ArticleMap.parse_with_escape_br(File.read(article_path), :single => true)
-      end
-
-      sections_ta_paths = extract_sections_ta_xml_paths(folder)
-
+      article_maps = parse_all_legiarti(article_paths)
       legisctas = parse_all_legiscta sections_ta_paths
-      legisctas.each{ |l| code.sections += l.extract_linked_sections() }
-      legisctas.each{ |l| add_articles_to_sections(code, article_maps, l) }
 
-      code.sections
+      # articles = article_maps.map { |a| a.to_article() }
+
+      sections = legisctas.map { |s| s.to_section() }
+
+      section_link_hashs = structMap.to_section_links_hash()
+      section_link_hashs += legisctas.map { |s| s.to_section_links_hash() }.compact.flatten
+
+      # article_link_hashs = legisctas.map { |s| s.to_article_links_hash() }
+
+      link_sections(sections, section_link_hashs)
+      # link_articles
+
+      code.sections += sections
+
       puts "#{code.title} is built; #{Time.now - start} (#{folder})"
       
       if code.nil?
@@ -88,6 +93,29 @@ class Extractor
     end
 
     codes.compact
+  end
+
+  def link_sections(sections, section_link_hashs)
+
+    sections_hash = sections.reduce({}) { |h, s| h[s.id_section_origin] = s; h }
+
+    section_link_hashs.each do |sl|
+
+      # next link if link to the code
+      # to test
+      if sl['source_id_section_origin'].start_with?('LEGITEXT')
+        next
+      end
+
+      source = sections_hash[sl["source_id_section_origin"]]
+      target = sections_hash[sl["target_id_section_origin"]]
+      section_link = SectionLink.new(source: source, target: target, state: sl['state'], start_date: sl['start_date'], end_date: sl['end_date'])
+      source.section_links << section_link
+    end
+  end
+
+  def parse_all_legiarti(article_paths)
+    article_paths.map { |article_path| ArticleMap.parse_with_escape_br(File.read(article_path), :single => true) }
   end
 
   def parse_all_legiscta paths

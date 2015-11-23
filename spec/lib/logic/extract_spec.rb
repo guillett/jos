@@ -70,6 +70,36 @@ describe '.add_articles_to_sections' do
 end
 
 
+describe '.link_sections' do
+  context 'with 2 section and one section_link_hash' do
+
+    before do
+      extractor = Extractor.new()
+      @s1 = Section.new(id_section_origin: '1')
+      @s2 = Section.new(id_section_origin: '2')
+      section_link_hash = {
+      'source_id_section_origin'=> '1', 'target_id_section_origin'=> '2',
+      'state' => 'vigueur',
+      'start_date' => DateTime.parse('1996-01-01'),
+      'end_date' => DateTime.parse('1997-01-01')
+      }
+      extractor.link_sections([@s1,@s2],[section_link_hash])
+    end
+
+    it 'links correctly the 2 sections' do
+      expect(@s1.section_links.first.target).to be(@s2)
+    end
+
+    it "the link has all the value" do
+      expect(@s1.section_links.first.state).to eq('vigueur')
+      expect(@s1.section_links.first.start_date).to eq('1996-01-01')
+      expect(@s1.section_links.first.end_date).to eq('1997-01-01')
+
+    end
+
+  end
+end
+
 describe 'truc' do
   context 'yop' do
 
