@@ -12,7 +12,7 @@ describe 'mapping of sections links' do
   <ID>LEGISCTA000006088000</ID>
   <TITRE_TA>Partie législative</TITRE_TA>
   <STRUCTURE_TA>
-    <LIEN_ART debut="2002-03-28" etat="MODIFIE" fin="2002-12-14" id="1" num="L3534-7" origine="LEGI"/>
+    <LIEN_ART debut="2002-03-28" etat="MODIFIE" fin="2002-12-14" id="LEGIARTI000021088655" num="L3534-7" origine="LEGI"/>
     <LIEN_SECTION_TA cid="LEGISCTA000006116627" debut="1996-02-24" etat="VIGUEUR" fin="2999-01-01" id="LEGISCTA000006116627" niv="2" url="/LEGI/SCTA/00/00/06/11/66/LEGISCTA000006116627.xml">PREMIÈRE PARTIE : DISPOSITIONS GÉNÉRALES</LIEN_SECTION_TA>
     <LIEN_SECTION_TA cid="LEGISCTA000024405340" debut="2222-02-22" etat="VIGUEUR_DIFF" fin="2999-01-01" id="LEGISCTA000024405340" niv="2" url="/LEGI/SCTA/00/00/24/40/53/LEGISCTA000024405340.xml">SEPTIEME PARTIE : AUTRES COLLECTIVITES REGIES PAR L'ARTICLE 73 DE LA CONSTITUTION</LIEN_SECTION_TA>
   </STRUCTURE_TA>
@@ -44,28 +44,26 @@ describe 'mapping of sections links' do
       expect(@legisctaMap.id_section_origin).to eq("LEGISCTA000006088000")
     end
 
-    it 'extracts 2 section links' do
-      section_links = @legisctaMap.to_section_links_hash()
-      expect(section_links.length).to eq(2)
-    end
-
-    it 'extracts 1 article link' do
-      article_link = @legisctaMap.to_article_links_hash
-      expect(article_link.length).to eq(1)
-    end
-
     it 'extracts to section' do
       section = @legisctaMap.to_section
       expect(section.title).to eq('Partie législative')
       expect(section.id_section_origin).to eq('LEGISCTA000006088000')
     end
 
-    it 'extracts to section_links_hash' do
+    it 'extracts 2 section links using #section_links_hash' do
       section_links_hash = @legisctaMap.to_section_links_hash
       expect(section_links_hash.length).to eq(2)
       section_link_1 = section_links_hash.find{|s| s['target_id_section_origin'] == 'LEGISCTA000006116627' }
       expect(section_link_1['order']).to eq(0)
       expect(section_link_1['source_id_section_origin']).to eq('LEGISCTA000006088000')
+    end
+
+    it 'extracts 1 article link using #article_links_hash' do
+      article_links_hash = @legisctaMap.to_article_links_hash
+      expect(article_links_hash.length).to eq(1)
+      article_link_1 = article_links_hash.find{|s| s['target_id_article_origin'] == 'LEGIARTI000021088655' }
+      expect(article_link_1['order']).to eq(0)
+      expect(article_link_1['source_id_section_origin']).to eq('LEGISCTA000006088000')
     end
 
   end
