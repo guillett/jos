@@ -55,21 +55,22 @@ describe 'mapping of articles' do
                                },
                               1)
 
-      @articleMap = ArticleMap.parse_with_escape_br(@xml, :single => true)
+      articleMap = ArticleMap.parse_with_escape_br(@xml, :single => true)
+      @article = articleMap.to_article
     end
 
     it 'maps correctly the article' do
-      expect(@articleMap.id).to   eq("LEGIARTI000006204293")
-      expect(@articleMap.nature).to eq("ARTICLE")
-      expect(@articleMap.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>")
-      expect(@articleMap.state).to eq("VIGUEUR")
-      expect(@articleMap.start_date).to eq("2015-01-01")
-      expect(@articleMap.end_date).to eq("2999-01-01")
-      expect(@articleMap.number).to eq("L711-23")
+      expect(@article.id_article_origin).to   eq("LEGIARTI000006204293")
+      expect(@article.nature).to eq("ARTICLE")
+      expect(@article.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>")
+      expect(@article.state).to eq("VIGUEUR")
+      expect(@article.start_date).to eq("2015-01-01")
+      expect(@article.end_date).to eq("2999-01-01")
+      expect(@article.number).to eq("L711-23")
     end
 
     xit 'maps correctly the article link' do
-      articleLinkHash = @articleMap.links.first.to_hash
+      articleLinkHash = @article.links.first.to_hash
       expect(articleLinkHash["id_link_origin"]).to  eq("LEGIARTI000017843672")
       expect(articleLinkHash["title"]).to           eq("Code des marchés publics - art. 150 (V)")
     end
