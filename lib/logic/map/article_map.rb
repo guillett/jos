@@ -28,12 +28,15 @@ class ArticleMap
   def to_hash
     hash = {}
     instance_variables.each { |var| hash[var.to_s.delete("@")] = instance_variable_get(var) }
+
+    # when writing to output replace \n with <br/>
     hash["nota"] = nota
     hash["text"] = text
     hash
   end
 
   def self.parse_with_escape_br xml, options
+    # when reading xml replace <br/> with \n
     self.parse(xml.gsub( /<br\/?>/, "\n"), options)
   end
 
