@@ -1,5 +1,4 @@
 require './lib/logic/map/article_version_map'
-#require './lib/logic/map/link_article_map'
 
 class ArticleMap
   include HappyMapper
