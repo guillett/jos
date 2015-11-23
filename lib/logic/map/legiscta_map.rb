@@ -37,7 +37,7 @@ class LegisctaMap
     section_links.map.with_index do |sectionMap, i|
       h = sectionMap.to_hash
       h['order'] = i
-      h['source_id_origin'] = @id_section_origin
+      h['source_id_section_origin'] = @id_section_origin
       h
     end
   end

@@ -7,7 +7,7 @@ class SectionMap
   attribute :state, String, :tag => 'etat'
   attribute :start_date, DateTime, :tag => 'debut'
   attribute :end_date, DateTime, :tag => 'fin'
-  attribute :target_id_origin, String, :tag => 'id'
+  attribute :target_id_section_origin, String, :tag => 'id'
 
   def to_hash
     hash = {}
