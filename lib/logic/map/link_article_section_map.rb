@@ -1,12 +1,11 @@
-class SectionArticleMap
+class LinkArticleSectionMap
   include HappyMapper
 
   tag 'LIEN_ART'
   attribute :state, String, :tag => 'etat'
   attribute :start_date, DateTime, :tag => 'debut'
   attribute :end_date, DateTime, :tag => 'fin'
-  attribute :id_article_origin, String, :tag => 'id'
-  attribute :number, String, :tag => 'num'
+  attribute :target_id_article_origin, String, :tag => 'id'
 
   def to_hash
     hash = {}
