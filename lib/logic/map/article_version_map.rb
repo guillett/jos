@@ -1,4 +1,4 @@
-class VersionArticleMap
+class ArticleVersionMap
   include HappyMapper
 
   tag 'VERSION/LIEN_ART'

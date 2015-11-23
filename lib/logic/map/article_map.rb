@@ -1,4 +1,4 @@
-require './lib/logic/map/version_article_map'
+require './lib/logic/map/article_version_map'
 #require './lib/logic/map/link_article_map'
 
 class ArticleMap
@@ -9,7 +9,7 @@ class ArticleMap
   has_one :nature, String, :xpath => 'META/META_COMMUN/NATURE'
   has_one :nota, String, :xpath => 'NOTA/CONTENU'
   has_one :text, String, :xpath => 'BLOC_TEXTUEL/CONTENU'
-  has_many :versions, VersionArticleMap, :xpath => 'VERSIONS'
+  has_many :versions, ArticleVersionMap, :xpath => 'VERSIONS'
   has_one :state, String, :xpath => 'META/META_SPEC/META_ARTICLE/ETAT'
   has_one :start_date, DateTime, :xpath => 'META/META_SPEC/META_ARTICLE/DATE_DEBUT'
   has_one :end_date, DateTime, :xpath => 'META/META_SPEC/META_ARTICLE/DATE_FIN'
