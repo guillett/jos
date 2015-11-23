@@ -34,42 +34,6 @@ describe 'escape title' do
   end
 end
 
-describe '.add_articles_to_sections' do
-
-  before do
-    @legisctaMapInstanceMock = instance_double("LegisctaMap")
-    allow(@legisctaMapInstanceMock).to receive(:id).and_return("1")
-  end
-
-
-  context 'with 2 articles belonging to two sections each in Legiscta' do
-    before do
-      a1 = Article.new()
-      a2 = Article.new()
-
-      allow(@legisctaMapInstanceMock).to receive(:extract_articles).with(anything()).and_return([a1, a2])
-
-      s1 = Section.new(id_section_origin: "1")
-      s2 = Section.new(id_section_origin: "1")
-
-      @code = Code.new()
-      @code.sections += [s1,s2]
-
-      extractor = Extractor.new()
-      extractor.add_articles_to_sections(@code, @code, @legisctaMapInstanceMock)
-    end
-
-    it 'add two articles each 2 sections' do
-      expect(@code.sections.length).to eq(2)
-
-      expect(@code.sections[1].articles.length).to eq(2)
-      expect(@code.sections[1].articles.length).to eq(2)
-    end
-  end
-
-end
-
-
 describe '.link_sections' do
   context 'with 2 section and one section_link_hash' do
 
