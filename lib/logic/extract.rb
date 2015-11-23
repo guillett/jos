@@ -109,13 +109,6 @@ class Extractor
     sections_hash = sections.reduce({}) { |h, s| h[s.id_section_origin] = s; h }
 
     section_link_hashs.each do |sl|
-
-      # next link if link to the code
-      # to test
-      if sl['source_id_section_origin'].start_with?('LEGITEXT')
-        next
-      end
-
       source = sections_hash[sl["source_id_section_origin"]]
       target = sections_hash[sl["target_id_section_origin"]]
       section_link = SectionLink.new(source: source, target: target, state: sl['state'], start_date: sl['start_date'], end_date: sl['end_date'], order: sl['order'])
