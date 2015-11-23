@@ -2,6 +2,7 @@ class Section < ActiveRecord::Base
   belongs_to :code
   has_and_belongs_to_many :articles
 
+  has_many :section_links, foreign_key: :source_id
   attr_accessor :sections
 
   after_initialize do

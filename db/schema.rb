@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151120110211) do
+ActiveRecord::Schema.define(version: 20151120162856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,16 @@ ActiveRecord::Schema.define(version: 20151120110211) do
     t.string   "escape_title"
   end
 
+  create_table "section_links", force: :cascade do |t|
+    t.string   "state"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.integer  "source_id",  null: false
+    t.integer  "target_id",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sections", force: :cascade do |t|
     t.string   "title"
     t.integer  "level"
@@ -65,5 +75,7 @@ ActiveRecord::Schema.define(version: 20151120110211) do
 
   add_index "sections", ["code_id"], name: "index_sections_on_code_id", using: :btree
 
+  add_foreign_key "section_links", "sections", column: "source_id"
+  add_foreign_key "section_links", "sections", column: "target_id"
   add_foreign_key "sections", "codes"
 end
