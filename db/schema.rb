@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151123123006) do
+ActiveRecord::Schema.define(version: 20151123162957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,13 +35,6 @@ ActiveRecord::Schema.define(version: 20151123123006) do
     t.string   "nature"
   end
 
-  create_table "articles_sections", id: false, force: :cascade do |t|
-    t.integer "section_id", null: false
-    t.integer "article_id", null: false
-  end
-
-  add_index "articles_sections", ["section_id", "article_id"], name: "index_articles_sections_on_section_id_and_article_id", using: :btree
-
   create_table "code_section_links", force: :cascade do |t|
     t.integer  "code_id"
     t.integer  "section_id"
@@ -62,6 +55,17 @@ ActiveRecord::Schema.define(version: 20151123123006) do
     t.datetime "updated_at",   null: false
     t.string   "escape_title"
   end
+
+  create_table "section_article_links", id: false, force: :cascade do |t|
+    t.integer  "section_id", null: false
+    t.integer  "article_id", null: false
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.string   "state"
+    t.integer  "order"
+  end
+
+  add_index "section_article_links", ["section_id", "article_id"], name: "index_section_article_links_on_section_id_and_article_id", using: :btree
 
   create_table "section_links", force: :cascade do |t|
     t.string   "state"

@@ -3,6 +3,8 @@ class Section < ActiveRecord::Base
   has_and_belongs_to_many :articles
 
   has_many :section_links, foreign_key: :source_id
+  has_many :section_article_links
+
   attr_accessor :sections
 
   after_initialize do
