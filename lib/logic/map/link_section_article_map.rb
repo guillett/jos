@@ -1,4 +1,4 @@
-class LinkArticleSectionMap
+class LinkSectionArticleMap
   include HappyMapper
 
   tag 'LIEN_ART'

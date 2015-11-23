@@ -9,7 +9,7 @@ class LegisctaMap
   element :title, String, :xpath => 'TITRE_TA'
 
   has_many :section_links, LinkSectionMap, :xpath => 'STRUCTURE_TA'
-  has_many :article_links, LinkArticleSectionMap, :xpath => 'STRUCTURE_TA'
+  has_many :article_links, LinkSectionArticleMap, :xpath => 'STRUCTURE_TA'
 
   def to_section
     Section.new(id_section_origin: id_section_origin, title: title)
