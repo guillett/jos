@@ -21,25 +21,33 @@ describe 'mapping of structure file' do
   end
 
 
-  describe "when we have a struct file with two link sections" do
+  context "when we have a struct file with two link sections" do
 
     before do
       @structMap = StructMap.parse(fake_struct_file, :single => true)
     end
 
     it 'maps correctly two section link' do
-      expect(@structMap.sections.length).to eq(2)
+      expect(@structMap.section_links.length).to eq(2)
     end
 
     it 'maps correctly the id' do
-      expect(@structMap.id).to eq("LEGITEXT000005627819")
+      expect(@structMap.id_section_origin).to eq("LEGITEXT000005627819")
     end
 
-    it 'extracts 2 sections' do
-      sections = @structMap.extract_linked_sections()
-      expect(sections.length).to eq(2)
-    end
+    describe ".to_section_links_hash" do
+      before do
+        @section_links = @structMap.to_section_links_hash()
+      end
 
+      it 'extracts 2 section links' do
+        expect(@section_links.length).to eq(2)
+        section1 = @section_links.select{|sl| sl["target_id_section_origin"] == 'LEGISCTA000006083134' }.first
+        expect(section1["order"]).to eq(1)
+        expect(section1["source_id_section_origin"]).to eq("LEGITEXT000005627819")
+      end
+
+    end
   end
 
 end
