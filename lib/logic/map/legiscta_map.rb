@@ -8,17 +8,9 @@ class LegisctaMap
   element :id_section_origin, String, :xpath => 'ID'
   element :title, String, :xpath => 'TITRE_TA'
 
-  has_many :sections, SectionMap, :xpath => 'STRUCTURE_TA'
+  has_many :section_links, SectionMap, :xpath => 'STRUCTURE_TA'
   has_many :article_links, SectionArticleMap, :xpath => 'STRUCTURE_TA'
 
-  def extract_linked_sections
-    @sections.map.with_index do |sectionMap, i|
-      section = Section.new(sectionMap.to_hash)
-      section.order = i
-      section.id_section_parent_origin = @id
-      section
-    end
-  end
 
   def extract_articles article_maps
     @article_links.map.with_index do |sectionArticleMap, i|
@@ -39,6 +31,15 @@ class LegisctaMap
 
   def to_section
     Section.new(id_section_origin: id_section_origin, title: title)
+  end
+
+  def to_section_links_hash
+    section_links.map.with_index do |sectionMap, i|
+      h = sectionMap.to_hash
+      h['order'] = i
+      h['source_id_origin'] = @id_section_origin
+      h
+    end
   end
 
 end

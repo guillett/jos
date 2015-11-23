@@ -69,6 +69,14 @@ describe 'mapping of sections links' do
       expect(section.id_section_origin).to eq('LEGISCTA000006088000')
     end
 
+    it 'extracts to section_links_hash' do
+      section_links_hash = @legisctaMap.to_section_links_hash
+      expect(section_links_hash.length).to eq(2)
+      section_link_1 = section_links_hash.find{|s| s['target_id_origin'] == 'LEGISCTA000006116627' }
+      expect(section_link_1['order']).to eq(0)
+      expect(section_link_1['source_id_origin']).to eq('LEGISCTA000006088000')
+    end
+
   end
 
 end
