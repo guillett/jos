@@ -32,6 +32,8 @@ class ArticleMap
     # when writing to output replace \n with <br/>
     hash["nota"] = nota
     hash["text"] = text
+
+    hash.delete("versions")
     hash
   end
 
