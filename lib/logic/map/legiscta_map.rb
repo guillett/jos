@@ -1,5 +1,5 @@
 require './lib/logic/map/link_section_map'
-require './lib/logic/map/link_article_section_map'
+require './lib/logic/map/link_section_article_map'
 
 class LegisctaMap
   include HappyMapper
