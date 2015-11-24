@@ -14,7 +14,7 @@ RSpec.describe CodesHelper, type: :helper do
         section_link1_2_old = SectionLink.new(source:section1, target:section1_2_old, order: 2, state: 'ABROGE')
         section_link1_2 = SectionLink.new(source:section1, target:section1_2, order: 2, state: 'VIGUEUR')
 
-        section1.section_links << section_link1_2 << section_link1_2_old << section_link1_1
+        section1.section_links_preloaded << section_link1_2 << section_link1_2_old << section_link1_1
 
         section2 =Section.new(title: "2")
         sections=[section1, section2]

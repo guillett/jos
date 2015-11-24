@@ -62,9 +62,9 @@ RSpec.describe Code, type: :model do
 
       it "display one section lvl1 and two lvl2" do
         expect(@summary.length).to eq(1)
-        expect(@summary[0].section_links.length).to eq(2)
-        expect(@summary[0].section_links[0].target.title).to eq("1.1")
-        expect(@summary[0].section_links[1].target.title).to eq("1.2")
+        expect(@summary[0].section_links_preloaded.length).to eq(2)
+        expect(@summary[0].section_links_preloaded[0].target.title).to eq("1.1")
+        expect(@summary[0].section_links_preloaded[1].target.title).to eq("1.2")
       end
 
     end

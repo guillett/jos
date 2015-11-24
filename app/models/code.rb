@@ -4,23 +4,24 @@ class Code < ActiveRecord::Base
   has_many :valid_sections, -> { where(code_section_links: {state:  "VIGUEUR"}).order('"code_section_links"."order"') }, through: :code_section_links, source: :section
 
   def summary
-    sections = Section.all
+    sections = Section.all.to_ary
     section_links = SectionLink.all
-    buildIt sections, section_links
+    section_hash = preload_section_links sections, section_links
 
-    valid_sections.map{|s| sections.find(s.id)}
+    valid_sections.map{|s| section_hash[s.id]}
   end
 
-  def buildIt sections, links
-    sections_hash = sections.reduce({}) { |h, s| h[s.id]=s; h }
+  def preload_section_links(sections, links)
+    sections_hash = sections.reduce({}) { |h, section| h[section.id]=section; h }
 
-    links.each do |l|
-      source = sections_hash[l.source_id]
-      target = sections_hash[l.target_id]
-      l.source = source
-      l.target = target
-      source.section_links << l
+    links.each do |link|
+      source = sections_hash[link.source_id]
+      target = sections_hash[link.target_id]
+      link.source = source
+      link.target = target
+      source.section_links_preloaded << link
     end
+    sections_hash
   end
 
   def summary_start_id id

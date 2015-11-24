@@ -8,8 +8,8 @@ module CodesHelper
       # else
       #   content += "<li>" + link_to(s.title, section_path(s))
       # end
-      if !s.section_links.empty?
-        child_sections = s.section_links
+      if s.section_links_preloaded.size != 0
+        child_sections = s.section_links_preloaded
           .select{|sl| %w{VIGUEUR ABROGE_DIFF}.include?(sl.state) }
           .sort_by{ |sl| sl.order }
           .map{ |sl| sl.target }

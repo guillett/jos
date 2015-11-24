@@ -5,10 +5,10 @@ class Section < ActiveRecord::Base
   has_many :section_links, foreign_key: :source_id
   has_many :section_article_links
 
-  attr_accessor :sections
+  attr_accessor :section_links_preloaded
 
   after_initialize do
-    @sections=[]
+    @section_links_preloaded=[]
   end
 
   def self.with_article_displayable id
