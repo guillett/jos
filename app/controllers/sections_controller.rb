@@ -1,9 +1,10 @@
 class SectionsController < ApplicationController
   def show
-    @section = Section.with_article_displayable(params[:id])
+    @section = Section.find(params[:id])
 
-    code_sections = Code.with_displayable_sections_and_articles_by_code_id(@section.code.id)
-    @sub_sections = code_sections.summary_start_id(@section.id).first.sections
+    @articles = @section.section_article_links.includes(:article).where(state: ['VIGUEUR', 'ABROGE_DIFF']).map(&:article)
+
+    @sub_sections = @section.code.summary_start_id(@section.id).section_links_preloaded.map(&:target)
   end
 end
   

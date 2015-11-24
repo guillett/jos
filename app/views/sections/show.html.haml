@@ -1,10 +1,10 @@
 %h1=@section.title
-- @section.articles.each do |a|
+- @articles.each do |article|
   %h2
-    %a{href: "/articles/#{a.id_article_origin}"}="#{a.nature}  #{a.number}"
-  %p= raw(a.text)
-  -unless a.nota.blank?
+    %a{href: "/articles/#{article.id_article_origin}"}="#{article.nature}  #{article.number}"
+  %p= raw(article.text)
+  -unless article.nota.blank?
     %h3= "Nota "
-    %p= raw(a.nota)
+    %p= raw(article.nota)
 
 = raw display_summary(@sub_sections, 'accordion')

@@ -24,22 +24,12 @@ class Code < ActiveRecord::Base
     sections_hash
   end
 
-  def summary_start_id id
-    hash = {}
+  def summary_start_id section_id
+    sections = Section.all.to_ary
+    section_links = SectionLink.all
+    section_hash = preload_section_links sections, section_links
 
-    sections_vigueur = sections.select{|s| s.state == 'VIGUEUR'}
-                           .sort_by { |s| s.order }
-                           .each do |s|
-      hash[s.id_section_origin] = [] if hash[s.id_section_origin].nil?
-      hash[s.id_section_origin] << s
-    end
-
-    sections_vigueur.each do |s|
-      next if s.id_section_parent_origin.nil? || hash[s.id_section_parent_origin].nil?
-      hash[s.id_section_parent_origin].each { |p| p.sections << s }
-    end
-
-    sections_vigueur.select{ |s| s.id == id }
+    section_hash[section_id]
   end
 
   def self.with_displayable_sections_and_articles_by_escape_title escape_title
