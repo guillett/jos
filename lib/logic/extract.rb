@@ -105,6 +105,11 @@ class Extractor
         SectionLink.import section_links
 
         code_links.each do |cl|
+          if cl.section.nil?
+            $stderr.puts "error in code #{code.title}"
+            $stderr.puts "missing section for code_link: #{cl}"
+            next
+          end
           cl.code_id = code.id
           cl.section_id = cl.section.id
         end
@@ -118,7 +123,6 @@ class Extractor
 
         article_versions = []
         articles.each do |article|
-          # sauvegarder dans la ligner
           article.versions.each do |version|
             article_versions << ArticleVersion.new(article_a_id: article.id, article_b_id: version.id)
           end
@@ -164,6 +168,17 @@ class Extractor
     articles_hash = articles.reduce({}) { |h, a| h[a.id_article_origin] = a; h }
 
     article_version_hashs.each do |av|
+
+      if articles_hash[av["source_id_article_origin"]].nil?
+        $stderr.puts "missing article: #{av["source_id_article_origin"]}"
+        next
+      end
+
+      if articles_hash[av["id_article_origin"]].nil?
+        $stderr.puts "missing article: #{av["id_article_origin"]}"
+        next
+      end
+
       articles_hash[av["source_id_article_origin"]].versions << articles_hash[av["id_article_origin"]]
     end
   end
