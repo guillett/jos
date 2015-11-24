@@ -52,7 +52,7 @@ describe 'mapping of articles' do
     before do
       @xml = fake_article_file({  id_article_origin: "LEGIARTI000006204293",
                                   nota_content: "Décret n° 2006-975 du 1er août 2006 art. 8 :<br/> I.-Les dispositions du présent décret entrent en vigueur le 1er septembre 2006.",
-                                  text_content: "I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>",
+                                  text_content: "<br/><br/>I.-Les dispositions du <br/><br/><br/>présent code s'appliquent aux marchés <br/>publics et aux accords-cadres ainsi définis :<br/><br/><br/>",
                                   number: "L711-23",
                                   nature: "ARTICLE",
                                   start_date: "2015-01-01",
@@ -67,8 +67,8 @@ describe 'mapping of articles' do
     it 'maps correctly the article' do
       expect(@articleMap.id_article_origin).to   eq("LEGIARTI000006204293")
       expect(@articleMap.nature).to eq("ARTICLE")
-      expect(@articleMap.text).to eq("I.-Les dispositions du présent code s'appliquent aux marchés publics et aux accords-cadres ainsi définis :<br/>")
-      expect(@articleMap.nota).to eq("Décret n° 2006-975 du 1er août 2006 art. 8 :<br/> I.-Les dispositions du présent décret entrent en vigueur le 1er septembre 2006.")
+      expect(@articleMap.nota).to eq("<p>Décret n° 2006-975 du 1er août 2006 art. 8 :</p><p> I.-Les dispositions du présent décret entrent en vigueur le 1er septembre 2006.</p>")
+      expect(@articleMap.text).to eq("<p>I.-Les dispositions du </p><p>présent code s'appliquent aux marchés </p><p>publics et aux accords-cadres ainsi définis :</p>")
       expect(@articleMap.state).to eq("VIGUEUR")
       expect(@articleMap.start_date).to eq("2015-01-01")
       expect(@articleMap.end_date).to eq("2999-01-01")

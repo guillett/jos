@@ -17,11 +17,11 @@ class ArticleMap
   #has_many :links, LinkArticleMap, :xpath => 'LIENS'
 
   def nota
-    @nota.gsub(/\n/, "<br/>")
+    format_for_html(@nota)
   end
 
   def text
-    @text.gsub(/\n/, "<br/>")
+    format_for_html(@text)
   end
 
   def to_hash
@@ -54,5 +54,10 @@ class ArticleMap
       end
     end
   end
+
+  def format_for_html(text)
+    "<p>"+text.gsub(/\n+/, "<br/>").gsub(/^<br\/>/, "").gsub(/<br\/>$/, "").gsub(/<br\/>/, "</p><p>")+"</p>"
+  end
+
 end
 
