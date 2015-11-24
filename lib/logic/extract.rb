@@ -70,8 +70,8 @@ class Extractor
       sections = legisctas.map { |s| s.to_section() }
       section_link_hashs = legisctas.map { |s| s.to_section_links_hash() }.compact.flatten
 
-      link_code_sections(code, sections, code_section_link_hashs)
-      link_sections(sections, section_link_hashs)
+      code_links = link_code_sections(code, sections, code_section_link_hashs)
+      section_links = link_sections(sections, section_link_hashs)
 
       article_paths = extract_article_xml_paths(folder)
       article_maps = parse_all_legiarti(article_paths)
@@ -84,7 +84,7 @@ class Extractor
 
       article_link_hashs = legisctas.map { |s| s.to_article_links_hash() }.compact.flatten
 
-      link_articles(sections, articles, article_link_hashs)
+      section_article_links = link_articles(sections, articles, article_link_hashs)
 
       code.sections += sections
 
@@ -93,7 +93,39 @@ class Extractor
       if code.nil?
         puts "#{code.title} is nil; do not save"
       else
-        code.save!
+        Code.import [code]
+        Article.import articles
+        sections.map{|s| s.code_id = code.id}
+        Section.import sections
+
+        section_links.each do |sl|
+          sl.source_id = sl.source.id
+          sl.target_id = sl.target.id
+        end
+        SectionLink.import section_links
+
+        code_links.each do |cl|
+          cl.code_id = code.id
+          cl.section_id = cl.section.id
+        end
+        CodeSectionLink.import code_links
+
+        section_article_links.each do |sal|
+          sal.section_id = sal.section.id
+          sal.article_id = sal.article.id
+        end
+        SectionArticleLink.import section_article_links
+
+        article_versions = []
+        articles.each do |article|
+          # sauvegarder dans la ligner
+          article.versions.each do |version|
+            article_versions << ArticleVersion.new(article_a_id: article.id, article_b_id: version.id)
+          end
+        end
+
+        ArticleVersion.import article_versions
+
         puts "#{code.title} saved; #{Time.now - start} (#{folder})"
       end
     end
@@ -102,15 +134,20 @@ class Extractor
   end
 
   def link_code_sections(code, sections, code_section_link_hashs)
+    code_links = []
     sections_hash = sections.reduce({}) { |h, s| h[s.id_section_origin] = s; h }
     code_section_link_hashs.each do |csl|
       target = sections_hash[csl["target_id_section_origin"]]
       code_section_link = CodeSectionLink.new(code: code, section: target, state: csl['state'], start_date: csl['start_date'], end_date: csl['end_date'], order: csl['order'])
       code.code_section_links << code_section_link
+      code_links << code_section_link
     end
+    code_links
   end
 
   def link_sections(sections, section_link_hashs)
+    section_links= []
+
     sections_hash = sections.reduce({}) { |h, s| h[s.id_section_origin] = s; h }
 
     section_link_hashs.each do |sl|
@@ -118,7 +155,9 @@ class Extractor
       target = sections_hash[sl["target_id_section_origin"]]
       section_link = SectionLink.new(source: source, target: target, state: sl['state'], start_date: sl['start_date'], end_date: sl['end_date'], order: sl['order'])
       source.section_links << section_link
+      section_links << section_link
     end
+    section_links
   end
 
   def version_articles(articles, article_version_hashs)
@@ -130,6 +169,8 @@ class Extractor
   end
 
   def link_articles(sections, articles, article_link_hashs)
+    section_article_links = []
+
     sections_hash = sections.reduce({}) { |h, s| h[s.id_section_origin] = s; h }
     articles_hash = articles.reduce({}) { |h, a| h[a.id_article_origin] = a; h }
 
@@ -138,7 +179,10 @@ class Extractor
       article_target = articles_hash[al["target_id_article_origin"]]
       article_link = SectionArticleLink.new(section: section_source, article: article_target, state: al['state'], start_date: al['start_date'], end_date: al['end_date'], order: al['order'])
       section_source.section_article_links << article_link
+      section_article_links << article_link
     end
+
+    section_article_links
   end
 
   def parse_all_legiarti(article_paths)

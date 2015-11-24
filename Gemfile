@@ -32,6 +32,8 @@ gem 'nokogiri-happymapper', :require => 'happymapper'
 gem 'parallel'
 gem 'wombat'
 
+gem 'activerecord-import'
+
 gem 'bootstrap-sass'
 
 # Use ActiveModel has_secure_password
