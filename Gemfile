@@ -66,3 +66,6 @@ end
 group :test do
   gem 'sqlite3'
 end
+
+# Diffs
+gem 'diffy', '~> 3.0.7'

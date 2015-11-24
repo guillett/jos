@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   resources :articles, :only => [:show]
+  get '/articles/:article_1_id/compare/:article_2_id' => 'articles#diff'
   resources :codes, :only => [:show]
   resources :sections, :only => [:show]
   root 'home#index'

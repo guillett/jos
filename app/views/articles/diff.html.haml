@@ -1,0 +1,12 @@
+%h1= "Différence entre les textes :"
+
+%h2
+  ="- "
+  %a{href: "/articles/#{@article_1.id_article_origin}"}="#{@article_1.nature}  #{@article_1.number}"
+  %span.compare_from (en vigueur du #{@article_1.start_date.strftime("%m/%d/%Y")} au #{@article_1.end_date.strftime("%m/%d/%Y")})
+%h2
+  ="- "
+  %a{href: "/articles/#{@article_2.id_article_origin}"}="#{@article_2.nature}  #{@article_2.number}"
+  %span.compare_to (en vigueur du #{@article_2.start_date.strftime("%m/%d/%Y")} au #{@article_2.end_date.strftime("%m/%d/%Y")})
+
+%p= raw(@diff)

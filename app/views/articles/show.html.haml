@@ -1,6 +1,5 @@
 %h2
   %a{href: "/articles/#{@article.id_article_origin}"}="#{@article.nature}  #{@article.number}"
-%h3= "Texte "
 %p= raw(@article.text)
 -unless @article.nota.blank?
   %h3= "Nota "
