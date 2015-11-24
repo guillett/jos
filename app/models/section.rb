@@ -6,9 +6,11 @@ class Section < ActiveRecord::Base
   has_many :section_article_links
 
   attr_accessor :section_links_preloaded
+  attr_accessor :section_article_links_preloaded
 
   after_initialize do
     @section_links_preloaded=[]
+    @section_article_links_preloaded=[]
   end
 
   def self.with_article_displayable id

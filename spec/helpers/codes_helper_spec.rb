@@ -33,7 +33,7 @@ RSpec.describe CodesHelper, type: :helper do
         article = Article.create()
         section_article_link = SectionArticleLink.create(section: section1, article: article, state: article_link_state)
 
-        section1.section_article_links << section_article_link
+        section1.section_article_links_preloaded << section_article_link
 
         sections=[section1]
         @summary = display_summary(sections)
