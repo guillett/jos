@@ -115,6 +115,8 @@ GEM
     pg (0.18.3)
     puma (2.15.3)
     rack (1.6.4)
+    rack-mini-profiler (0.9.7)
+      rack (>= 1.1.3)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.4)
@@ -228,6 +230,7 @@ DEPENDENCIES
   parallel
   pg
   puma
+  rack-mini-profiler
   rails (= 4.2.4)
   rails_12factor
   rspec-rails
