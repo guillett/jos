@@ -12,12 +12,10 @@ describe 'mapping of article version' do
   describe "when we have one article version" do
 
     before do
-      p fake_article_version
       @article_version_map = ArticleVersionMap.parse(fake_article_version, :single => true).to_hash
     end
 
     it 'maps correctly the article version' do
-      p @article_version_map
       expect(@article_version_map["id_article_origin"]).to eq("LEGIARTI000006219125")
     end
 
