@@ -71,44 +71,4 @@ RSpec.describe Code, type: :model do
 
   end
 
-  describe '.with_vigueur_section_and_articles' do
-
-    context 'when one vigueur section with one article' do
-      before do
-        article = Article.create()
-        section = Section.create(title: 1, state: 'VIGUEUR')
-        section.articles << article
-        code = Code.create!(escape_title: 'code_civil')
-        code.sections << section
-        code.save
-      end
-
-
-      xit "should retrieve one section and one article" do
-        code = Code.with_displayable_sections_and_articles 'code_civil'
-        expect(code.sections.length).to eq(1)
-        expect(code.sections[0].articles.length).to eq(1)
-      end
-
-    end
-
-    context 'when two sections in vigueur | abroge_diff and one with other state section with no article' do
-      before do
-        s1 = Section.create(state: 'VIGUEUR')
-        s2 = Section.create(state: 'ABROGE_DIFF')
-        s3 = Section.create(state: 'other state')
-        code = Code.create!(escape_title: 'code_civil')
-        code.sections += [s1, s2, s3]
-        code.save
-      end
-
-      xit "should retrieve two sections" do
-        code = Code.with_displayable_sections_and_articles 'code_civil'
-        expect(code.sections.length).to eq(2)
-      end
-
-    end
-
-  end
-
 end

@@ -27,56 +27,41 @@ RSpec.describe CodesHelper, type: :helper do
       end
     end
 
-    describe "with one section article in VIGUEUR" do
+    describe 'display summary' do
       before do
-        section =Section.create({title: "1"})
-        article = Article.new(id:3, state: "VIGUEUR")
+        section1 =Section.create(title: "1")
+        article = Article.create()
+        section_article_link = SectionArticleLink.create(section: section1, article: article, state: article_link_state)
 
-        section.articles << article
+        section1.section_article_links << section_article_link
 
-        sections=[section]
-
+        sections=[section1]
         @summary = display_summary(sections)
       end
 
-      xit "display one ul li by level with a for link" do
-        expect(@summary).to eq("<ul id='' class='nav'><li><a href=\"/sections/1\">1</a></li></ul>")
+      context "with one section article in VIGUEUR" do
+        let(:article_link_state) { 'VIGUEUR' }
+
+        it "display one ul li by level with a for link" do
+          expect(@summary).to eq("<ul id='' class='nav'><li><a href=\"/sections/1\">1</a></li></ul>")
+        end
+      end
+
+      context "with one section article in ABROGE_DIFF" do
+        let(:article_link_state) { 'ABROGE_DIFF' }
+
+        it "display one ul li by level with a for link" do
+          expect(@summary).to eq("<ul id='' class='nav'><li><a href=\"/sections/1\">1</a></li></ul>")
+        end
+      end
+
+      context "with one section no article displayable" do
+        let(:article_link_state) { 'MODIFIE' }
+
+        it "display one ul li by level with no link" do
+          expect(@summary).to eq("<ul id='' class='nav'><li><a href='#'>1</a></li></ul>")
+        end
       end
     end
-
-    describe "with one section article in ABROGE_DIFF" do
-      before do
-        section =Section.create({title: "1"})
-        article = Article.new(id:3, state: "ABROGE_DIFF")
-
-        section.articles << article
-
-        sections=[section]
-
-        @summary = display_summary(sections)
-      end
-
-      xit "display one ul li by level with a for link" do
-        expect(@summary).to eq("<ul id='' class='nav'><li><a href=\"/sections/1\">1</a></li></ul>")
-      end
-    end
-
-    describe "with one section no article displayable" do
-      before do
-        section =Section.create({title: "1"})
-        article = Article.new(id:3, state: "MODIFIE")
-
-        section.articles << article
-
-        sections=[section]
-
-        @summary = display_summary(sections)
-      end
-
-      xit "display one ul li by level with no link" do
-        expect(@summary).to eq("<ul id='' class='nav'><li><a href='#'>1</a></li></ul>")
-      end
-    end
-
   end
 end
