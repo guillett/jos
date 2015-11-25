@@ -3,7 +3,10 @@ class Section < ActiveRecord::Base
   has_and_belongs_to_many :articles
 
   has_many :section_links, foreign_key: :source_id
+  has_many :section_links_valid, -> { where(state:  ["VIGUEUR", "ABROGE_DIFF"]) }, foreign_key: :source_id, class_name: "SectionLink"
+
   has_many :section_article_links
+  has_many :section_article_links_valid, -> { where(state:  ["VIGUEUR", "ABROGE_DIFF"]) }, foreign_key: :section_id, class_name: "SectionArticleLink"
 
   attr_accessor :section_links_preloaded
   attr_accessor :section_article_links_preloaded

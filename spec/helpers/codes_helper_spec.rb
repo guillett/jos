@@ -11,10 +11,9 @@ RSpec.describe CodesHelper, type: :helper do
         section1_2 =Section.new(title: "1.2")
 
         section_link1_1 = SectionLink.new(source:section1, target:section1_1, order: 1, state: 'ABROGE_DIFF')
-        section_link1_2_old = SectionLink.new(source:section1, target:section1_2_old, order: 2, state: 'ABROGE')
         section_link1_2 = SectionLink.new(source:section1, target:section1_2, order: 2, state: 'VIGUEUR')
 
-        section1.section_links_preloaded << section_link1_2 << section_link1_2_old << section_link1_1
+        section1.section_links_preloaded << section_link1_2 << section_link1_1
 
         section2 =Section.new(title: "2")
         sections=[section1, section2]
@@ -31,7 +30,7 @@ RSpec.describe CodesHelper, type: :helper do
       before do
         section1 =Section.create(title: "1")
         article = Article.create()
-        section_article_link = SectionArticleLink.create(section: section1, article: article, state: article_link_state)
+        section_article_link = SectionArticleLink.create(section: section1, article: article)
 
         section1.section_article_links_preloaded << section_article_link
 
@@ -39,29 +38,13 @@ RSpec.describe CodesHelper, type: :helper do
         @summary = display_summary(sections)
       end
 
-      context "with one section article in VIGUEUR" do
-        let(:article_link_state) { 'VIGUEUR' }
+      context "with one section article" do
 
         it "display one ul li by level with a for link" do
           expect(@summary).to eq("<ul id='' class='nav'><li><a href=\"/sections/1\">1</a></li></ul>")
         end
       end
 
-      context "with one section article in ABROGE_DIFF" do
-        let(:article_link_state) { 'ABROGE_DIFF' }
-
-        it "display one ul li by level with a for link" do
-          expect(@summary).to eq("<ul id='' class='nav'><li><a href=\"/sections/1\">1</a></li></ul>")
-        end
-      end
-
-      context "with one section no article displayable" do
-        let(:article_link_state) { 'MODIFIE' }
-
-        it "display one ul li by level with no link" do
-          expect(@summary).to eq("<ul id='' class='nav'><li><a href='#'>1</a></li></ul>")
-        end
-      end
     end
   end
 end

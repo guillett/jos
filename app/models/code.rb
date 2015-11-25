@@ -1,12 +1,15 @@
 class Code < ActiveRecord::Base
   has_many :sections, :dependent => :delete_all
+  has_many :sections_with_valid_links, -> { includes(:section_links_valid, :section_article_links_valid) }, class_name: "Section"
+
   has_many :code_section_links
   has_many :valid_sections, -> { where(code_section_links: {state:  "VIGUEUR"}).order('"code_section_links"."order"') }, through: :code_section_links, source: :section
 
+
   def summary
-    own_sections = sections.includes(:section_links, :section_article_links).all
-    section_links = own_sections.map(&:section_links).compact.flatten
-    section_article_links = own_sections.map(&:section_article_links).compact.flatten
+    own_sections = sections_with_valid_links
+    section_links = own_sections.map(&:section_links_valid).compact.flatten
+    section_article_links = own_sections.map(&:section_article_links_valid).compact.flatten
 
     section_hash = preload_section_links(own_sections, section_links)
     preload_section_article_links(own_sections, section_article_links)
@@ -47,20 +50,6 @@ class Code < ActiveRecord::Base
     section_hash = preload_section_links sections, section_links
 
     section_hash[section_id]
-  end
-
-  def self.with_displayable_sections_and_articles_by_escape_title escape_title
-    with_displayable_sections_and_articles().find_by escape_title: escape_title
-  end
-
-  def self.with_displayable_sections_and_articles_by_code_id code_id
-    with_displayable_sections_and_articles().find(code_id)
-  end
-
-  private
-
-  def self.with_displayable_sections_and_articles
-    Code.includes(sections: :articles).where(sections: { state: ['VIGUEUR','ABROGE_DIFF'] })
   end
 
 end
