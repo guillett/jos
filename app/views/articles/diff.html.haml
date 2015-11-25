@@ -1,14 +1,30 @@
-%h1{:style=>'text-align: center'}= "Diff entre deux textes"
-%table
-  %thead
-    %tr{:style=>'text-align: center'}
-      %td
-        %a{href: "/articles/#{@article_1.id_article_origin}"}="#{@article_1.nature}  #{@article_1.number}"
-        %span#compare_from (en vigueur du #{@article_1.start_date.strftime("%m/%d/%Y")} au #{@article_1.end_date.strftime("%m/%d/%Y")})
-      %td
-        %a{href: "/articles/#{@article_2.id_article_origin}"}="#{@article_2.nature}  #{@article_2.number}"
-        %span#compare_to (en vigueur du #{@article_2.start_date.strftime("%m/%d/%Y")} au #{@article_2.end_date.strftime("%m/%d/%Y")})
-  %tbody
-    %tr
-      %td#from=raw(@diff)
-      %td#to=raw(@diff)
+%h1.center
+  Time Machine entre 2 articles
+%p.center
+  %span.grey
+    lignes grises : lignes identiques dans les 2 articles
+%p.center
+  %span.pink
+    lignes roses : lignes supprimées dans le 2<sup>ème</sup> article (à droite)
+%p.center
+  %span.green
+    lignes vertes : lignes ajoutées dans le 2<sup>ème</sup> article (à droite)
+%div.row
+  %div.col-md-6.center
+    %h2
+      %a{href: "/articles/#{@article_1.id_article_origin}"}="#{@article_1.nature}  #{@article_1.number}"
+    %h3
+      #{@article_1.start_date.strftime("%m/%d/%Y")} - #{@article_1.end_date.strftime("%m/%d/%Y")}
+  %div.col-md-6.center
+    %h2
+      %a{href: "/articles/#{@article_2.id_article_origin}"}="#{@article_2.nature}  #{@article_2.number}"
+    %h3
+      #{@article_2.start_date.strftime("%m/%d/%Y")} - #{@article_2.end_date.strftime("%m/%d/%Y")}
+- @diff_array.each do |line|
+  - if line.first == " "
+    %div.col-md-12.grey= raw(line[1, line.length])
+  - elsif line.first == "-"
+    %div.col-md-6.pink= raw(line[1, line.length])
+  - elsif line.first == "+"
+    %div.col-md-6
+    %div.col-md-6.green= raw(line[1, line.length])

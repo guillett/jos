@@ -35,7 +35,4 @@ $(document).ready(function() {
         e.preventDefault();
         $("#accordion").navgoco('toggle', true);
     });
-
-    $("#from div ul li.ins").remove();
-    $("#to div ul li.del").remove();
 });
