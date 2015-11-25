@@ -7,12 +7,17 @@ class Code < ActiveRecord::Base
 
 
   def summary section_id=nil
-    own_sections = sections_with_valid_links
-    section_links = own_sections.map(&:section_links_valid).compact.flatten
-    section_article_links = own_sections.map(&:section_article_links_valid).compact.flatten
 
-    section_hash = preload_section_links(own_sections, section_links)
-    preload_section_article_links(own_sections, section_article_links)
+    section_hash = Rails.cache.fetch("code/#{id}", expires_in: 90.minutes) do
+      own_sections = sections_with_valid_links
+      section_links = own_sections.map(&:section_links_valid).compact.flatten
+      section_article_links = own_sections.map(&:section_article_links_valid).compact.flatten
+
+      section_hash = preload_section_links(own_sections, section_links)
+      preload_section_article_links(own_sections, section_article_links)
+
+      section_hash
+    end
 
     return valid_sections.map{|s| section_hash[s.id]} if section_id.nil?
     section_hash[section_id]

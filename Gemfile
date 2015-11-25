@@ -47,6 +47,7 @@ gem 'bootstrap-sass'
 
 group :production do
   gem 'rails_12factor'
+  gem 'redis-rails'
 end
 
 group :development, :test do
