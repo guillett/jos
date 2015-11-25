@@ -6,7 +6,7 @@ class Code < ActiveRecord::Base
   has_many :valid_sections, -> { where(code_section_links: {state:  "VIGUEUR"}).order('"code_section_links"."order"') }, through: :code_section_links, source: :section
 
 
-  def summary
+  def summary section_id=nil
     own_sections = sections_with_valid_links
     section_links = own_sections.map(&:section_links_valid).compact.flatten
     section_article_links = own_sections.map(&:section_article_links_valid).compact.flatten
@@ -14,7 +14,8 @@ class Code < ActiveRecord::Base
     section_hash = preload_section_links(own_sections, section_links)
     preload_section_article_links(own_sections, section_article_links)
 
-    valid_sections.map{|s| section_hash[s.id]}
+    return valid_sections.map{|s| section_hash[s.id]} if section_id.nil?
+    section_hash[section_id]
   end
 
   def preload_section_links(sections, links)
@@ -42,14 +43,6 @@ class Code < ActiveRecord::Base
       sal.section = source
       source.section_article_links_preloaded << sal
     end
-  end
-
-  def summary_start_id section_id
-    sections = Section.all.to_ary
-    section_links = SectionLink.all
-    section_hash = preload_section_links sections, section_links
-
-    section_hash[section_id]
   end
 
 end
