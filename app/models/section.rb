@@ -16,10 +16,4 @@ class Section < ActiveRecord::Base
     @section_article_links_preloaded=[]
   end
 
-  def self.with_article_displayable id
-    section = Section.includes(:articles).find id
-    section.articles = section.articles.select {|a| a.state == 'VIGUEUR' || a.state == 'ABROGE_DIFF' }
-    section
-  end
-
 end

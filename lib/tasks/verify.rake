@@ -12,9 +12,9 @@ def crawl_section id_section_origin
   end
 end
 
-def section_displayed_by_us id_section_origin
-  section= Section.find_by(id_section_origin: id_section_origin)
-  Section.with_article_displayable section.id
+def articles_displayed_by_us id_section_origin
+  section = Section.find_by(id_section_origin: id_section_origin)
+  section.section_article_links_valid.includes(:article).map(&:article)
 end
 
 
@@ -32,8 +32,11 @@ namespace :verify do
     section_ids.each do |section_id|
       puts "for section: #{section_id}"
 
-      legi_length = (crawl_section section_id)['articles'].length
-      us_length = (section_displayed_by_us section_id).articles.length
+      legi_articles = (crawl_section section_id)['articles']
+      our_articles = (articles_displayed_by_us section_id)
+
+      legi_length = legi_articles.length
+      us_length = our_articles.length
 
       puts "legifrance: #{legi_length} articles"
       puts "us: #{us_length} articles"
@@ -44,6 +47,8 @@ namespace :verify do
         puts "Error"
         exit 1
       end
+
+      puts "same title !" if our_articles.map{|a| "#{a.nature} #{a.number}"} == legi_articles
 
     end
     
