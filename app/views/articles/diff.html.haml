@@ -10,21 +10,29 @@
   %span.green
     lignes vertes : lignes ajoutées dans le 2<sup>ème</sup> article (à droite)
 %div.row
-  %div.col-md-6.center
+  %div.col-md-1
+  %div.col-md-5.center
     %h2
       %a{href: "/articles/#{@article_1.id_article_origin}"}="#{@article_1.nature}  #{@article_1.number}"
     %h3
       #{@article_1.start_date.strftime("%m/%d/%Y")} - #{@article_1.end_date.strftime("%m/%d/%Y")}
-  %div.col-md-6.center
+  %div.col-md-5.center
     %h2
       %a{href: "/articles/#{@article_2.id_article_origin}"}="#{@article_2.nature}  #{@article_2.number}"
     %h3
       #{@article_2.start_date.strftime("%m/%d/%Y")} - #{@article_2.end_date.strftime("%m/%d/%Y")}
+  %div.col-md-1
 - @diff_array.each do |line|
   - if line.first == " "
-    %div.col-md-12.grey= raw(line[1, line.length])
+    %div.clearfix
+    %div.col-md-1
+    %div.col-md-10.grey= raw(line[1, line.length])
+    %div.col-md-1
+    %div.clearfix
   - elsif line.first == "-"
-    %div.col-md-6.pink= raw(line[1, line.length])
+    %div.col-md-1
+    %div.col-md-5.pink= raw(line[1, line.length])
   - elsif line.first == "+"
     %div.col-md-6
-    %div.col-md-6.green= raw(line[1, line.length])
+    %div.col-md-5.green= raw(line[1, line.length])
+    %div.col-md-1
