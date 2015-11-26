@@ -20,7 +20,7 @@ class ArticlesController < ApplicationController
   private
 
   def diff_to_array(article_1, article_2)
-    Diffy::Diff.new(article_1, article_2).each_chunk.to_a
+    Diffy::Diff.new(article_1, article_2, :allow_empty_diff => false).each_chunk.to_a
   end
 
 end
