@@ -1,10 +1,14 @@
-%h1=@section.title
-- @articles.each do |article|
-  %h2
-    %a{href: "/articles/#{article.id_article_origin}"}="#{article.nature}  #{article.number}"
-  = raw format_article_text(article.text)
-  -unless article.nota.blank?
-    %h3= "Nota "
-    = raw format_article_text(article.nota)
-
-= raw display_summary(@sub_sections, 'accordion')
+%div.row
+  %div.col-md-10.col-md-offset-1
+    %h1=@section.title
+    - @articles.each do |article|
+      %h2
+        %a{href: "/articles/#{article.id_article_origin}"}="#{article.nature}  #{article.number}"
+      = raw format_article_text(article.text)
+      -unless article.nota.blank?
+        %h3= "Nota "
+        = raw format_article_text(article.nota)
+    %p.sub_sections
+      %strong
+        Sous-parties
+    = raw display_summary(@sub_sections, 'accordion')
