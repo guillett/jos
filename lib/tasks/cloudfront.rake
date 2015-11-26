@@ -7,4 +7,13 @@ namespace :cloudfront do
     raise "Error while invalidating cache : \n#{resp.inspect}" unless resp.invalidation.status == 'InProgress'
   end
 
+  desc 'warmup all cloudfront cache'
+  task warmup: :environment do
+    Anemone.crawl("http://www.jo-nf.fr/codes") do |anemone|
+      anemone.on_every_page do |page|
+        puts page.url
+      end
+    end
+  end
+
 end
