@@ -18,6 +18,9 @@
   %div.col-md-6
     %h2
       %a{href: "/articles/#{@article.id_article_origin}"}="#{@article.nature}  #{@article.number}"
+    %p
+      %strong
+        #{@article.start_date.strftime("%d/%m/%Y")} au #{@article.end_date.strftime("%d/%m/%Y")}
     = raw format_article_text(@article.text)
     -unless @article.nota.blank?
       %h3= "Nota "
