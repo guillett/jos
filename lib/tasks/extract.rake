@@ -33,9 +33,7 @@ namespace :extract do
 
     path = File.absolute_path(ENV["TARGET"])
     extractor = Extractor.new
-    jorf = extractor.extract_jorf(path)
-
-    puts "#{jorf.length} jorfs built"
+    extractor.extract_jorf(path)
   end
 
   desc "Download legi global"

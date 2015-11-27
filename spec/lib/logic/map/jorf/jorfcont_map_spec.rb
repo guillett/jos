@@ -50,6 +50,19 @@ describe 'mapping of jorfcont' do
       expect(@jorfcont_map.link_cont_text_maps[0].id_jorftext_origin).to  eq("JORFTEXT000000339622")
     end
 
+    describe "to_jorfcont_jorftext_link_hash" do
+
+      before do
+        @hashes = @jorfcont_map.to_jorfcont_jorftext_link_hashes
+      end
+
+      it 'hash correctly the link' do
+        expect(@hashes.length).to   eq(1)
+        expect(@hashes[0][:id_jorfcont_origin]).to   eq("JORFCONT000000000001")
+        expect(@hashes[0][:id_jorftext_origin]).to   eq("JORFTEXT000000339622")
+      end
+    end
+
   end
 
 end
