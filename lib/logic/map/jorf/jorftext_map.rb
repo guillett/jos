@@ -1,5 +1,3 @@
-require './lib/logic/map/article_version_map'
-
 class JorftextMap
   include HappyMapper
   tag 'TEXTELR'
