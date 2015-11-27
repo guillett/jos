@@ -33,7 +33,8 @@ describe 'mapping of jorfcont' do
 
     before do
       @xml = fake_jorfcont_file
-      @jorfcont = JorfcontMap.parse(@xml, :single => true).to_jorfcont
+      @jorfcont_map = JorfcontMap.parse(@xml, :single => true)
+      @jorfcont = @jorfcont_map.to_jorfcont
     end
 
     it 'maps correctly the jorfcont' do
@@ -42,6 +43,11 @@ describe 'mapping of jorfcont' do
       expect(@jorfcont.title).to   eq("JOUE n°113 du 7 mai 1993")
       expect(@jorfcont.number).to   eq(113)
       expect(@jorfcont.publication_date).to   eq("1993-05-07")
+    end
+
+    it 'maps correctly the cont jorf link' do
+      expect(@jorfcont_map.link_cont_text_maps.length).to  eq(1)
+      expect(@jorfcont_map.link_cont_text_maps[0].id_jorftext_origin).to  eq("JORFTEXT000000339622")
     end
 
   end

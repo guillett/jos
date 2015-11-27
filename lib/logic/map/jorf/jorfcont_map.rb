@@ -1,3 +1,5 @@
+require './lib/logic/map/jorf/link_cont_text_map'
+
 class JorfcontMap
   include HappyMapper
   tag 'JO'
@@ -8,9 +10,12 @@ class JorfcontMap
   has_one :number, String, :xpath => 'META/META_SPEC/META_CONTENEUR/NUM'
   has_one :publication_date, DateTime, :xpath => 'META/META_SPEC/META_CONTENEUR/DATE_PUBLI'
 
+  has_many :link_cont_text_maps, LinkContTextMap, :xpath => 'STRUCTURE_TXT'
+
   def to_hash
     hash = {}
     instance_variables.each { |var| hash[var.to_s.delete("@")] = instance_variable_get(var) }
+    hash.delete("link_cont_text_maps")
     hash
   end
 
