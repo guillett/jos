@@ -7,6 +7,8 @@ class Extractor
 
   JTEXT_STRUCTURE_PATTERN = 'texte/struct/**/*.xml'
   JCONT_PATTERN = 'conteneur/**/*.xml'
+  JSECTION_PATTERN = 'section_ta/**/*.xml'
+  JARTICLE_PATTERN = 'article/**/*.xml'
 
   def extract_struct_xml_paths path
     Dir.glob(File.join(path, JTEXT_STRUCTURE_PATTERN))
@@ -14,6 +16,14 @@ class Extractor
 
   def extract_conteneur_xml_paths path
     Dir.glob(File.join(path, JCONT_PATTERN))
+  end
+
+  def extract_jsection_xml_paths path
+    Dir.glob(File.join(path, JSECTION_PATTERN))
+  end
+  
+  def extract_jarticle_xml_paths path
+    Dir.glob(File.join(path, JARTICLE_PATTERN))
   end
 
   def extract_jorf path
@@ -33,6 +43,43 @@ class Extractor
 
     JorfcontJorftextLink.import jorfcont_jorftext_links
 
+    jsections_maps = extract_jsection_maps(path)
+    jsections = jsections_maps.map(&:to_jsection)
+    Jsection.import jsections
+
+    jarticles = extract_jarticles(path)
+    Jarticle.import jarticles
+
+    jsections_hash = jsections.reduce({}) { |h, jsection| h[jsection.id_jsection_origin] = jsection; h }
+    jarticles_hash = jarticles.reduce({}) { |h, jarticle| h[jarticle.id_jarticle_origin] = jarticle; h }
+
+    jsection_article_link_hashes = jsections_maps.map(&:to_jscta_jarticle_link_hashes).compact.flatten
+    jsection_jarticle_links = build_jsection_jarticle_links(jarticles_hash, jsection_article_link_hashes, jsections_hash)
+
+    JsectionJarticleLink.import jsection_jarticle_links
+  end
+
+  def build_jsection_jarticle_links(jarticles_hash, jsection_article_link_hashes, jsections_hash)
+    jsection_article_link_hashes.map do |jsection_article_link_hash|
+      jsection_id = jsections_hash[jsection_article_link_hash[:id_jsection_origin]].id
+      jarticle_id = jarticles_hash[jsection_article_link_hash[:id_jarticle_origin]].id
+      number = jsection_article_link_hash[:number]
+      JsectionJarticleLink.new(jsection_id: jsection_id, jarticle_id: jarticle_id, number: number)
+    end
+  end
+
+  def extract_jarticles(path)
+    jarticle_paths = extract_jarticle_xml_paths(path)
+    jarticle_paths.map do |path|
+      JarticleMap.parse(File.read(path), single: true).to_jarticle
+    end
+  end
+  
+  def extract_jsection_maps(path)
+    jsection_paths = extract_jsection_xml_paths(path)
+    jsection_paths.map do |path|
+      JsctaMap.parse(File.read(path), single: true)
+    end
   end
 
   def extract_jtext_maps(path)

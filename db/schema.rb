@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151130120509) do
+ActiveRecord::Schema.define(version: 20151130140011) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,14 @@ ActiveRecord::Schema.define(version: 20151130120509) do
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end
+
+  create_table "jsection_jarticle_links", id: false, force: :cascade do |t|
+    t.integer "jsection_id", null: false
+    t.integer "jarticle_id", null: false
+    t.integer "number"
+  end
+
+  add_index "jsection_jarticle_links", ["jsection_id", "jarticle_id"], name: "index_jsection_jarticle_links_on_jsection_id_and_jarticle_id", using: :btree
 
   create_table "jsections", force: :cascade do |t|
     t.string   "id_jsection_origin"
@@ -149,7 +157,4 @@ ActiveRecord::Schema.define(version: 20151130120509) do
 
   add_index "sections", ["code_id"], name: "index_sections_on_code_id", using: :btree
 
-  add_foreign_key "section_links", "sections", column: "source_id"
-  add_foreign_key "section_links", "sections", column: "target_id"
-  add_foreign_key "sections", "codes"
 end
