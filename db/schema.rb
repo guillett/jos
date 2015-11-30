@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151130112234) do
+ActiveRecord::Schema.define(version: 20151130115641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,6 +78,13 @@ ActiveRecord::Schema.define(version: 20151130112234) do
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end
+
+  create_table "jtext_jsection_links", id: false, force: :cascade do |t|
+    t.integer "jtext_id",    null: false
+    t.integer "jsection_id", null: false
+  end
+
+  add_index "jtext_jsection_links", ["jtext_id", "jsection_id"], name: "index_jtext_jsection_links_on_jtext_id_and_jsection_id", using: :btree
 
   create_table "jtexts", force: :cascade do |t|
     t.string   "id_jorftext_origin"
