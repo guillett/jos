@@ -72,6 +72,13 @@ ActiveRecord::Schema.define(version: 20151130112234) do
     t.datetime "updated_at",         null: false
   end
 
+  create_table "jsections", force: :cascade do |t|
+    t.string   "id_jsection_origin"
+    t.string   "title"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
   create_table "jtexts", force: :cascade do |t|
     t.string   "id_jorftext_origin"
     t.string   "nature"
