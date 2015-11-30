@@ -41,7 +41,7 @@ describe 'mapping of jscta' do
     it 'maps correctly the cont jorf link' do
       expect(@jscta_map.link_section_article_maps.length).to  eq(4)
       expect(@jscta_map.link_section_article_maps[0].id_jarticle_origin).to  eq("JORFARTI000030611462")
-      expect(@jscta_map.link_section_article_maps[0].number).to  eq("3")
+      expect(@jscta_map.link_section_article_maps[0].number).to  eq(3)
     end
 
     describe "to_jscta_jarticle_link_hashes" do
@@ -54,6 +54,7 @@ describe 'mapping of jscta' do
         expect(@hashes.length).to   eq(4)
         expect(@hashes[0][:id_jsection_origin]).to   eq("JORFSCTA000030611457")
         expect(@hashes[0][:id_jarticle_origin]).to   eq("JORFARTI000030611462")
+        expect(@hashes[0][:number]).to   eq(3)
       end
     end
 

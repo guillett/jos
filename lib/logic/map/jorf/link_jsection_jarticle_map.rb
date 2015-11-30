@@ -3,7 +3,7 @@ class LinkJsectionJarticleMap
   tag 'LIEN_ART'
 
   attribute :id_jarticle_origin, String, :tag => 'id'
-  attribute :number, String, :tag => 'num'
+  attribute :number, Integer, :tag => 'num'
 
   def to_hash
     hash = {}

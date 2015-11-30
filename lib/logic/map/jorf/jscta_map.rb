@@ -21,7 +21,7 @@ class JsctaMap
   end
 
   def to_jscta_jarticle_link_hashes
-    link_section_article_maps.map { |lsa| { id_jsection_origin: id_jsection_origin, id_jarticle_origin: lsa.id_jarticle_origin }}
+    link_section_article_maps.map { |lsa| { id_jsection_origin: id_jsection_origin, id_jarticle_origin: lsa.id_jarticle_origin, number: lsa.number }}
   end
 
 end
