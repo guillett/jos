@@ -42,7 +42,7 @@ class Extractor
 
     jcont_jtext_links = build_jorfcont_jorftext_links(jcont_jtext_link_hashes, jconts_hash, jtexts_hash)
 
-    JorfcontJorftextLink.import jcont_jtext_links
+    JorfcontJtextLink.import jcont_jtext_links
 
     jsections_maps = extract_jsection_maps(path)
     jsections = jsections_maps.map(&:to_jsection)
@@ -133,7 +133,7 @@ class Extractor
       jorfcont_id = jorfconts_hash[id_jorfcont_origin].id
       jorftext_id = jorftexts_hash[id_jorftext_origin].id
 
-      JorfcontJorftextLink.new(jorfcont_id: jorfcont_id, jorftext_id: jorftext_id)
+      JorfcontJtextLink.new(jorfcont_id: jorfcont_id, jtext_id: jorftext_id)
     end
   end
 

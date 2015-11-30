@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  resources :containers, :only => [:index]
+  resources :containers, :only => [:index, :show]
   resources :articles, :only => [:show]
   get '/articles/:article_1_id/compare/:article_2_id' => 'articles#diff'
   resources :codes, :only => [:index, :show]
