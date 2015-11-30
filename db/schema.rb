@@ -11,10 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20151130115641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+=======
+ActiveRecord::Schema.define(version: 20151130115757) do
+>>>>>>> 9f80c2e14444cf7d4e7de2f35f2f67497b6f4a29
 
   create_table "article_versions", id: false, force: :cascade do |t|
     t.integer "article_a_id", null: false
@@ -45,8 +49,8 @@ ActiveRecord::Schema.define(version: 20151130115641) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "code_section_links", ["code_id"], name: "index_code_section_links_on_code_id", using: :btree
-  add_index "code_section_links", ["section_id"], name: "index_code_section_links_on_section_id", using: :btree
+  add_index "code_section_links", ["code_id"], name: "index_code_section_links_on_code_id"
+  add_index "code_section_links", ["section_id"], name: "index_code_section_links_on_section_id"
 
   create_table "codes", force: :cascade do |t|
     t.string   "title"
@@ -55,12 +59,19 @@ ActiveRecord::Schema.define(version: 20151130115641) do
     t.string   "escape_title"
   end
 
+  create_table "jarticles", force: :cascade do |t|
+    t.string   "id_jarticle_origin"
+    t.text     "text"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
   create_table "jorfcont_jorftext_links", id: false, force: :cascade do |t|
     t.integer "jorfcont_id", null: false
     t.integer "jorftext_id", null: false
   end
 
-  add_index "jorfcont_jorftext_links", ["jorfcont_id", "jorftext_id"], name: "index_jorfcont_jorftext_links_on_jorfcont_id_and_jorftext_id", using: :btree
+  add_index "jorfcont_jorftext_links", ["jorfcont_id", "jorftext_id"], name: "index_jorfcont_jorftext_links_on_jorfcont_id_and_jorftext_id"
 
   create_table "jorfconts", force: :cascade do |t|
     t.string   "id_jorfcont_origin"
@@ -112,7 +123,7 @@ ActiveRecord::Schema.define(version: 20151130115641) do
     t.integer  "order"
   end
 
-  add_index "section_article_links", ["section_id", "article_id"], name: "index_section_article_links_on_section_id_and_article_id", using: :btree
+  add_index "section_article_links", ["section_id", "article_id"], name: "index_section_article_links_on_section_id_and_article_id"
 
   create_table "section_links", force: :cascade do |t|
     t.string   "state"
@@ -133,9 +144,6 @@ ActiveRecord::Schema.define(version: 20151130115641) do
     t.string   "id_section_origin"
   end
 
-  add_index "sections", ["code_id"], name: "index_sections_on_code_id", using: :btree
+  add_index "sections", ["code_id"], name: "index_sections_on_code_id"
 
-  add_foreign_key "section_links", "sections", column: "source_id"
-  add_foreign_key "section_links", "sections", column: "target_id"
-  add_foreign_key "sections", "codes"
 end
