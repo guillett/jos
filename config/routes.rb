@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get '/articles/:article_1_id/compare/:article_2_id' => 'articles#diff'
   resources :codes, :only => [:index, :show]
   resources :sections, :only => [:show]
+  resources :textes, :only => [:show]
   root 'home#index'
 
   # The priority is based upon order of creation: first created -> highest priority.

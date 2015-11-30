@@ -1,0 +1,18 @@
+%div.row
+  %div.col-md-10.col-md-offset-1
+    %h1=@jtext.nature
+
+    %h2 articles
+    %ul
+      -@jtext.jarticles.each do |article|
+        %li=article.text
+
+    %h2 sections
+    %ul
+      -@jtext.jsections.each do |section|
+        %li
+          =section.title
+          -if !section.jarticles.empty?
+            %ul
+              -section.jarticles.each  do |jarticle|
+                %li=jarticle.text
