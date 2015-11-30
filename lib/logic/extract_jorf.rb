@@ -31,17 +31,17 @@ class Extractor
     jconts = jcont_maps.map(&:to_jorfcont)
     jcont_jtext_link_hashes = jcont_maps.map(&:to_jorfcont_jorftext_link_hashes).compact.flatten
 
-    jorftexts = extract_jtext_maps(path)
+    jtexts = extract_jtext_maps(path)
 
     Jorfcont.import jconts
-    Jtext.import jorftexts
+    Jtext.import jtexts
 
-    jorfconts_hash = jconts.reduce({}) { |h, jorfcont| h[jorfcont.id_jorfcont_origin] = jorfcont; h }
-    jorftexts_hash = jorftexts.reduce({}) { |h, jorftext| h[jorftext.id_jorftext_origin] = jorftext; h }
+    jconts_hash = jconts.reduce({}) { |h, jorfcont| h[jorfcont.id_jorfcont_origin] = jorfcont; h }
+    jtexts_hash = jtexts.reduce({}) { |h, jorftext| h[jorftext.id_jorftext_origin] = jorftext; h }
 
-    jorfcont_jorftext_links = build_jorfcont_jorftext_links(jcont_jtext_link_hashes, jorfconts_hash, jorftexts_hash)
+    jcont_jtext_links = build_jorfcont_jorftext_links(jcont_jtext_link_hashes, jconts_hash, jtexts_hash)
 
-    JorfcontJorftextLink.import jorfcont_jorftext_links
+    JorfcontJorftextLink.import jcont_jtext_links
 
     jsections_maps = extract_jsection_maps(path)
     jsections = jsections_maps.map(&:to_jsection)
