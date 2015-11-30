@@ -57,10 +57,28 @@ class Extractor
     Jarticle.import jarticles
     jarticles_hash = jarticles.reduce({}) { |h, jarticle| h[jarticle.id_jarticle_origin] = jarticle; h }
 
+    jtext_jarticle_link_hashes = jtext_maps.map(&:to_jtext_jarticle_link_hashes).compact.flatten
+    jtext_jarticle_links = build_jtext_jarticle_links(jarticles_hash, jtext_jarticle_link_hashes, jtexts_hash)
+    JtextJarticleLink.import jtext_jarticle_links
+
     jsection_article_link_hashes = jsections_maps.map(&:to_jscta_jarticle_link_hashes).compact.flatten
     jsection_jarticle_links = build_jsection_jarticle_links(jarticles_hash, jsection_article_link_hashes, jsections_hash)
 
     JsectionJarticleLink.import jsection_jarticle_links
+  end
+
+  def build_jtext_jarticle_links(jarticles_hash, jtext_jarticle_link_hashes, jtexts_hash)
+    jtext_jarticle_link_hashes.map do |jtext_jarticle_link_hash|
+      jtext_id = jtexts_hash[jtext_jarticle_link_hash[:id_jtext_origin]].id
+      jarticle = jarticles_hash[jtext_jarticle_link_hash[:id_jarticle_origin]]
+      if jarticle.nil?
+        $stderr.puts "missing article ! #{jtext_jarticle_link_hash[:id_jarticle_origin]}"
+        next
+      end
+      jarticle_id = jarticle.id
+      order = jtext_jarticle_link_hash[:order]
+      JtextJarticleLink.new(jtext_id: jtext_id, jarticle_id: jarticle_id, order: order)
+    end.compact
   end
 
   def build_jtext_jsection_links(jsections_hash, jtext_jsection_link_hashes, jtexts_hash)
