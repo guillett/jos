@@ -1,4 +1,4 @@
-class JorftextMap
+class JtextMap
   include HappyMapper
   tag 'TEXTELR'
 

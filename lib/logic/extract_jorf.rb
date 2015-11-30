@@ -27,7 +27,7 @@ class Extractor
 
     jorftext_struct_paths = extract_struct_xml_paths(path)
     jorftexts = jorftext_struct_paths.map do |jorftext_struct_path|
-      JorftextMap.parse(File.read(jorftext_struct_path), :single => true).to_jorftext
+      JtextMap.parse(File.read(jorftext_struct_path), :single => true).to_jorftext
     end
 
     Jorfcont.import jorfconts

@@ -1,5 +1,5 @@
 require 'rails_helper'
-require './lib/logic/map/jorf/jorftext_map'
+require './lib/logic/map/jorf/jtext_map'
 
 def fake_jorftext_file
   <<-FOO
@@ -52,7 +52,7 @@ describe 'mapping of jorftext' do
 
     before do
       @xml = fake_jorftext_file
-      @jorftextMap = JorftextMap.parse(@xml, :single => true).to_jorftext
+      @jorftextMap = JtextMap.parse(@xml, :single => true).to_jorftext
     end
 
     it 'maps correctly the jorftext' do
