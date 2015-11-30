@@ -31,7 +31,7 @@ class Extractor
     end
 
     Jorfcont.import jorfconts
-    Jorftext.import jorftexts
+    Jtext.import jorftexts
 
     jorfconts_hash = jorfconts.reduce({}) { |h, jorfcont| h[jorfcont.id_jorfcont_origin] = jorfcont; h }
     jorftexts_hash = jorftexts.reduce({}) { |h, jorftext| h[jorftext.id_jorftext_origin] = jorftext; h }

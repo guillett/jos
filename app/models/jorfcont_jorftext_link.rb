@@ -1,4 +1,4 @@
 class JorfcontJorftextLink < ActiveRecord::Base
   belongs_to :jorfcont
-  belongs_to :jorftext
+  belongs_to :jtext
 end

@@ -17,7 +17,7 @@ class JorftextMap
   end
 
   def to_jorftext
-     Jorftext.new(to_hash)
+     Jtext.new(to_hash)
   end
 
 end
