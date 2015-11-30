@@ -1,0 +1,5 @@
+%div.col-md-6.col-md-offset-3
+  %h1= "#{@containers.count} JORFs"
+  - @containers.each do |c|
+    %h2
+      %a{href: "conteneurs/#{c.id}"}=c.title

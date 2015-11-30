@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
 
+  resources :containers, :only => [:index]
   resources :articles, :only => [:show]
   get '/articles/:article_1_id/compare/:article_2_id' => 'articles#diff'
   resources :codes, :only => [:index, :show]
   resources :sections, :only => [:show]
   root 'home#index'
-
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
