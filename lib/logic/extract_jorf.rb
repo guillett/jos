@@ -31,7 +31,8 @@ class Extractor
     jconts = jcont_maps.map(&:to_jorfcont)
     jcont_jtext_link_hashes = jcont_maps.map(&:to_jorfcont_jorftext_link_hashes).compact.flatten
 
-    jtexts = extract_jtext_maps(path)
+    jtext_maps = extract_jtext_maps(path)
+    jtexts = jtext_maps.map(&:to_jtext)
 
     Jorfcont.import jconts
     Jtext.import jtexts
@@ -46,17 +47,29 @@ class Extractor
     jsections_maps = extract_jsection_maps(path)
     jsections = jsections_maps.map(&:to_jsection)
     Jsection.import jsections
+    jsections_hash = jsections.reduce({}) { |h, jsection| h[jsection.id_jsection_origin] = jsection; h }
+
+    jtext_jsection_link_hashes = jtext_maps.map(&:to_jtext_jsection_link_hashes).compact.flatten
+    jtext_jsection_links = build_jtext_jsection_links(jsections_hash, jtext_jsection_link_hashes, jtexts_hash)
+    JtextJsectionLink.import jtext_jsection_links
 
     jarticles = extract_jarticles(path)
     Jarticle.import jarticles
-
-    jsections_hash = jsections.reduce({}) { |h, jsection| h[jsection.id_jsection_origin] = jsection; h }
     jarticles_hash = jarticles.reduce({}) { |h, jarticle| h[jarticle.id_jarticle_origin] = jarticle; h }
 
     jsection_article_link_hashes = jsections_maps.map(&:to_jscta_jarticle_link_hashes).compact.flatten
     jsection_jarticle_links = build_jsection_jarticle_links(jarticles_hash, jsection_article_link_hashes, jsections_hash)
 
     JsectionJarticleLink.import jsection_jarticle_links
+  end
+
+  def build_jtext_jsection_links(jsections_hash, jtext_jsection_link_hashes, jtexts_hash)
+    jtext_jsection_link_hashes.map do |jtext_jsection_link_hash|
+      jtext_id = jtexts_hash[jtext_jsection_link_hash[:id_jtext_origin]].id
+      jsection_id = jsections_hash[jtext_jsection_link_hash[:id_jsection_origin]].id
+      order = jtext_jsection_link_hash[:order]
+      JtextJsectionLink.new(jtext_id: jtext_id, jsection_id: jsection_id, order: order)
+    end
   end
 
   def build_jsection_jarticle_links(jarticles_hash, jsection_article_link_hashes, jsections_hash)
@@ -84,8 +97,8 @@ class Extractor
 
   def extract_jtext_maps(path)
     jorftext_struct_paths = extract_struct_xml_paths(path)
-    jorftexts = jorftext_struct_paths.map do |jorftext_struct_path|
-      JtextMap.parse(File.read(jorftext_struct_path), :single => true).to_jtext
+    jorftext_struct_paths.map do |jorftext_struct_path|
+      JtextMap.parse(File.read(jorftext_struct_path), :single => true)
     end
   end
 

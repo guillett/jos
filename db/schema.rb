@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151130140011) do
+ActiveRecord::Schema.define(version: 20151130145247) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 20151130140011) do
   create_table "jtext_jsection_links", id: false, force: :cascade do |t|
     t.integer "jtext_id",    null: false
     t.integer "jsection_id", null: false
+    t.integer "order"
   end
 
   add_index "jtext_jsection_links", ["jtext_id", "jsection_id"], name: "index_jtext_jsection_links_on_jtext_id_and_jsection_id", using: :btree
