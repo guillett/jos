@@ -5,41 +5,46 @@ require './app/models/code'
 
 class Extractor
 
-  JORFTEXT_STRUCTURE_PATTERN = 'texte/struct/**/*.xml'
-  JORFCONT_PATTERN = 'conteneur/**/*.xml'
+  JTEXT_STRUCTURE_PATTERN = 'texte/struct/**/*.xml'
+  JCONT_PATTERN = 'conteneur/**/*.xml'
 
   def extract_struct_xml_paths path
-    Dir.glob(File.join(path, JORFTEXT_STRUCTURE_PATTERN))
+    Dir.glob(File.join(path, JTEXT_STRUCTURE_PATTERN))
   end
 
   def extract_conteneur_xml_paths path
-    Dir.glob(File.join(path, JORFCONT_PATTERN))
+    Dir.glob(File.join(path, JCONT_PATTERN))
   end
 
   def extract_jorf path
-    jorfcont_paths = extract_conteneur_xml_paths(path)
-    jorfcont_maps = jorfcont_paths.map do |jorfcont_path|
-      JorfcontMap.parse(File.read(jorfcont_path), :single => true)
-    end
+    jcont_maps = extract_jcont_maps(path)
+    jconts = jcont_maps.map(&:to_jorfcont)
+    jcont_jtext_link_hashes = jcont_maps.map(&:to_jorfcont_jorftext_link_hashes).compact.flatten
 
-    jorfconts = jorfcont_maps.map(&:to_jorfcont)
-    jorfcont_jorftext_link_hashes = jorfcont_maps.map(&:to_jorfcont_jorftext_link_hashes).compact.flatten
+    jorftexts = extract_jtext_maps(path)
 
+    Jorfcont.import jconts
+    Jtext.import jorftexts
+
+    jorfconts_hash = jconts.reduce({}) { |h, jorfcont| h[jorfcont.id_jorfcont_origin] = jorfcont; h }
+    jorftexts_hash = jorftexts.reduce({}) { |h, jorftext| h[jorftext.id_jorftext_origin] = jorftext; h }
+
+    jorfcont_jorftext_links = build_jorfcont_jorftext_links(jcont_jtext_link_hashes, jorfconts_hash, jorftexts_hash)
+
+    JorfcontJorftextLink.import jorfcont_jorftext_links
+
+  end
+
+  def extract_jtext_maps(path)
     jorftext_struct_paths = extract_struct_xml_paths(path)
     jorftexts = jorftext_struct_paths.map do |jorftext_struct_path|
       JtextMap.parse(File.read(jorftext_struct_path), :single => true).to_jorftext
     end
+  end
 
-    Jorfcont.import jorfconts
-    Jtext.import jorftexts
-
-    jorfconts_hash = jorfconts.reduce({}) { |h, jorfcont| h[jorfcont.id_jorfcont_origin] = jorfcont; h }
-    jorftexts_hash = jorftexts.reduce({}) { |h, jorftext| h[jorftext.id_jorftext_origin] = jorftext; h }
-
-    jorfcont_jorftext_links = build_jorfcont_jorftext_links(jorfcont_jorftext_link_hashes, jorfconts_hash, jorftexts_hash)
-
-    JorfcontJorftextLink.import jorfcont_jorftext_links
-
+  def extract_jcont_maps(path)
+    jorfcont_paths = extract_conteneur_xml_paths(path)
+    jorfcont_paths.map { |jorfcont_path| JorfcontMap.parse(File.read(jorfcont_path), :single => true) }
   end
 
   def build_jorfcont_jorftext_links(jorfcont_jorftext_link_hashes, jorfconts_hash, jorftexts_hash)
