@@ -113,28 +113,28 @@ class Extractor
 
   def extract_jarticles(path)
     jarticle_paths = extract_jarticle_xml_paths(path)
-    jarticle_paths.map do |path|
+    Parallel.map(jarticle_paths) do |path|
       JarticleMap.parse(File.read(path), single: true).to_jarticle
     end
   end
   
   def extract_jsection_maps(path)
     jsection_paths = extract_jsection_xml_paths(path)
-    jsection_paths.map do |path|
+    Parallel.map(jsection_paths) do |path|
       JsctaMap.parse(File.read(path), single: true)
     end
   end
 
   def extract_jstruct_maps(path)
     jorftext_struct_paths = extract_struct_xml_paths(path)
-    jorftext_struct_paths.map do |jorftext_struct_path|
+    Parallel.map(jorftext_struct_paths) do |jorftext_struct_path|
       JstructMap.parse(File.read(jorftext_struct_path), :single => true)
     end
   end
 
   def extract_jversion_maps(path)
     jorftext_version_paths = extract_version_xml_paths(path)
-    jorftext_version_paths.map do |jorftext_version_path|
+    Parallel.map(jorftext_version_paths) do |jorftext_version_path|
       JversionMap.parse(File.read(jorftext_version_path), :single => true)
     end
   end
@@ -162,7 +162,7 @@ class Extractor
 
   def extract_jcont_maps(path)
     jorfcont_paths = extract_conteneur_xml_paths(path)
-    jorfcont_paths.map { |jorfcont_path| JorfcontMap.parse(File.read(jorfcont_path), :single => true) }
+    Parallel.map(jorfcont_paths) { |jorfcont_path| JorfcontMap.parse(File.read(jorfcont_path), :single => true) }
   end
 
   def build_jorfcont_jorftext_links(jorfcont_jorftext_link_hashes, jorfconts_hash, jorftexts_hash)
