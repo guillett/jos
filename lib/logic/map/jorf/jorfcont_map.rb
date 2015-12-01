@@ -20,7 +20,9 @@ class JorfcontMap
   end
 
   def to_jorfcont
-     Jorfcont.new(to_hash)
+    jorfcont = Jorfcont.where(id_jorfcont_origin: @id_jorfcont_origin).first
+    jorfcont.destroy if jorfcont
+    Jorfcont.new(to_hash)
   end
 
   def to_jorfcont_jorftext_link_hashes

@@ -10,6 +10,8 @@ class KeywordMap
   end
 
   def to_keyword
+    keyword = Keyword.where(label: @label).first
+    keyword.destroy if keyword
     Keyword.new(to_hash)
   end
 end

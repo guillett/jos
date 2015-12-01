@@ -50,7 +50,9 @@ class Extractor
     Jtext.import jtexts
     puts "keywords jorfcont jtext imported"
 
-    JtextKeyword.import jtexts.map(&:jtext_keywords).flatten.each{|jk| jk.jtext_id = jk.jtext.id; jk.keyword_id = jk.keyword.id; }
+    jtext_keword_hashes = jtexts.map(&:jtext_keywords).flatten.each{|jk| jk.jtext_id = jk.jtext.id; jk.keyword_id = jk.keyword.id; }
+    jtext_kewords = build_jtext_kewords(jtext_keword_hashes)
+    JtextKeyword.import jtext_kewords
 
 
     jconts_hash = jconts.reduce({}) { |h, jorfcont| h[jorfcont.id_jorfcont_origin] = jorfcont; h }
@@ -95,6 +97,8 @@ class Extractor
       end
       jarticle_id = jarticle.id
       order = jtext_jarticle_link_hash[:order]
+      jtext_jarticle_link = JtextJarticleLink.where(jtext_id: jtext_id, jarticle_id: jarticle_id).first
+      jtext_jarticle_link.destroy if jtext_jarticle_link
       JtextJarticleLink.new(jtext_id: jtext_id, jarticle_id: jarticle_id, order: order)
     end.compact
   end
@@ -104,6 +108,8 @@ class Extractor
       jtext_id = jtexts_hash[jtext_jsection_link_hash[:id_jtext_origin]].id
       jsection_id = jsections_hash[jtext_jsection_link_hash[:id_jsection_origin]].id
       order = jtext_jsection_link_hash[:order]
+      jtext_jsection_link = JtextJsectionLink.where(jtext_id: jtext_id, jsection_id: jsection_id).first
+      jtext_jsection_link.destroy if jtext_jsection_link
       JtextJsectionLink.new(jtext_id: jtext_id, jsection_id: jsection_id, order: order)
     end
   end
@@ -113,6 +119,8 @@ class Extractor
       jsection_id = jsections_hash[jsection_article_link_hash[:id_jsection_origin]].id
       jarticle_id = jarticles_hash[jsection_article_link_hash[:id_jarticle_origin]].id
       number = jsection_article_link_hash[:number]
+      jsection_jarticle_link = JsectionJarticleLink.where(jsection_id: jsection_id, jarticle_id: jarticle_id).first
+      jsection_jarticle_link.destroy if jsection_jarticle_link
       JsectionJarticleLink.new(jsection_id: jsection_id, jarticle_id: jarticle_id, number: number)
     end
   end
@@ -166,6 +174,14 @@ class Extractor
     keywords_map.values
   end
 
+  def build_jtext_kewords(jtext_keword_hashes)
+    jtext_keword_hashes.each do |jkh|
+      jtext_keyword = JtextKeyword.where(jtext_id: jkh.jtext.id, keyword_id: jkh.keyword.id).first
+      jtext_keyword.destroy if jtext_keyword
+      JtextKeyword.new(jtext_id: jkh.jtext.id, keyword_id: jkh.keyword.id)
+    end
+  end
+
   def extract_jcont_maps(path)
     jorfcont_paths = extract_conteneur_xml_paths(path)
     Parallel.map(jorfcont_paths) { |jorfcont_path| JorfcontMap.parse(File.read(jorfcont_path), :single => true) }
@@ -184,6 +200,8 @@ class Extractor
         next
       end
 
+      jorfcont_jtext_link = JorfcontJtextLink.where(jorfcont_id: jorfcont_id, jtext_id: jorftext_id).first
+      jorfcont_jtext_link.destroy if jorfcont_jtext_link
       JorfcontJtextLink.new(jorfcont_id: jorfcont_id, jtext_id: jorftext_id, title: jorfcont_jorftext_link_hash[:title])
     end.compact
   end

@@ -17,7 +17,9 @@ class JsctaMap
   end
 
   def to_jsection
-     Jsection.new(to_hash)
+    jsection = Jsection.where(id_jsection_origin: @id_jsection_origin).first
+    jsection.destroy if jsection
+    Jsection.new(to_hash)
   end
 
   def to_jscta_jarticle_link_hashes

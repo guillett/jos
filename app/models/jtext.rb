@@ -7,5 +7,4 @@ class Jtext < ActiveRecord::Base
 
   has_many :jtext_keywords, dependent: :delete_all
   has_many :keywords, through: :jtext_keywords
-
 end
