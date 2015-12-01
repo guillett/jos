@@ -3,6 +3,7 @@ class LinkContTextMap
   tag 'LIEN_TXT'
 
   attribute :id_jorftext_origin, String, :tag => 'idtxt'
+  attribute :title, String, :tag => 'titretxt'
 
   def to_hash
     hash = {}

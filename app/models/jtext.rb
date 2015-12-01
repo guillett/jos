@@ -1,7 +1,4 @@
 class Jtext < ActiveRecord::Base
-  has_many :jorfcont_jtext_links
-  has_many :jorfconts, through: :jorfcont_jtext_links
-
   has_many :jtext_jarticle_links
   has_many :jarticles, through: :jtext_jarticle_links
 

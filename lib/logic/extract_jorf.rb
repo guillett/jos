@@ -133,7 +133,7 @@ class Extractor
       jorfcont_id = jorfconts_hash[id_jorfcont_origin].id
       jorftext_id = jorftexts_hash[id_jorftext_origin].id
 
-      JorfcontJtextLink.new(jorfcont_id: jorfcont_id, jtext_id: jorftext_id)
+      JorfcontJtextLink.new(jorfcont_id: jorfcont_id, jtext_id: jorftext_id, title: jorfcont_jorftext_link_hash[:title])
     end
   end
 

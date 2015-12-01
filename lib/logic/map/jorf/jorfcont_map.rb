@@ -24,7 +24,7 @@ class JorfcontMap
   end
 
   def to_jorfcont_jorftext_link_hashes
-    link_cont_text_maps.map { |lct| { id_jorfcont_origin: id_jorfcont_origin, id_jorftext_origin: lct.id_jorftext_origin }}
+    link_cont_text_maps.map { |lct| { id_jorfcont_origin: id_jorfcont_origin, id_jorftext_origin: lct.id_jorftext_origin, title: lct.title }}
   end
 
 end

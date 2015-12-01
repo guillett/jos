@@ -1,3 +1,9 @@
 %div.row
   %div.col-md-10.col-md-offset-1
     %h1= @container.title
+    %ul
+    - @container.jtexts.each do |jtext|
+      - link = JorfcontJtextLink.where("jorfcont_id = ? and jtext_id = ?", @container.id, jtext.id)
+      %li
+        %a{href: "/textes/#{jtext.id}", title: link.first.title}
+          =link.first.title
