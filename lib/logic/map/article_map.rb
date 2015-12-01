@@ -1,4 +1,5 @@
 require './lib/logic/map/article_version_map'
+require './lib/logic/map/history_link_map'
 
 class ArticleMap
   include HappyMapper
@@ -13,6 +14,7 @@ class ArticleMap
   has_one :start_date, DateTime, :xpath => 'META/META_SPEC/META_ARTICLE/DATE_DEBUT'
   has_one :end_date, DateTime, :xpath => 'META/META_SPEC/META_ARTICLE/DATE_FIN'
   has_one :number, String, :xpath => 'META/META_SPEC/META_ARTICLE/NUM'
+  has_many :history_links, HistoryLinkMap, :xpath => 'LIENS'
 
   #has_many :links, LinkArticleMap, :xpath => 'LIENS'
 
@@ -33,6 +35,7 @@ class ArticleMap
     hash["text"] = text
 
     hash.delete("versions")
+    hash.delete("history_links")
     hash
   end
 
@@ -42,7 +45,9 @@ class ArticleMap
   end
 
   def to_article
-    Article.new(to_hash)
+    article = Article.new(to_hash)
+    article.history_links = history_links.map(&:to_history_link)
+    article
   end
 
   def to_article_versions_hash

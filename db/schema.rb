@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151201165248) do
+ActiveRecord::Schema.define(version: 20151201151019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,19 @@ ActiveRecord::Schema.define(version: 20151201165248) do
     t.datetime "updated_at",   null: false
     t.string   "escape_title"
   end
+
+  create_table "history_links", force: :cascade do |t|
+    t.string   "id_text_origin"
+    t.string   "nature"
+    t.string   "text_number"
+    t.string   "text_type"
+    t.string   "title"
+    t.integer  "article_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "history_links", ["article_id"], name: "index_history_links_on_article_id", using: :btree
 
   create_table "jarticles", force: :cascade do |t|
     t.string   "id_jarticle_origin"
@@ -172,6 +185,7 @@ ActiveRecord::Schema.define(version: 20151201165248) do
 
   add_index "sections", ["code_id"], name: "index_sections_on_code_id", using: :btree
 
+  add_foreign_key "history_links", "articles"
   add_foreign_key "jtext_keywords", "jtexts"
   add_foreign_key "jtext_keywords", "keywords"
 end

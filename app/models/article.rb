@@ -6,4 +6,7 @@ class Article < ActiveRecord::Base
                           :join_table => "article_versions",
                           :foreign_key => "article_a_id",
                           :association_foreign_key => "article_b_id")
+
+  has_many :history_links
+
 end

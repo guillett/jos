@@ -98,6 +98,12 @@ class Extractor
         sections.map{|s| s.code_id = code.id}
         Section.import sections
 
+        history_links = articles.map do |article|
+          article.history_links.each { |history_link| history_link.article_id = article.id }
+        end.flatten.compact
+        puts "history links size: #{history_links.length}"
+        HistoryLink.import history_links
+
         section_links.each do |sl|
           sl.source_id = sl.source.id
           sl.target_id = sl.target.id

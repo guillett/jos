@@ -39,6 +39,10 @@ body += "</VERSIONS>
 </BLOC_TEXTUEL>"
 
   footer = <<-FOO
+  <LIENS>
+    <LIEN cidtexte="JORFTEXT000000459601" datesignatexte="2006-11-14" id="JORFTEXT000000459601" naturetexte="DECRET" nortexte="INTD0600235D" num="" numtexte="2006-1378" sens="source" typelien="CODIFICATION">Décret 2006-1378 2006-11-14 JORF 15 novembre 2006</LIEN>
+    <LIEN cidtexte="JORFTEXT000000459601" datesignatexte="2006-11-14" id="JORFTEXT000000459601" naturetexte="DECRET" nortexte="INTD0600235D" num="" numtexte="2006-1378" sens="source" typelien="MODIFICATION">le deuxieme decret</LIEN>
+  </LIENS>
   </ARTICLE>
   FOO
 
@@ -74,6 +78,7 @@ describe 'mapping of articles' do
       expect(@articleMap.end_date).to eq("2999-01-01")
       expect(@articleMap.number).to eq("L711-23")
       expect(@articleMap.versions.length).to eq(0)
+      expect(@articleMap.history_links.length).to eq(2)
     end
 
   end
