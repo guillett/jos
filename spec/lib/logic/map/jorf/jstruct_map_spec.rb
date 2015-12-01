@@ -1,5 +1,5 @@
 require 'rails_helper'
-require './lib/logic/map/jorf/jtext_map'
+require './lib/logic/map/jorf/jstruct_map'
 
 def fake_jtext_file
   <<-FOO
@@ -52,7 +52,7 @@ describe 'mapping of jorftext' do
   context "when we have one jorftext" do
 
     before do
-      @jtext_map = JtextMap.parse(fake_jtext_file, :single => true)
+      @jtext_map = JstructMap.parse(fake_jtext_file, :single => true)
       @jtext = @jtext_map.to_jtext
     end
 

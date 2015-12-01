@@ -1,7 +1,7 @@
 require './lib/logic/map/jorf/link_jtext_jarticle_map'
 require './lib/logic/map/jorf/link_jtext_jsection_map'
 
-class JtextMap
+class JstructMap
   include HappyMapper
   tag 'TEXTELR'
 

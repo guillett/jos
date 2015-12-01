@@ -6,12 +6,17 @@ require './app/models/code'
 class Extractor
 
   JTEXT_STRUCTURE_PATTERN = 'texte/struct/**/*.xml'
+  JTEXT_VERSION_PATTERN = 'texte/version/**/*.xml'
   JCONT_PATTERN = 'conteneur/**/*.xml'
   JSECTION_PATTERN = 'section_ta/**/*.xml'
   JARTICLE_PATTERN = 'article/**/*.xml'
 
   def extract_struct_xml_paths path
     Dir.glob(File.join(path, JTEXT_STRUCTURE_PATTERN))
+  end
+
+  def extract_version_xml_paths path
+    Dir.glob(File.join(path, JTEXT_VERSION_PATTERN))
   end
 
   def extract_conteneur_xml_paths path
@@ -31,11 +36,18 @@ class Extractor
     jconts = jcont_maps.map(&:to_jorfcont)
     jcont_jtext_link_hashes = jcont_maps.map(&:to_jorfcont_jorftext_link_hashes).compact.flatten
 
-    jtext_maps = extract_jtext_maps(path)
-    jtexts = jtext_maps.map(&:to_jtext)
+    jstruct_maps = extract_jstruct_maps(path)
+    jtexts = jstruct_maps.map(&:to_jtext)
 
+    jversion_maps = extract_jversion_maps(path)
+    keywords = complete_jtexts_and_returns_keywords(jtexts, jversion_maps)
+
+    Keyword.import keywords
     Jorfcont.import jconts
     Jtext.import jtexts
+
+    JtextKeyword.import jtexts.map(&:jtext_keywords).flatten.each{|jk| jk.jtext_id = jk.jtext.id; jk.keyword_id = jk.keyword.id; }
+
 
     jconts_hash = jconts.reduce({}) { |h, jorfcont| h[jorfcont.id_jorfcont_origin] = jorfcont; h }
     jtexts_hash = jtexts.reduce({}) { |h, jorftext| h[jorftext.id_jorftext_origin] = jorftext; h }
@@ -49,7 +61,7 @@ class Extractor
     Jsection.import jsections
     jsections_hash = jsections.reduce({}) { |h, jsection| h[jsection.id_jsection_origin] = jsection; h }
 
-    jtext_jsection_link_hashes = jtext_maps.map(&:to_jtext_jsection_link_hashes).compact.flatten
+    jtext_jsection_link_hashes = jstruct_maps.map(&:to_jtext_jsection_link_hashes).compact.flatten
     jtext_jsection_links = build_jtext_jsection_links(jsections_hash, jtext_jsection_link_hashes, jtexts_hash)
     JtextJsectionLink.import jtext_jsection_links
 
@@ -57,7 +69,7 @@ class Extractor
     Jarticle.import jarticles
     jarticles_hash = jarticles.reduce({}) { |h, jarticle| h[jarticle.id_jarticle_origin] = jarticle; h }
 
-    jtext_jarticle_link_hashes = jtext_maps.map(&:to_jtext_jarticle_link_hashes).compact.flatten
+    jtext_jarticle_link_hashes = jstruct_maps.map(&:to_jtext_jarticle_link_hashes).compact.flatten
     jtext_jarticle_links = build_jtext_jarticle_links(jarticles_hash, jtext_jarticle_link_hashes, jtexts_hash)
     JtextJarticleLink.import jtext_jarticle_links
 
@@ -113,11 +125,39 @@ class Extractor
     end
   end
 
-  def extract_jtext_maps(path)
+  def extract_jstruct_maps(path)
     jorftext_struct_paths = extract_struct_xml_paths(path)
     jorftext_struct_paths.map do |jorftext_struct_path|
-      JtextMap.parse(File.read(jorftext_struct_path), :single => true)
+      JstructMap.parse(File.read(jorftext_struct_path), :single => true)
     end
+  end
+
+  def extract_jversion_maps(path)
+    jorftext_version_paths = extract_version_xml_paths(path)
+    jorftext_version_paths.map do |jorftext_version_path|
+      JversionMap.parse(File.read(jorftext_version_path), :single => true)
+    end
+  end
+
+  def complete_jtexts_and_returns_keywords (jtexts, jversion_maps)
+    keywords_map = {}
+    jtexts_map = jtexts.reduce({}) { |hash, jtext| hash[jtext.id_jorftext_origin] = jtext; hash }
+
+    jversion_maps.each do |jversion_map|
+      jtext = jtexts_map[jversion_map.id_jtext_origin]
+      if jtext
+        jtext.title_full = jversion_map.title_full
+        jtext.permanent_link = jversion_map.permanent_link
+        keywords = jversion_map.keywords.map do |k|
+          keywords_map[k] = Keyword.new(k.to_hash) unless keywords_map.include?(k)
+          keywords_map[k]
+        end
+        jtext.keywords << keywords
+      else
+        puts "No Jtext for #{jversion_map.id_jtext_origin}"
+      end
+    end
+    keywords_map.values
   end
 
   def extract_jcont_maps(path)

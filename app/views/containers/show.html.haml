@@ -2,8 +2,8 @@
   %div.col-md-10.col-md-offset-1
     %h1= @container.title
     %ul
-    - @container.jtexts.each do |jtext|
-      - link = JorfcontJtextLink.where("jorfcont_id = ? and jtext_id = ?", @container.id, jtext.id)
+    - @container.jorfcont_jtext_links.includes(:jtext).sort{|a, b| a.jtext.sequence_number <=> b.jtext.sequence_number}.each do |jorfcont_jtext_link|
       %li
-        %a{href: "/textes/#{jtext.id}", title: link.first.title}
-          =link.first.title
+        %b= jorfcont_jtext_link.jtext.sequence_number
+        %a{href: "/textes/#{jorfcont_jtext_link.jtext_id}", title: jorfcont_jtext_link.title}
+          =jorfcont_jtext_link.title

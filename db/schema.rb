@@ -111,6 +111,16 @@ ActiveRecord::Schema.define(version: 20151201165248) do
 
   add_index "jtext_jsection_links", ["jtext_id", "jsection_id"], name: "index_jtext_jsection_links_on_jtext_id_and_jsection_id", using: :btree
 
+  create_table "jtext_keywords", force: :cascade do |t|
+    t.integer  "jtext_id",   null: false
+    t.integer  "keyword_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "jtext_keywords", ["jtext_id"], name: "index_jtext_keywords_on_jtext_id", using: :btree
+  add_index "jtext_keywords", ["keyword_id"], name: "index_jtext_keywords_on_keyword_id", using: :btree
+
   create_table "jtexts", force: :cascade do |t|
     t.string   "id_jorftext_origin"
     t.string   "nature"
@@ -120,6 +130,8 @@ ActiveRecord::Schema.define(version: 20151201165248) do
     t.datetime "text_date"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.string   "title_full"
+    t.string   "permanent_link"
   end
 
   create_table "keywords", force: :cascade do |t|
@@ -160,4 +172,6 @@ ActiveRecord::Schema.define(version: 20151201165248) do
 
   add_index "sections", ["code_id"], name: "index_sections_on_code_id", using: :btree
 
+  add_foreign_key "jtext_keywords", "jtexts"
+  add_foreign_key "jtext_keywords", "keywords"
 end

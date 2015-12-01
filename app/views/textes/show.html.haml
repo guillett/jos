@@ -1,18 +1,29 @@
 %div.row
   %div.col-md-10.col-md-offset-1
-    %h1=@jtext.nature
+    %h1= "#{@jorfcont_jtext_link.jorfcont.title}, Texte n°#{@jtext.sequence_number}"
 
-    %h2 articles
+    %h2= @jtext.nature
+    %p= @jtext.title_full
+
+    %h2= "NOR : #{@jtext.nor}"
+    %p= @jtext.permanent_link
+
+    %h2 Articles
     %ul
       -@jtext.jarticles.each do |article|
         %li=article.text
 
-    %h2 sections
-    %ul
-      -@jtext.jsections.each do |section|
-        %li
-          =section.title
-          -if !section.jarticles.empty?
-            %ul
-              -section.jarticles.each  do |jarticle|
-                %li=jarticle.text
+    - if @jtext.jsections.size > 0
+      %h2 Sections
+      %ul
+        -@jtext.jsections.each do |section|
+          %li
+            =section.title
+            -if !section.jarticles.empty?
+              %ul
+                -section.jarticles.each  do |jarticle|
+                  %li=jarticle.text
+
+    - if @jtext.keywords.size > 0
+      %h2 Mots clés
+      %p= @jtext.keywords.map(&:label).join(', ')
