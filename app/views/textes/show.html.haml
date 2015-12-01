@@ -26,4 +26,7 @@
 
     - if @jtext.keywords.size > 0
       %h2 Mots clés
-      %p= @jtext.keywords.map(&:label).join(', ')
+      %ul
+      - @jtext.keywords.map(&:label).each do |label|
+        %li
+          %a{href: "/keywords/#{label}"}="#{label}"

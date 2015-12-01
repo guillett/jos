@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  get '/keywords/:label' => 'keywords#show'
   resources :containers, :only => [:index, :show]
   resources :articles, :only => [:show]
   get '/articles/:article_1_id/compare/:article_2_id' => 'articles#diff'

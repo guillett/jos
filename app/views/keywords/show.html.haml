@@ -1,0 +1,5 @@
+%div.col-md-6.col-md-offset-3
+  %h1= "#{@keyword.jtexts.count} JORFTEXTs"
+  - @keyword.jtexts.each do |t|
+    %h2
+      %a{href: "/textes/#{t.id_jorftext_origin}"}=t.id_jorftext_origin
