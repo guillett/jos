@@ -149,7 +149,7 @@ class Extractor
         jtext.title_full = jversion_map.title_full
         jtext.permanent_link = jversion_map.permanent_link
         keywords = jversion_map.keywords.map do |k|
-          keywords_map[k] = Keyword.new(k.to_hash) unless keywords_map.include?(k)
+          keywords_map[k] = k.to_keyword unless keywords_map.include?(k)
           keywords_map[k]
         end
         jtext.keywords << keywords

@@ -38,17 +38,6 @@ describe 'mapping of jorf version file' do
       expect(@jversionMap.keywords.length).to eq(1)
     end
 
-    describe ".to_keywords_hash" do
-      before do
-        @keywords = @jversionMap.to_keywords_hash()
-      end
-
-      it 'extracts 1 keyword' do
-        expect(@keywords.length).to eq(1)
-        expect(@keywords.first["label"]).to eq("DIRECTIVE CEE")
-      end
-    end
-
   end
 
 end

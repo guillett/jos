@@ -9,4 +9,7 @@ class KeywordMap
     hash
   end
 
+  def to_keyword
+    Keyword.new(to_hash)
+  end
 end

@@ -15,10 +15,4 @@ class JversionMap
     hash
   end
 
-  def to_keywords_hash
-    keywords.map do |keywordMap|
-      keywordMap.to_hash
-    end
-  end
-
 end
