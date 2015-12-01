@@ -171,10 +171,15 @@ class Extractor
       id_jorftext_origin = jorfcont_jorftext_link_hash[:id_jorftext_origin]
 
       jorfcont_id = jorfconts_hash[id_jorfcont_origin].id
-      jorftext_id = jorftexts_hash[id_jorftext_origin].id
+      if jorftexts_hash[id_jorftext_origin]
+        jorftext_id = jorftexts_hash[id_jorftext_origin].id
+      else
+        $stderr.puts "missing text ! #{id_jorftext_origin}"
+        next
+      end
 
       JorfcontJtextLink.new(jorfcont_id: jorfcont_id, jtext_id: jorftext_id, title: jorfcont_jorftext_link_hash[:title])
-    end
+    end.compact
   end
 
 end
