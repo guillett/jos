@@ -33,18 +33,22 @@ class Extractor
 
   def extract_jorf path
     jcont_maps = extract_jcont_maps(path)
+    puts "#{jcont_maps.length} jcont_maps extracted"
     jconts = jcont_maps.map(&:to_jorfcont)
     jcont_jtext_link_hashes = jcont_maps.map(&:to_jorfcont_jorftext_link_hashes).compact.flatten
 
     jstruct_maps = extract_jstruct_maps(path)
+    puts "#{jstruct_maps.length} jstruct_maps extracted"
     jtexts = jstruct_maps.map(&:to_jtext)
 
     jversion_maps = extract_jversion_maps(path)
+    puts "#{jversion_maps.length} jversion_maps extracted"
     keywords = complete_jtexts_and_returns_keywords(jtexts, jversion_maps)
 
     Keyword.import keywords
     Jorfcont.import jconts
     Jtext.import jtexts
+    puts "keywords jorfcont jtext imported"
 
     JtextKeyword.import jtexts.map(&:jtext_keywords).flatten.each{|jk| jk.jtext_id = jk.jtext.id; jk.keyword_id = jk.keyword.id; }
 
@@ -57,6 +61,7 @@ class Extractor
     JorfcontJtextLink.import jcont_jtext_links
 
     jsections_maps = extract_jsection_maps(path)
+    puts "#{jsections_maps.length} jsections_maps extracted"
     jsections = jsections_maps.map(&:to_jsection)
     Jsection.import jsections
     jsections_hash = jsections.reduce({}) { |h, jsection| h[jsection.id_jsection_origin] = jsection; h }
@@ -66,6 +71,7 @@ class Extractor
     JtextJsectionLink.import jtext_jsection_links
 
     jarticles = extract_jarticles(path)
+    puts "#{jarticles.length} jarticles extracted"
     Jarticle.import jarticles
     jarticles_hash = jarticles.reduce({}) { |h, jarticle| h[jarticle.id_jarticle_origin] = jarticle; h }
 
