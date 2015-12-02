@@ -127,28 +127,28 @@ class Extractor
 
   def extract_jarticles(path)
     jarticle_paths = extract_jarticle_xml_paths(path)
-    Parallel.map(jarticle_paths) do |path|
+    better_map(jarticle_paths) do |path|
       JarticleMap.parse(File.read(path), single: true).to_jarticle
     end
   end
   
   def extract_jsection_maps(path)
     jsection_paths = extract_jsection_xml_paths(path)
-    Parallel.map(jsection_paths) do |path|
+    better_map(jsection_paths) do |path|
       JsctaMap.parse(File.read(path), single: true)
     end
   end
 
   def extract_jstruct_maps(path)
     jorftext_struct_paths = extract_struct_xml_paths(path)
-    Parallel.map(jorftext_struct_paths) do |jorftext_struct_path|
+    better_map(jorftext_struct_paths) do |jorftext_struct_path|
       JstructMap.parse(File.read(jorftext_struct_path), :single => true)
     end
   end
 
   def extract_jversion_maps(path)
     jorftext_version_paths = extract_version_xml_paths(path)
-    Parallel.map(jorftext_version_paths) do |jorftext_version_path|
+    better_map(jorftext_version_paths) do |jorftext_version_path|
       JversionMap.parse(File.read(jorftext_version_path), :single => true)
     end
   end
@@ -184,7 +184,7 @@ class Extractor
 
   def extract_jcont_maps(path)
     jorfcont_paths = extract_conteneur_xml_paths(path)
-    Parallel.map(jorfcont_paths) { |jorfcont_path| JorfcontMap.parse(File.read(jorfcont_path), :single => true) }
+    better_map(jorfcont_paths) { |jorfcont_path| JorfcontMap.parse(File.read(jorfcont_path), :single => true) }
   end
 
   def build_jorfcont_jorftext_links(jorfcont_jorftext_link_hashes, jorfconts_hash, jorftexts_hash)
@@ -204,6 +204,16 @@ class Extractor
       jorfcont_jtext_link.destroy if jorfcont_jtext_link
       JorfcontJtextLink.new(jorfcont_id: jorfcont_id, jtext_id: jorftext_id, title: jorfcont_jorftext_link_hash[:title])
     end.compact
+  end
+
+  def better_map array, &block
+    result = Parallel.map(array) { |el| block.call(el) }
+    begin
+      ActiveRecord::Base.connection.reconnect!
+    rescue
+      ActiveRecord::Base.connection.reconnect!
+    end
+    result
   end
 
 end
