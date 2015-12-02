@@ -67,7 +67,7 @@ class Extractor
     jtext_keword_hashes = jtexts.map(&:jtext_keywords).flatten.each{|jk| jk.jtext_id = jk.jtext.id; jk.keyword_id = jk.keyword.id; }
     jtext_kewords = build_jtext_kewords(jtext_keword_hashes)
     JtextKeyword.import jtext_kewords
-
+    puts "jtext_kewords loaded, -> #{Time.now - start}"
 
     jconts_hash = jconts.reduce({}) { |h, jorfcont| h[jorfcont.id_jorfcont_origin] = jorfcont; h }
     jtexts_hash = jtexts.reduce({}) { |h, jorftext| h[jorftext.id_jorftext_origin] = jorftext; h }
@@ -75,25 +75,32 @@ class Extractor
     jcont_jtext_links = build_jorfcont_jorftext_links(jcont_jtext_link_hashes, jconts_hash, jtexts_hash)
 
     JorfcontJtextLink.import jcont_jtext_links
+    puts "jcont_jtext_links loaded, -> #{Time.now - start}"
 
     jsections_maps = extract_jsection_maps(path)
     puts "#{jsections_maps.length} jsections_maps extracted"
     jsections = jsections_maps.map(&:to_jsection)
     Jsection.import jsections
+    puts "jsections loaded, -> #{Time.now - start}"
+
     jsections_hash = jsections.reduce({}) { |h, jsection| h[jsection.id_jsection_origin] = jsection; h }
 
     jtext_jsection_link_hashes = jstruct_maps.map(&:to_jtext_jsection_link_hashes).compact.flatten
     jtext_jsection_links = build_jtext_jsection_links(jsections_hash, jtext_jsection_link_hashes, jtexts_hash)
     JtextJsectionLink.import jtext_jsection_links
+    puts "jtext_jsection_links loaded, -> #{Time.now - start}"
 
     jarticles = extract_jarticles(path)
     puts "#{jarticles.length} jarticles extracted"
     Jarticle.import jarticles
+    puts "jarticles loaded, -> #{Time.now - start}"
+
     jarticles_hash = jarticles.reduce({}) { |h, jarticle| h[jarticle.id_jarticle_origin] = jarticle; h }
 
     jtext_jarticle_link_hashes = jstruct_maps.map(&:to_jtext_jarticle_link_hashes).compact.flatten
     jtext_jarticle_links = build_jtext_jarticle_links(jarticles_hash, jtext_jarticle_link_hashes, jtexts_hash)
     JtextJarticleLink.import jtext_jarticle_links
+    puts "jarticles loaded, -> #{Time.now - start}"
 
     jsection_article_link_hashes = jsections_maps.map(&:to_jscta_jarticle_link_hashes).compact.flatten
     jsection_jarticle_links = build_jsection_jarticle_links(jarticles_hash, jsection_article_link_hashes, jsections_hash)
