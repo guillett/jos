@@ -55,18 +55,18 @@ class Extractor
     keywords = complete_jtexts_and_returns_keywords(jtexts, jversion_maps)
     puts "#{keywords.length} keywords built, -> #{Time.now - start}"
 
-    Keyword.import keywords
+    Keyword.import keywords, :validate => false
     puts "keywords loaded, -> #{Time.now - start}"
 
-    Jorfcont.import jconts
+    Jorfcont.import jconts, :validate => false
     puts "jconts loaded, -> #{Time.now - start}"
 
-    Jtext.import jtexts
+    Jtext.import jtexts, :validate => false
     puts "jtexts loaded, -> #{Time.now - start}"
 
     jtext_keword_hashes = jtexts.map(&:jtext_keywords).flatten.each{|jk| jk.jtext_id = jk.jtext.id; jk.keyword_id = jk.keyword.id; }
     jtext_kewords = build_jtext_kewords(jtext_keword_hashes)
-    JtextKeyword.import jtext_kewords
+    JtextKeyword.import jtext_kewords, :validate => false
     puts "jtext_kewords loaded, -> #{Time.now - start}"
 
     jconts_hash = jconts.reduce({}) { |h, jorfcont| h[jorfcont.id_jorfcont_origin] = jorfcont; h }
@@ -74,38 +74,38 @@ class Extractor
 
     jcont_jtext_links = build_jorfcont_jorftext_links(jcont_jtext_link_hashes, jconts_hash, jtexts_hash)
 
-    JorfcontJtextLink.import jcont_jtext_links
+    JorfcontJtextLink.import jcont_jtext_links, :validate => false
     puts "jcont_jtext_links loaded, -> #{Time.now - start}"
 
     jsections_maps = extract_jsection_maps(path)
     puts "#{jsections_maps.length} jsections_maps extracted"
     jsections = jsections_maps.map(&:to_jsection)
-    Jsection.import jsections
+    Jsection.import jsections, :validate => false
     puts "jsections loaded, -> #{Time.now - start}"
 
     jsections_hash = jsections.reduce({}) { |h, jsection| h[jsection.id_jsection_origin] = jsection; h }
 
     jtext_jsection_link_hashes = jstruct_maps.map(&:to_jtext_jsection_link_hashes).compact.flatten
     jtext_jsection_links = build_jtext_jsection_links(jsections_hash, jtext_jsection_link_hashes, jtexts_hash)
-    JtextJsectionLink.import jtext_jsection_links
+    JtextJsectionLink.import jtext_jsection_links, :validate => false
     puts "jtext_jsection_links loaded, -> #{Time.now - start}"
 
     jarticles = extract_jarticles(path)
     puts "#{jarticles.length} jarticles extracted"
-    Jarticle.import jarticles
+    Jarticle.import jarticles, :validate => false
     puts "jarticles loaded, -> #{Time.now - start}"
 
     jarticles_hash = jarticles.reduce({}) { |h, jarticle| h[jarticle.id_jarticle_origin] = jarticle; h }
 
     jtext_jarticle_link_hashes = jstruct_maps.map(&:to_jtext_jarticle_link_hashes).compact.flatten
     jtext_jarticle_links = build_jtext_jarticle_links(jarticles_hash, jtext_jarticle_link_hashes, jtexts_hash)
-    JtextJarticleLink.import jtext_jarticle_links
+    JtextJarticleLink.import jtext_jarticle_links, :validate => false
     puts "jarticles loaded, -> #{Time.now - start}"
 
     jsection_article_link_hashes = jsections_maps.map(&:to_jscta_jarticle_link_hashes).compact.flatten
     jsection_jarticle_links = build_jsection_jarticle_links(jarticles_hash, jsection_article_link_hashes, jsections_hash)
 
-    JsectionJarticleLink.import jsection_jarticle_links
+    JsectionJarticleLink.import jsection_jarticle_links, :validate => false
   end
 
   def build_jtext_jarticle_links(jarticles_hash, jtext_jarticle_link_hashes, jtexts_hash)
