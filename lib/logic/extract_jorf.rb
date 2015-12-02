@@ -46,7 +46,9 @@ class Extractor
     jstruct_maps = extract_jstruct_maps(path)
     puts "#{jstruct_maps.length} jstruct_maps extracted, -> #{Time.now - start}"
 
-    jtexts = jstruct_maps.map(&:to_jtext)
+    jstruct_maps_chunks = jstruct_maps.each_slice(10000).to_a
+    jtexts = better_map(jstruct_maps_chunks, &:to_jtext).flatten
+
     puts "jtexts AR built, -> #{Time.now - start}"
 
     jversion_maps = extract_jversion_maps(path)
