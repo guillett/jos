@@ -32,23 +32,37 @@ class Extractor
   end
 
   def extract_jorf path
+    start = Time.now
+
     jcont_maps = extract_jcont_maps(path)
-    puts "#{jcont_maps.length} jcont_maps extracted"
+    puts "#{jcont_maps.length} jcont_maps extracted, -> #{Time.now - start}"
+
     jconts = jcont_maps.map(&:to_jorfcont)
+    puts "jconts AR built, -> #{Time.now - start}"
+
     jcont_jtext_link_hashes = jcont_maps.map(&:to_jorfcont_jorftext_link_hashes).compact.flatten
+    puts "#{jcont_jtext_link_hashes.length} jcont_jtext_link_hashes built, -> #{Time.now - start}"
 
     jstruct_maps = extract_jstruct_maps(path)
-    puts "#{jstruct_maps.length} jstruct_maps extracted"
+    puts "#{jstruct_maps.length} jstruct_maps extracted, -> #{Time.now - start}"
+
     jtexts = jstruct_maps.map(&:to_jtext)
+    puts "jtexts AR built, -> #{Time.now - start}"
 
     jversion_maps = extract_jversion_maps(path)
-    puts "#{jversion_maps.length} jversion_maps extracted"
+    puts "#{jversion_maps.length} jversion_maps extracted, -> #{Time.now - start}"
+
     keywords = complete_jtexts_and_returns_keywords(jtexts, jversion_maps)
+    puts "#{keywords.length} keywords built, -> #{Time.now - start}"
 
     Keyword.import keywords
+    puts "keywords loaded, -> #{Time.now - start}"
+
     Jorfcont.import jconts
+    puts "jconts loaded, -> #{Time.now - start}"
+
     Jtext.import jtexts
-    puts "keywords jorfcont jtext imported"
+    puts "jtexts loaded, -> #{Time.now - start}"
 
     jtext_keword_hashes = jtexts.map(&:jtext_keywords).flatten.each{|jk| jk.jtext_id = jk.jtext.id; jk.keyword_id = jk.keyword.id; }
     jtext_kewords = build_jtext_kewords(jtext_keword_hashes)
