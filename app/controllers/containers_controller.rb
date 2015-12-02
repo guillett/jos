@@ -1,6 +1,6 @@
 class ContainersController < ApplicationController
   def index
-    @containers = Jorfcont.order(:title)
+    @containers = Jorfcont.order(:publication_date)
   end
 
   def show
