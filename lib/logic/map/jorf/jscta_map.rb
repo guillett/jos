@@ -17,8 +17,6 @@ class JsctaMap
   end
 
   def to_jsection
-    jsection = Jsection.where(id_jsection_origin: @id_jsection_origin).first
-    jsection.destroy if jsection
     Jsection.new(to_hash)
   end
 
