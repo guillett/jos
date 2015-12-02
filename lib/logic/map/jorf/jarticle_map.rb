@@ -14,9 +14,12 @@ class JarticleMap
   end
 
   def to_jarticle
+    Jarticle.new(to_hash)
+  end
+
+  def to_jarticle_update
     jarticle = Jarticle.where(id_jarticle_origin: @id_jarticle_origin).first
     jarticle.destroy if jarticle
     Jarticle.new(to_hash)
   end
-
 end

@@ -11,6 +11,10 @@ class Extractor
   JSECTION_PATTERN = 'section_ta/**/*.xml'
   JARTICLE_PATTERN = 'article/**/*.xml'
 
+  def initialize update=false
+    @update = update
+  end
+
   def extract_struct_xml_paths path
     Dir.glob(File.join(path, JTEXT_STRUCTURE_PATTERN))
   end
@@ -34,12 +38,20 @@ class Extractor
   def extract_jorf path
     jcont_maps = extract_jcont_maps(path)
     puts "#{jcont_maps.length} jcont_maps extracted"
-    jconts = jcont_maps.map(&:to_jorfcont)
+    if @update
+      jconts = jcont_maps.map(&:to_jorfcont_update)
+    else
+      jconts = jcont_maps.map(&:to_jorfcont)
+    end
     jcont_jtext_link_hashes = jcont_maps.map(&:to_jorfcont_jorftext_link_hashes).compact.flatten
 
     jstruct_maps = extract_jstruct_maps(path)
     puts "#{jstruct_maps.length} jstruct_maps extracted"
-    jtexts = jstruct_maps.map(&:to_jtext)
+    if @update
+      jtexts = jstruct_maps.map(&:to_jtext_update)
+    else
+      jtexts = jstruct_maps.map(&:to_jtext)
+    end
 
     jversion_maps = extract_jversion_maps(path)
     puts "#{jversion_maps.length} jversion_maps extracted"
@@ -64,7 +76,11 @@ class Extractor
 
     jsections_maps = extract_jsection_maps(path)
     puts "#{jsections_maps.length} jsections_maps extracted"
-    jsections = jsections_maps.map(&:to_jsection)
+    if @update
+      jsections = jsections_maps.map(&:to_jsection_update)
+    else
+      jsections = jsections_maps.map(&:to_jsection)
+    end
     Jsection.import jsections
     jsections_hash = jsections.reduce({}) { |h, jsection| h[jsection.id_jsection_origin] = jsection; h }
 
@@ -97,8 +113,10 @@ class Extractor
       end
       jarticle_id = jarticle.id
       order = jtext_jarticle_link_hash[:order]
-      jtext_jarticle_link = JtextJarticleLink.where(jtext_id: jtext_id, jarticle_id: jarticle_id).first
-      jtext_jarticle_link.destroy if jtext_jarticle_link
+      if @update
+        jtext_jarticle_link = JtextJarticleLink.where(jtext_id: jtext_id, jarticle_id: jarticle_id).first
+        jtext_jarticle_link.destroy if jtext_jarticle_link
+      end
       JtextJarticleLink.new(jtext_id: jtext_id, jarticle_id: jarticle_id, order: order)
     end.compact
   end
@@ -108,8 +126,10 @@ class Extractor
       jtext_id = jtexts_hash[jtext_jsection_link_hash[:id_jtext_origin]].id
       jsection_id = jsections_hash[jtext_jsection_link_hash[:id_jsection_origin]].id
       order = jtext_jsection_link_hash[:order]
-      jtext_jsection_link = JtextJsectionLink.where(jtext_id: jtext_id, jsection_id: jsection_id).first
-      jtext_jsection_link.destroy if jtext_jsection_link
+      if @update
+        jtext_jsection_link = JtextJsectionLink.where(jtext_id: jtext_id, jsection_id: jsection_id).first
+        jtext_jsection_link.destroy if jtext_jsection_link
+      end
       JtextJsectionLink.new(jtext_id: jtext_id, jsection_id: jsection_id, order: order)
     end
   end
@@ -119,8 +139,10 @@ class Extractor
       jsection_id = jsections_hash[jsection_article_link_hash[:id_jsection_origin]].id
       jarticle_id = jarticles_hash[jsection_article_link_hash[:id_jarticle_origin]].id
       number = jsection_article_link_hash[:number]
-      jsection_jarticle_link = JsectionJarticleLink.where(jsection_id: jsection_id, jarticle_id: jarticle_id).first
-      jsection_jarticle_link.destroy if jsection_jarticle_link
+      if @update
+        jsection_jarticle_link = JsectionJarticleLink.where(jsection_id: jsection_id, jarticle_id: jarticle_id).first
+        jsection_jarticle_link.destroy if jsection_jarticle_link
+      end
       JsectionJarticleLink.new(jsection_id: jsection_id, jarticle_id: jarticle_id, number: number)
     end
   end
@@ -128,7 +150,11 @@ class Extractor
   def extract_jarticles(path)
     jarticle_paths = extract_jarticle_xml_paths(path)
     Parallel.map(jarticle_paths) do |path|
-      JarticleMap.parse(File.read(path), single: true).to_jarticle
+      if @update
+        JarticleMap.parse(File.read(path), single: true).to_jarticle_update
+      else
+        JarticleMap.parse(File.read(path), single: true).to_jarticle
+      end
     end
   end
   
@@ -163,7 +189,11 @@ class Extractor
         jtext.title_full = jversion_map.title_full
         jtext.permanent_link = jversion_map.permanent_link
         keywords = jversion_map.keywords.map do |k|
-          keywords_map[k] = k.to_keyword unless keywords_map.include?(k)
+          if @update
+            keywords_map[k] = k.to_keyword_update unless keywords_map.include?(k)
+          else
+            keywords_map[k] = k.to_keyword unless keywords_map.include?(k)
+          end
           keywords_map[k]
         end
         jtext.keywords << keywords
@@ -176,8 +206,10 @@ class Extractor
 
   def build_jtext_kewords(jtext_keword_hashes)
     jtext_keword_hashes.each do |jkh|
-      jtext_keyword = JtextKeyword.where(jtext_id: jkh.jtext.id, keyword_id: jkh.keyword.id).first
-      jtext_keyword.destroy if jtext_keyword
+      if @update
+        jtext_keyword = JtextKeyword.where(jtext_id: jkh.jtext.id, keyword_id: jkh.keyword.id).first
+        jtext_keyword.destroy if jtext_keyword
+      end
       JtextKeyword.new(jtext_id: jkh.jtext.id, keyword_id: jkh.keyword.id)
     end
   end
@@ -200,8 +232,10 @@ class Extractor
         next
       end
 
-      jorfcont_jtext_link = JorfcontJtextLink.where(jorfcont_id: jorfcont_id, jtext_id: jorftext_id).first
-      jorfcont_jtext_link.destroy if jorfcont_jtext_link
+      if @update
+        jorfcont_jtext_link = JorfcontJtextLink.where(jorfcont_id: jorfcont_id, jtext_id: jorftext_id).first
+        jorfcont_jtext_link.destroy if jorfcont_jtext_link
+      end
       JorfcontJtextLink.new(jorfcont_id: jorfcont_id, jtext_id: jorftext_id, title: jorfcont_jorftext_link_hash[:title])
     end.compact
   end

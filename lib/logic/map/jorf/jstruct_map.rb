@@ -24,6 +24,10 @@ class JstructMap
   end
 
   def to_jtext
+    Jtext.new(to_hash)
+  end
+
+  def to_jtext_update
     jtext = Jtext.where(id_jorftext_origin: @id_jorftext_origin).first
     jtext.destroy if jtext
     Jtext.new(to_hash)

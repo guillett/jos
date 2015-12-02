@@ -101,7 +101,7 @@ namespace :extract do
       #extract
       filename_extract = filename.split(".").first.split("_").last
       p "Beginning extraction of #{filename_extract}"
-      extractor = Extractor.new
+      extractor = Extractor.new(true)
       extractor.extract_jorf("/tmp/#{filename_extract}/jorf/global")
 
     end
