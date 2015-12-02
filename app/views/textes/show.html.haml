@@ -1,17 +1,22 @@
 %div.row
   %div.col-md-10.col-md-offset-1
-    %h1= "#{@jorfcont_jtext_link.jorfcont.title}, Texte n°#{@jtext.sequence_number}"
+    %h1
+      #{@jorfcont_jtext_link.jorfcont.title}
+      - unless @jtext.sequence_number.blank?
+        \- Texte n°#{@jtext.sequence_number}
 
     %h2= @jtext.nature
     %p= @jtext.title_full
 
-    %h2= "NOR : #{@jtext.nor}"
+    - unless @jtext.nor.blank?
+      %h2= "NOR : #{@jtext.nor}"
     %p= @jtext.permanent_link
 
-    %h2 Articles
-    %ul
-      -@jtext.jarticles.each do |article|
-        %li=article.text
+    - if @jtext.jarticles.size > 0
+      %h2 Articles
+      %ul
+        -@jtext.jarticles.each do |article|
+          %li=article.text
 
     - if @jtext.jsections.size > 0
       %h2 Sections
