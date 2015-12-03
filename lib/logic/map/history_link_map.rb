@@ -4,8 +4,9 @@ class HistoryLinkMap
   include HappyMapper
   tag 'LIEN'
 
-  attribute :id_text_origin, String, :tag => 'id'
+  attribute :id_text_origin, String, :tag => 'cidtexte'
   attribute :nature, String, :tag => 'naturetexte'
+  attribute :order, Integer, :tag => 'num'
   attribute :text_number, String, :tag => 'numtexte'
   attribute :text_type, String, :tag => 'typelien'
   content :title, String
