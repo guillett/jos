@@ -1,20 +1,24 @@
 %div.row
   %div.col-md-3.col-md-offset-1
-    - other_versions = @article.versions.select{|v| v.id_article_origin != @article.id_article_origin}
+    - other_versions = @article.versions.sort_by { |v| v.start_date }
+    - index_before_current_version = other_versions.index { |v| v.id_article_origin == @article.id_article_origin } - 1
     %div{style: "margin: 30px 15px 15px;"}
-      - if other_versions.length == 0
+      - if other_versions.length-1 == 0
         %p Aucune autre version
-      - elsif other_versions.length == 1
+      - elsif other_versions.length-1 == 1
         %p Autre version disponible :
       - else
         %p Autres versions disponibles :
-      - other_versions.each do |version|
+      - other_versions.each_with_index do |version, i|
+        - if version.id_article_origin == @article.id_article_origin
+          - next
         %p
           #{version.start_date.strftime("%d/%m/%Y")} au #{version.end_date.strftime("%d/%m/%Y")}
           %a{href: "/articles/#{version.id_article_origin}", title: "voir"}
             %span{class:"glyphicon glyphicon-eye-open", aria_hidden:"true", style: "margin-left: 10px"}
           %a{href: "/articles/#{version.id_article_origin}/compare/#{@article.id_article_origin}", title: "comparer"}
-            %span{class:"glyphicon glyphicon-random", aria_hidden:"true", style: "margin-left: 10px"}
+            - if i == index_before_current_version
+              %span{class:"glyphicon glyphicon-random", aria_hidden:"true", style: "margin-left: 10px"}
   %div.col-md-6
     %h2
       %a{href: "/articles/#{@article.id_article_origin}"}="#{@article.nature}  #{@article.number}"
