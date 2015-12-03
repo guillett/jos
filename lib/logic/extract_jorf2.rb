@@ -29,12 +29,8 @@ class Extractor
     # récupérer les texts, avec les struct et les versions, en partant 
     jorfcont_map.link_cont_text_maps.each do |link_cont_text_map|
       id_jorftext_origin = link_cont_text_map.id_jorftext_origin
-      jstruct_map = find_jstruct_map_by_id_jorftext_origin(id_jorftext_origin, path)
-      jversion_map = find_jversion_map_by_id_jorftext_origin(id_jorftext_origin, path)
-
-      if jversion_map && !jstruct_map
-        raise 'OUI'
-      end
+      jstruct_map = find_jstruct_map_by_id_origin(id_jorftext_origin, path)
+      jversion_map = find_jversion_map_by_id_origin(id_jorftext_origin, path)
 
       if jstruct_map
         jtext = jstruct_map.to_jtext
@@ -45,31 +41,51 @@ class Extractor
         # TODO: ajouter les keywords
 
         # ajouter les liens de niveau 2
-        jsections = jstruct_map.link_text_section_maps.map do |section_map|
-          full_path = full_path_from_id_origin(section_map.id_jsection_origin)
-          full_path = File.join(path, 'section_ta/JORF/SCTA', full_path) 
-          if File.exists? full_path
-            JsctaMap.parse(File.read(full_path))
-          else
-            $stderr.puts "Missing SCTA file: #{full_path}"
-            nil
-          end
-        end.compact.to_jsection
+        jsections = jstruct_map.link_text_section_maps.map do |link_text_section_map|
+          section_map = find_jscta_map_by_id_origin(link_text_section_map.id_jsection_origin, path)
 
-        jtext.sections = jsections
+          article_maps = section_map.link_section_article_maps.map do |link_section_article_map|
+            find_article_map_by_id_origin(link_section_article_map.id_jarticle_origin, path)
+          end
+
+          jsection = section_map.to_jsection
+          jarticles = article_maps.map(&:to_jarticle)
+          jsection.jarticles = jarticles
+          jsection
+        end
+
+        jtext.jsections = jsections
+
+        jarticles = jstruct_map.link_text_article_maps.map do |article_map|
+          find_article_map_by_id_origin(article_map.id_jarticle_origin, path)
+        end.compact.map(&:to_jarticle)
+
+        jtext.jarticles = jarticles
       end
     end
 
+    jtexts = jorfcont.jtexts
     Jorfcont.import([jorfcont], validate: false)
-    Jtext.import(jorfcont.jtexts.to_ary, validate: false)
+    Jtext.import(jtexts.to_ary, validate: false)
     jorfcont.jorfcont_jtext_links.each{|link| link.jorfcont_id = jorfcont.id; link.jtext_id = link.jtext.id}
     JorfcontJtextLink.import(jorfcont.jorfcont_jtext_links.to_ary, validate: false)
 
     # import sections
-    sections = jorfcont.jtexts.map(&:jsections).flatten.compact
+    sections = jtexts.map(&:jsections).flatten.compact
     Jsection.import(sections, validate: false)
-    links = jorfcont.jtexts.map(&:jtext_jsection_links).flatten.compact.map{|link| link.jtext_id = link.jtext.id; link.jsection_id = link.jsection.id; link}
-    JtextJectionLink.import(links, validate: false)
+    links = jtexts.map(&:jtext_jsection_links).flatten.compact.map{|link| link.jtext_id = link.jtext.id; link.jsection_id = link.jsection.id; link}
+    JtextJsectionLink.import(links, validate: false)
+    # import section articles
+    articles = sections.map(&:jarticles).flatten.compact
+    Jarticle.import(articles, validate: false)
+    links = sections.map(&:jsection_jarticle_links).flatten.compact.map{|link| link.jsection_id = link.jsection.id; link.jarticle_id = link.jarticle.id; link}
+    JsectionJarticleLink.import(links, validate: false)
+
+    # import articles
+    articles = jtexts.map(&:jarticles).flatten.compact
+    Jarticle.import(articles, validate: false)
+    links = jtexts.map(&:jtext_jarticle_links).flatten.compact.map{|link| link.jtext_id = link.jtext.id; link.jarticle_id = link.jarticle.id; link}
+    JtextJarticleLink.import(links, validate: false)
   end
 
   def full_path_from_id_origin(id_origin)
@@ -78,22 +94,29 @@ class Extractor
     File.join(dirname, filename)
   end
 
-  def find_jstruct_map_by_id_jorftext_origin(id_jorftext_origin, path)
-    find_x_map_by_id_origin(id_jorftext_origin, path, 'struct')
+  def find_jscta_map_by_id_origin(id_origin, path)
+    find_x_map_by_id_origin(id_origin, path, JsctaMap, "section_ta/JORF/SCTA")
   end
 
-  def find_jversion_map_by_id_jorftext_origin(id_jorftext_origin, path)
-    find_x_map_by_id_origin(id_jorftext_origin, path, 'version')
+  def find_article_map_by_id_origin(id_origin, path)
+    find_x_map_by_id_origin(id_origin, path, JarticleMap, "article/JORF/ARTI")
   end
 
-  def find_x_map_by_id_origin(id_origin, path, struct_or_version)
-    clazz = "J#{struct_or_version}Map".constantize
+  def find_jstruct_map_by_id_origin(id_origin, path)
+    find_x_map_by_id_origin(id_origin, path, JstructMap, "texte/struct/JORF/TEXT")
+  end
+
+  def find_jversion_map_by_id_origin(id_origin, path)
+    find_x_map_by_id_origin(id_origin, path, JversionMap, "texte/version/JORF/TEXT")
+  end
+
+  def find_x_map_by_id_origin(id_origin, path, clazz, base_folder)
     full_path = full_path_from_id_origin(id_origin)
-    full_path = File.join(path, "texte/#{struct_or_version}/JORF/TEXT", full_path)
+    full_path = File.join(path, base_folder, full_path)
     if File.exists?(full_path)
       clazz.send(:parse, File.read(full_path), single: true)
     else
-      $stderr.puts "missing #{struct_or_version} file: #{full_path}"
+      $stderr.puts "missing #{clazz.to_s} file: #{full_path}"
       nil
     end
   end

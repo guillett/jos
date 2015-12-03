@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151201151019) do
+ActiveRecord::Schema.define(version: 20151203132450) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,16 +124,6 @@ ActiveRecord::Schema.define(version: 20151201151019) do
 
   add_index "jtext_jsection_links", ["jtext_id", "jsection_id"], name: "index_jtext_jsection_links_on_jtext_id_and_jsection_id", using: :btree
 
-  create_table "jtext_keywords", force: :cascade do |t|
-    t.integer  "jtext_id",   null: false
-    t.integer  "keyword_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "jtext_keywords", ["jtext_id"], name: "index_jtext_keywords_on_jtext_id", using: :btree
-  add_index "jtext_keywords", ["keyword_id"], name: "index_jtext_keywords_on_keyword_id", using: :btree
-
   create_table "jtexts", force: :cascade do |t|
     t.string   "id_jorftext_origin"
     t.string   "nature"
@@ -151,7 +141,10 @@ ActiveRecord::Schema.define(version: 20151201151019) do
     t.string   "label"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "jtext_id"
   end
+
+  add_index "keywords", ["jtext_id"], name: "index_keywords_on_jtext_id", using: :btree
 
   create_table "section_article_links", id: false, force: :cascade do |t|
     t.integer  "section_id", null: false
@@ -186,6 +179,5 @@ ActiveRecord::Schema.define(version: 20151201151019) do
   add_index "sections", ["code_id"], name: "index_sections_on_code_id", using: :btree
 
   add_foreign_key "history_links", "articles"
-  add_foreign_key "jtext_keywords", "jtexts"
-  add_foreign_key "jtext_keywords", "keywords"
+  add_foreign_key "keywords", "jtexts"
 end
