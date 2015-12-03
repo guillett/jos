@@ -1,5 +1,5 @@
 class KeywordsController < ApplicationController
   def show
-    @keyword = Keyword.find_by_label(params[:label])
+    @keywords = Keyword.where(label: params[:label])
   end
 end

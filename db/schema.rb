@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203132450) do
+ActiveRecord::Schema.define(version: 20151203170014) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,6 +145,7 @@ ActiveRecord::Schema.define(version: 20151203132450) do
   end
 
   add_index "keywords", ["jtext_id"], name: "index_keywords_on_jtext_id", using: :btree
+  add_index "keywords", ["label"], name: "index_keywords_on_label", using: :btree
 
   create_table "section_article_links", id: false, force: :cascade do |t|
     t.integer  "section_id", null: false

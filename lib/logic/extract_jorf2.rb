@@ -38,7 +38,8 @@ class Extractor
         jtext.permanent_link = jversion_map.permanent_link
 
         jorfcont.jtexts << jtext
-        # TODO: ajouter les keywords
+        # ajouter les keywords
+        jtext.keywords = jversion_map.keywords.map(&:to_keyword)
 
         # ajouter les liens de niveau 2
         jsections = jstruct_map.link_text_section_maps.map do |link_text_section_map|
@@ -69,6 +70,11 @@ class Extractor
     Jtext.import(jtexts.to_ary, validate: false)
     jorfcont.jorfcont_jtext_links.each{|link| link.jorfcont_id = jorfcont.id; link.jtext_id = link.jtext.id}
     JorfcontJtextLink.import(jorfcont.jorfcont_jtext_links.to_ary, validate: false)
+
+    #import keywords
+    keywords = jtexts.map(&:keywords).flatten
+    keywords.map{|keyword| keyword.jtext_id = keyword.jtext.id}
+    Keyword.import(keywords, validate: false)
 
     # import sections
     sections = jtexts.map(&:jsections).flatten.compact
