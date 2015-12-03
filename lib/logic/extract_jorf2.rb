@@ -40,6 +40,7 @@ class Extractor
         jorfcont.jtexts << jtext
         # ajouter les keywords
         jtext.keywords = jversion_map.keywords.map(&:to_keyword)
+        jtext.keywords.each{|keyword| keyword.jtext = jtext}
 
         # ajouter les liens de niveau 2
         jsections = jstruct_map.link_text_section_maps.map do |link_text_section_map|
