@@ -38,6 +38,21 @@ namespace :extract do
     extractor.extract_jorf(path)
   end
 
+  desc "extract jorf2"
+  task :jorf2 => :environment do
+
+    puts "start extract"
+
+    if ENV["TARGET"].nil?
+      puts "define target folder with TARGET='../jorf/global/' rake extract:jorf2"
+      exit 1
+    end
+
+    path = File.absolute_path(ENV["TARGET"])
+    extractor = Extractor.new
+    extractor.extract_jorf2(path)
+  end
+
   desc "Download legi global"
   task :download_global => :environment do
     ftp = Net::FTP.new

@@ -5,5 +5,5 @@
     - @container.jorfcont_jtext_links.includes(:jtext).sort{|a, b| a.jtext.sequence_number <=> b.jtext.sequence_number}.each do |jorfcont_jtext_link|
       %li
         %b= jorfcont_jtext_link.jtext.sequence_number
-        %a{href: "/textes/#{jorfcont_jtext_link.jtext.id_jorftext_origin}", title: jorfcont_jtext_link.title}
-          =jorfcont_jtext_link.title
+        %a{href: "/textes/#{jorfcont_jtext_link.jtext.id_jorftext_origin}", title: jorfcont_jtext_link.jtext.title_full}
+          =jorfcont_jtext_link.jtext.title_full
