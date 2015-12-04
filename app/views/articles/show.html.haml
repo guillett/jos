@@ -6,18 +6,19 @@
       - if other_versions.length-1 == 0
         %p Aucune autre version
       - elsif other_versions.length-1 == 1
-        %p Autre version disponible :
+        %p Version disponible :
       - else
-        %p Autres versions disponibles :
+        %p Versions disponibles :
       - other_versions.each_with_index do |version, i|
-        - if version.id_article_origin == @article.id_article_origin
-          - next
         %p
           #{version.start_date.strftime("%d/%m/%Y")} au #{version.end_date.strftime("%d/%m/%Y")}
+          - if version.id_article_origin == @article.id_article_origin
+            %span{class:"glyphicon glyphicon-arrow-right", aria_hidden:"true", style: "margin-left: 10px"}
+            - next
           %a{href: "/articles/#{version.id_article_origin}", title: "voir"}
             %span{class:"glyphicon glyphicon-eye-open", aria_hidden:"true", style: "margin-left: 10px"}
-          %a{href: "/articles/#{version.id_article_origin}/compare/#{@article.id_article_origin}", title: "comparer"}
-            - if i == index_before_current_version
+          - if i == index_before_current_version
+            %a{href: "/articles/#{version.id_article_origin}/compare/#{@article.id_article_origin}", title: "comparer"}
               %span{class:"glyphicon glyphicon-random", aria_hidden:"true", style: "margin-left: 10px"}
   %div.col-md-6
     %h2
