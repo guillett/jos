@@ -3,12 +3,10 @@
     - other_versions = @article.versions.sort_by { |v| v.start_date }
     - index_before_current_version = other_versions.index { |v| v.id_article_origin == @article.id_article_origin } - 1
     %div{style: "margin: 30px 15px 15px;"}
-      - if other_versions.length-1 == 0
-        %p Aucune autre version
-      - elsif other_versions.length-1 == 1
-        %p Version disponible :
+      - if other_versions.length == 1
+        %p #{other_versions.length} version disponible :
       - else
-        %p Versions disponibles :
+        %p #{other_versions.length} versions disponibles :
       - other_versions.each_with_index do |version, i|
         %p
           #{version.start_date.strftime("%d/%m/%Y")} au #{version.end_date.strftime("%d/%m/%Y")}
