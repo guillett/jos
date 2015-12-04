@@ -15,6 +15,10 @@ class ArticlesController < ApplicationController
     @article_2.text.each_line {|line|  article_2_text += line.strip + "\n"}
 
     @diff_array = diff_to_array(article_1_text.strip.chomp, article_2_text.strip.chomp).map { |line| line.gsub(/\n/, "<br/>").gsub(/<br\/>-/, "<br/>").gsub(/<br\/>\+/, "<br/>") }
+
+    @history_link_modif = HistoryLink.where(article_id: @article_1.id, text_type: "MODIFICATION").first
+    @jarticle_modif_id = JtextJarticleLink.includes(:jtext).where(jtexts: { id_jorftext_origin: @history_link_modif.id_text_origin }, jtext_jarticle_links: { order: @history_link_modif.order }).first.jarticle_id
+    @jarticle_modif = Jarticle.find(@jarticle_modif_id)
   end
 
   private
