@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  get '/jarticles/:label' => 'jarticles#show'
   get '/keywords/:label' => 'keywords#show'
   resources :containers, :only => [:index, :show]
   resources :articles, :only => [:show]
