@@ -29,5 +29,5 @@
     %div.col-md-5.green= raw(line[1, line.length])
 %div.col-md-10.col-md-offset-1
   %h3
-    Modifié par l'article
-    %a{href: "/jarticles/#{@jarticle_modif.id_jarticle_origin}"}="#{@jarticle_modif.id_jarticle_origin}"
+    Modifié par
+    %a{href: "/jarticles/#{@jarticle_modif.id_jarticle_origin}"}="#{@history_link_modif.title}"
