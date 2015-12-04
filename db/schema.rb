@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151203170014) do
+ActiveRecord::Schema.define(version: 20151204083351) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20151203170014) do
     t.integer  "article_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.integer  "order"
   end
 
   add_index "history_links", ["article_id"], name: "index_history_links_on_article_id", using: :btree
@@ -74,6 +75,8 @@ ActiveRecord::Schema.define(version: 20151203170014) do
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
   end
+
+  add_index "jarticles", ["id_jarticle_origin"], name: "index_jarticles_on_id_jarticle_origin", unique: true, using: :btree
 
   create_table "jorfcont_jtext_links", id: false, force: :cascade do |t|
     t.integer "jorfcont_id", null: false
