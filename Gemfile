@@ -40,6 +40,9 @@ gem 'anemone'
 gem 'aws-sdk'
 gem 'ruby-progressbar'
 gem 'devise'
+gem 'devise-bootstrap-views'
+gem 'activerecord-session_store'
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
