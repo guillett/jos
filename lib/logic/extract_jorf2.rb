@@ -15,16 +15,20 @@ class Extractor
     Dir.glob(File.join(path, JCONT_PATTERN))
   end
 
-  def extract_jorf2 path
+  def extract_jorf2 path, daily_container=false
     jorfcont_paths = extract_conteneur_xml_paths(path)
     Parallel.map(jorfcont_paths, in_processes: ENV['PARALLEL_PROCESSES'].try(:to_i), :progress => "Containers") do |jorfcont_path|
-      extract_full_container(jorfcont_path, path)
+      extract_full_container(jorfcont_path, path, daily_container)
     end
   end
 
-  def extract_full_container(jorfcont_path, path)
+  def extract_full_container(jorfcont_path, path, daily_container)
     jorfcont_map = JorfcontMap.parse(File.read(jorfcont_path), :single => true)
     jorfcont = jorfcont_map.to_jorfcont
+
+    if daily_container
+      delete_outdated_containers(jorfcont)
+    end
 
     # récupérer les texts, avec les struct et les versions, en partant 
     jorfcont_map.link_cont_text_maps.each do |link_cont_text_map|
@@ -93,6 +97,11 @@ class Extractor
     Jarticle.import(articles, validate: false)
     links = jtexts.map(&:jtext_jarticle_links).flatten.compact.map{|link| link.jtext_id = link.jtext.id; link.jarticle_id = link.jarticle.id; link}
     JtextJarticleLink.import(links, validate: false)
+  end
+
+  def delete_outdated_containers(jorfcont)
+    jcont = Jorfcont.find_by(id_jorfcont_origin: jorfcont.id_jorfcont_origin)
+    jcont.destroy if !jcont.nil?
   end
 
   def full_path_from_id_origin(id_origin)

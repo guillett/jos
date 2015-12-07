@@ -45,12 +45,15 @@ namespace :extract do
 
     if ENV["TARGET"].nil?
       puts "define target folder with TARGET='../jorf/global/' rake extract:jorf2"
+      puts "add DAILY=1 if you want to update current db with a daily dump"
       exit 1
     end
 
+    daily = !ENV["DAILY"].nil?
+
     path = File.absolute_path(ENV["TARGET"])
     extractor = Extractor.new
-    extractor.extract_jorf2(path)
+    extractor.extract_jorf2(path, daily)
   end
 
   desc "Download legi global"
