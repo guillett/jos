@@ -27,9 +27,10 @@
     %div.col-md-5.col-md-offset-1.pink= raw(line[1, line.length])
   - elsif line.first == "+"
     %div.col-md-5.green= raw(line[1, line.length])
-%div.col-md-10.col-md-offset-1
-  %h3
-    Modifié par
-    %a{href: "/jarticles/#{@jarticle_modif.id_jarticle_origin}"}="#{@history_link_modif.title}"
-  %p
-    %blockquote=@jarticle_modif.text
+- unless @jarticle_modif.nil?
+  %div.col-md-10.col-md-offset-1
+    %h3
+      Modifié par
+      %a{href: "/jarticles/#{@jarticle_modif.id_jarticle_origin}"}="#{@history_link_modif.title}"
+    %p
+      %blockquote=@jarticle_modif.text
