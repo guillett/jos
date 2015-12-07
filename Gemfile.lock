@@ -51,6 +51,7 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.2.3)
       aws-sdk-core (= 2.2.3)
+    bcrypt (3.1.10)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     bootstrap-sass (3.3.5.1)
@@ -66,6 +67,13 @@ GEM
       execjs
     coffee-script-source (1.9.1.1)
     debug_inspector (0.0.2)
+    devise (3.5.2)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 3.2.6, < 5)
+      responders
+      thread_safe (~> 0.1)
+      warden (~> 1.2.3)
     diff-lcs (1.2.5)
     diffy (3.0.7)
     domain_name (0.5.25)
@@ -124,6 +132,7 @@ GEM
     nokogiri-happymapper (0.5.9)
       nokogiri (~> 1.5)
     ntlm-http (0.1.1)
+    orm_adapter (0.5.0)
     parallel (1.6.1)
     pg (0.18.3)
     puma (2.15.3)
@@ -180,6 +189,8 @@ GEM
       redis-store (~> 1.1.0)
     redis-store (1.1.7)
       redis (>= 2.2)
+    responders (2.1.0)
+      railties (>= 4.2.0, < 5)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
@@ -239,6 +250,8 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
+    warden (1.2.3)
+      rack (>= 1.0)
     web-console (2.2.1)
       activemodel (>= 4.0)
       binding_of_caller (>= 0.7.2)
@@ -260,6 +273,7 @@ DEPENDENCIES
   bootstrap-sass
   byebug
   coffee-rails (~> 4.1.0)
+  devise
   diffy (~> 3.0.7)
   haml-rails
   jbuilder (~> 2.0)

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  devise_for :users
+  
   get '/jarticles/:id_jarticle_origin' => 'jarticles#show'
   get '/keywords/:label' => 'keywords#show'
   resources :containers, :only => [:index, :show]
