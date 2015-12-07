@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   devise_for :users
-  
+
   get '/jarticles/:id_jarticle_origin' => 'jarticles#show'
   get '/keywords/:label' => 'keywords#show'
   resources :containers, :only => [:index, :show]
@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :codes, :only => [:index, :show]
   resources :sections, :only => [:show]
   resources :textes, :only => [:show]
+  resources :users, only: [:show, :edit, :update]
   root 'home#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
