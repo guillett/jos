@@ -19,7 +19,7 @@ def fake_jarticle_file
         <MCS_ART/>
         <DATE_DEBUT>2999-01-01</DATE_DEBUT>
         <DATE_FIN>2999-01-01</DATE_FIN>
-        <TYPE>AUTONOME</TYPE>
+        <TYPE>AU  TONOME</TYPE>
       </META_ARTICLE>
     </META_SPEC>
   </META>
@@ -59,12 +59,12 @@ describe 'mapping of jarticle' do
     before do
       @xml = fake_jarticle_file
       @jarticle_map = JarticleMap.parse(@xml, :single => true)
-      @jarticle = @jarticle_map.to_jarticle
     end
 
     it 'maps correctly the jarticle' do
-      expect(@jarticle.id_jarticle_origin).to  eq("JORFARTI000030611298")
-      expect(@jarticle.text).to   eq("\n      \n        En application de l'article 4 \n      ")
+      expect(@jarticle_map.id_jarticle_origin).to  eq("JORFARTI000030611298")
+      expect(@jarticle_map.text).to   eq("\n      \n        En application de l'article 4 \n      ")
+      expect(@jarticle_map.number).to  eq(3)
     end
 
   end

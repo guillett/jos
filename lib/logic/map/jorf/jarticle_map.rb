@@ -6,6 +6,7 @@ class JarticleMap
 
   has_one :id_jarticle_origin, String, :xpath => 'META/META_COMMUN/ID'
   has_one :text, String, :xpath => 'BLOC_TEXTUEL/CONTENU'
+  has_one :number, Integer, :xpath => 'META/META_SPEC/META_ARTICLE/NUM'
 
   def to_hash
     hash = {}
