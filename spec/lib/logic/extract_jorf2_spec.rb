@@ -126,7 +126,6 @@ describe 'extraction of text folders' do
         end
 
         it 'returns all the articles' do
-          puts articles.inspect
           expect(articles.length).to eq(3)
         end
 

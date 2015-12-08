@@ -6,12 +6,8 @@ RSpec.describe Jorfcont, type: :model do
       before do
         container = Jorfcont.new()
 
-        jsection = Jsection.new()
-        jsection.jarticles << Jarticle.new()
-
         jarticle = Jarticle.new()
         jtext = Jtext.new()
-        jtext.jsections << jsection
         jtext.jarticles << jarticle
 
         container.jtexts << jtext
@@ -23,8 +19,6 @@ RSpec.describe Jorfcont, type: :model do
         expect(JsectionJarticleLink.count).to eq(0)
         expect(Jarticle.count).to eq(0)
         expect(JtextJarticleLink.count).to eq(0)
-        expect(Jsection.count).to eq(0)
-        expect(JtextJsectionLink.count).to eq(0)
         expect(Jtext.count).to eq(0)
         expect(JorfcontJtextLink.count).to eq(0)
         expect(Jorfcont.count).to eq(0)
