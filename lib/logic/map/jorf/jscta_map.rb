@@ -1,4 +1,5 @@
 require './lib/logic/map/jorf/link_jsection_jarticle_map'
+require './lib/logic/map/jorf/link_jsection_map'
 
 class JsctaMap
   include HappyMapper
@@ -8,11 +9,13 @@ class JsctaMap
   has_one :title, String, :xpath => 'TITRE_TA'
 
   has_many :link_section_article_maps, LinkJsectionJarticleMap, :xpath => 'STRUCTURE_TA'
+  has_many :link_section_maps, LinkJsectionMap, :xpath => 'STRUCTURE_TA'
 
   def to_hash
     hash = {}
     instance_variables.each { |var| hash[var.to_s.delete("@")] = instance_variable_get(var) }
     hash.delete("link_section_article_maps")
+    hash.delete("link_section_maps")
     hash
   end
 

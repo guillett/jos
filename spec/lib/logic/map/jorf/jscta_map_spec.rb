@@ -12,6 +12,8 @@ def fake_jscta_file
 <LIEN_ART debut="2999-01-01" etat="" fin="2999-01-01" id="JORFARTI000030611463" num="4" origine="JORF"/>
 <LIEN_ART debut="2999-01-01" etat="" fin="2999-01-01" id="JORFARTI000030611464" num="5" origine="JORF"/>
 <LIEN_ART debut="2999-01-01" etat="" fin="2999-01-01" id="JORFARTI000030611465" num="6" origine="JORF"/>
+<LIEN_SECTION_TA cid="JORFSCTA000000905382" debut="2999-01-01" etat="" fin="2999-01-01" id="JORFSCTA000000905382" niv="2" url="/JORF/SCTA/00/00/00/90/53/JORFSCTA000000905382.xml">Chapitre Ier :   Concours de spécialité mathématiques</LIEN_SECTION_TA>
+<LIEN_SECTION_TA cid="JORFSCTA000000905383" debut="2999-01-01" etat="" fin="2999-01-01" id="JORFSCTA000000905383" niv="2" url="/JORF/SCTA/00/00/00/90/53/JORFSCTA000000905383.xml">Chapitre II :   Concours de spécialité économie</LIEN_SECTION_TA>
 </STRUCTURE_TA>
 <CONTEXTE>
 <TEXTE autorite="" cid="JORFTEXT000030611453" date_publi="2015-05-19" date_signature="2015-05-11" ministere="Ministère de l'économie, de l'industrie et du numérique" nature="ARRETE" nor="EING1505034A" num="">
@@ -42,6 +44,11 @@ describe 'mapping of jscta' do
       expect(@jscta_map.link_section_article_maps.length).to  eq(4)
       expect(@jscta_map.link_section_article_maps[0].id_jarticle_origin).to  eq("JORFARTI000030611462")
       expect(@jscta_map.link_section_article_maps[0].number).to  eq(3)
+    end
+
+    it 'maps correctly the jsection' do
+      expect(@jscta_map.link_section_maps.length).to  eq(2)
+      expect(@jscta_map.link_section_maps[0].id_jsection_origin).to  eq("JORFSCTA000000905382")
     end
 
     describe "to_jscta_jarticle_link_hashes" do
