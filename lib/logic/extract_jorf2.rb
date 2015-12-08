@@ -46,27 +46,7 @@ class Extractor
         jtext.keywords = jversion_map.keywords.map(&:to_keyword)
         jtext.keywords.each{|keyword| keyword.jtext = jtext}
 
-        # ajouter les liens de niveau 2
-        jsections = jstruct_map.link_text_section_maps.map do |link_text_section_map|
-          section_map = find_jscta_map_by_id_origin(link_text_section_map.id_jsection_origin, path)
-
-          article_maps = section_map.link_section_article_maps.map do |link_section_article_map|
-            find_article_map_by_id_origin(link_section_article_map.id_jarticle_origin, path)
-          end
-
-          jsection = section_map.to_jsection
-          jarticles = article_maps.map(&:to_jarticle)
-          jsection.jarticles = jarticles
-          jsection
-        end
-
-        jtext.jsections = jsections
-
-        jarticles = jstruct_map.link_text_article_maps.map do |article_map|
-          find_article_map_by_id_origin(article_map.id_jarticle_origin, path)
-        end.compact.map(&:to_jarticle)
-
-        jtext.jarticles = jarticles
+        jtext.jarticles = extract_all_article_map_from_jstruct_map(jstruct_map, path).map(&:to_jarticle)
       end
     end
 
@@ -97,6 +77,39 @@ class Extractor
     Jarticle.import(articles, validate: false)
     links = jtexts.map(&:jtext_jarticle_links).flatten.compact.map{|link| link.jtext_id = link.jtext.id; link.jarticle_id = link.jarticle.id; link}
     JtextJarticleLink.import(links, validate: false)
+  end
+
+  def extract_all_article_map_from_jstruct_map jstruct_map, path
+    articles = []
+    if !jstruct_map.link_text_article_maps.nil?
+      articles += jstruct_map.link_text_article_maps.map do |link_text_article_map|
+        find_article_map_by_id_origin(link_text_article_map.id_jarticle_origin, path)
+      end
+    end
+
+    if !jstruct_map.link_text_section_maps.nil?
+      jstruct_map.link_text_section_maps.each do |link_text_section_map|
+        jsection_map = find_jscta_map_by_id_origin(link_text_section_map.id_jsection_origin, path)
+        extract_article_from_jsection(articles, jsection_map, path)
+      end
+    end
+
+    articles
+  end
+
+  def extract_article_from_jsection(articles, jsection_map, path)
+    if !jsection_map.link_section_article_maps.empty?
+      jsection_map.link_section_article_maps.map do |link_jsection_jarticle|
+        articles << find_article_map_by_id_origin(link_jsection_jarticle.id_jarticle_origin, path)
+      end
+    end
+
+    if !jsection_map.link_section_maps.empty?
+      jsection_map.link_section_maps.each do |link_section_map|
+        sub_jsection_map = find_jscta_map_by_id_origin(link_section_map.id_jsection_origin, path)
+        extract_article_from_jsection(articles, sub_jsection_map, path)
+      end
+    end
   end
 
   def delete_outdated_containers(jorfcont)
