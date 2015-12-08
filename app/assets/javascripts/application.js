@@ -16,6 +16,7 @@
 //= require bootstrap-sprockets
 //= require jquery.navgoco.0.2.1
 //= require_tree .
+//= require cocoon
 
 $(document).ready(function() {
     // Initialize navgoco with default options

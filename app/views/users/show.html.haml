@@ -5,3 +5,12 @@
 
 %label Vos alertes
 TODO 
+
+= simple_form_for current_user do |f|
+  %h3 mot cles
+  #mot_cle
+    = f.simple_fields_for :keywords do |keyword|
+      = render 'keyword_fields', f: keyword
+    .links
+      = link_to_add_association 'ajouter les mots clefs', f, :keywords
+  = f.submit

@@ -16,4 +16,16 @@ class UsersController < ApplicationController
 
     end
   end
+
+  def update
+    keywords = keyword_params.to_h.values.map{|k| Keyword.where(label: k.values[0]["label"]).first }.compact
+
+    current_user.keywords += keywords
+
+    redirect_to(current_user)
+  end
+
+  def keyword_params
+    params.require(:user).permit(keywords_attributes: [:id, :label, :_destroy])
+  end
 end
