@@ -18,17 +18,6 @@
         -@jtext.jarticles.each do |article|
           %li=article.text
 
-    - if @jtext.jsections.size > 0
-      %h2 Sections
-      %ul
-        -@jtext.jsections.each do |section|
-          %li
-            =section.title
-            -if !section.jarticles.empty?
-              %ul
-                -section.jarticles.each  do |jarticle|
-                  %li=jarticle.text
-
     - if @jtext.keywords.size > 0
       %h2 Mots clés
       %ul
