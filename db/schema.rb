@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151207100533) do
+ActiveRecord::Schema.define(version: 20151208114748) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "article_versions", id: false, force: :cascade do |t|
     t.integer "article_a_id", null: false
@@ -42,8 +45,8 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "code_section_links", ["code_id"], name: "index_code_section_links_on_code_id"
-  add_index "code_section_links", ["section_id"], name: "index_code_section_links_on_section_id"
+  add_index "code_section_links", ["code_id"], name: "index_code_section_links_on_code_id", using: :btree
+  add_index "code_section_links", ["section_id"], name: "index_code_section_links_on_section_id", using: :btree
 
   create_table "codes", force: :cascade do |t|
     t.string   "title"
@@ -64,16 +67,19 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.integer  "order"
   end
 
-  add_index "history_links", ["article_id"], name: "index_history_links_on_article_id"
+  add_index "history_links", ["article_id"], name: "index_history_links_on_article_id", using: :btree
 
   create_table "jarticles", force: :cascade do |t|
     t.string   "id_jarticle_origin"
     t.text     "text"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.integer  "number"
+    t.integer  "jtext_id"
   end
 
-  add_index "jarticles", ["id_jarticle_origin"], name: "index_jarticles_on_id_jarticle_origin", unique: true
+  add_index "jarticles", ["id_jarticle_origin"], name: "index_jarticles_on_id_jarticle_origin", unique: true, using: :btree
+  add_index "jarticles", ["jtext_id"], name: "index_jarticles_on_jtext_id", using: :btree
 
   create_table "jorfcont_jtext_links", id: false, force: :cascade do |t|
     t.integer "jorfcont_id", null: false
@@ -81,7 +87,7 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.string  "title"
   end
 
-  add_index "jorfcont_jtext_links", ["jorfcont_id", "jtext_id"], name: "index_jorfcont_jtext_links_on_jorfcont_id_and_jtext_id"
+  add_index "jorfcont_jtext_links", ["jorfcont_id", "jtext_id"], name: "index_jorfcont_jtext_links_on_jorfcont_id_and_jtext_id", using: :btree
 
   create_table "jorfconts", force: :cascade do |t|
     t.string   "id_jorfcont_origin"
@@ -99,7 +105,7 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.integer "number"
   end
 
-  add_index "jsection_jarticle_links", ["jsection_id", "jarticle_id"], name: "index_jsection_jarticle_links_on_jsection_id_and_jarticle_id"
+  add_index "jsection_jarticle_links", ["jsection_id", "jarticle_id"], name: "index_jsection_jarticle_links_on_jsection_id_and_jarticle_id", using: :btree
 
   create_table "jsections", force: :cascade do |t|
     t.string   "id_jsection_origin"
@@ -114,7 +120,7 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.integer "order"
   end
 
-  add_index "jtext_jarticle_links", ["jtext_id", "jarticle_id"], name: "index_jtext_jarticle_links_on_jtext_id_and_jarticle_id"
+  add_index "jtext_jarticle_links", ["jtext_id", "jarticle_id"], name: "index_jtext_jarticle_links_on_jtext_id_and_jarticle_id", using: :btree
 
   create_table "jtext_jsection_links", id: false, force: :cascade do |t|
     t.integer "jtext_id",    null: false
@@ -122,7 +128,7 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.integer "order"
   end
 
-  add_index "jtext_jsection_links", ["jtext_id", "jsection_id"], name: "index_jtext_jsection_links_on_jtext_id_and_jsection_id"
+  add_index "jtext_jsection_links", ["jtext_id", "jsection_id"], name: "index_jtext_jsection_links_on_jtext_id_and_jsection_id", using: :btree
 
   create_table "jtexts", force: :cascade do |t|
     t.string   "id_jorftext_origin"
@@ -144,8 +150,8 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.integer  "jtext_id"
   end
 
-  add_index "keywords", ["jtext_id"], name: "index_keywords_on_jtext_id"
-  add_index "keywords", ["label"], name: "index_keywords_on_label"
+  add_index "keywords", ["jtext_id"], name: "index_keywords_on_jtext_id", using: :btree
+  add_index "keywords", ["label"], name: "index_keywords_on_label", using: :btree
 
   create_table "section_article_links", id: false, force: :cascade do |t|
     t.integer  "section_id", null: false
@@ -156,7 +162,7 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.integer  "order"
   end
 
-  add_index "section_article_links", ["section_id", "article_id"], name: "index_section_article_links_on_section_id_and_article_id"
+  add_index "section_article_links", ["section_id", "article_id"], name: "index_section_article_links_on_section_id_and_article_id", using: :btree
 
   create_table "section_links", force: :cascade do |t|
     t.string   "state"
@@ -177,7 +183,7 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.string   "id_section_origin"
   end
 
-  add_index "sections", ["code_id"], name: "index_sections_on_code_id"
+  add_index "sections", ["code_id"], name: "index_sections_on_code_id", using: :btree
 
   create_table "sessions", force: :cascade do |t|
     t.string   "session_id", null: false
@@ -186,8 +192,8 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.datetime "updated_at"
   end
 
-  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true
-  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at"
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -204,7 +210,8 @@ ActiveRecord::Schema.define(version: 20151207100533) do
     t.datetime "updated_at",                          null: false
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "jarticles", "jtexts"
 end

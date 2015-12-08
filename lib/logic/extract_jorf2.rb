@@ -61,22 +61,14 @@ class Extractor
     keywords.map{|keyword| keyword.jtext_id = keyword.jtext.id}
     Keyword.import(keywords, validate: false)
 
-    # import sections
-    sections = jtexts.map(&:jsections).flatten.compact
-    Jsection.import(sections, validate: false)
-    links = jtexts.map(&:jtext_jsection_links).flatten.compact.map{|link| link.jtext_id = link.jtext.id; link.jsection_id = link.jsection.id; link}
-    JtextJsectionLink.import(links, validate: false)
-    # import section articles
-    articles = sections.map(&:jarticles).flatten.compact
-    Jarticle.import(articles, validate: false)
-    links = sections.map(&:jsection_jarticle_links).flatten.compact.map{|link| link.jsection_id = link.jsection.id; link.jarticle_id = link.jarticle.id; link}
-    JsectionJarticleLink.import(links, validate: false)
-
     # import articles
+    jtexts.each do |jtext|
+      jtext.jarticles.each do |jarticle|
+        jarticle.jtext_id = jtext.id
+      end
+    end
     articles = jtexts.map(&:jarticles).flatten.compact
     Jarticle.import(articles, validate: false)
-    links = jtexts.map(&:jtext_jarticle_links).flatten.compact.map{|link| link.jtext_id = link.jtext.id; link.jarticle_id = link.jarticle.id; link}
-    JtextJarticleLink.import(links, validate: false)
   end
 
   def extract_all_article_map_from_jstruct_map jstruct_map, path
