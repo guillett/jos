@@ -17,9 +17,7 @@ TODO
 
 %div.row
   %div.col-md-9.col-md-offset-1
-    %select#toto
-      %option{:value => "a"}= "Alabama"
-      %option{:value => "b"}= "Wyoming"
+    %select#toto{:multiple => true}
 
 :css
-  #toto {width: 500px !important;}
+  #toto {width: 200px;}

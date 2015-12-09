@@ -29,6 +29,7 @@ $(document).ready(function() {
     var index = algolia.initIndex('JoKeywords');
 
     $("#toto").select2({
+        tags: true,
         ajax: {
             // Custom transport to call Algolia's API
             transport: function(params, success, failure) {
@@ -36,20 +37,26 @@ $(document).ready(function() {
                 delete params.data.query;
                 index.search(q, function(algolia_success, content) {
                     if (algolia_success) {
-                        console.log(content)
-                        success();
+                        success(content);
                     }
                 }, params.data);
             },
             // build Algolia's query parameters
             data: function(params) {
-                return { query: params.term, hitsPerPage: 10, page: 1 };
+                return { query: params.term, hitsPerPage: 10, page: 0 };
             },
             // return Algolia's results
             results: function(data, page) {
-                console.log("HELLOOOO")
                 return { results: data.hits }
+            },
+            processResults: function (data) {
+                var well_formed = $.map(data.hits, function(el,i ) {return { id: i, text: el.label } });
+                return {
+                    results: well_formed
+                };
             }
+
         }
+
     });
 });
