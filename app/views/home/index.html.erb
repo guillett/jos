@@ -33,8 +33,8 @@
     }
 
     .tt-menu {
-        width: 422px;
-        margin: 12px 0;
+        width: 600px;
+        margin: 12px 20;
         padding: 8px 0;
         background-color: #fff;
         border: 1px solid #ccc;
@@ -65,6 +65,10 @@
 
     }
 
+    .tt-dataset {
+        margin: 0 20px;
+    }
+
     .tt-suggestion p {
         margin: 0;
     }
@@ -74,15 +78,23 @@
 
 
 <div style="width: 600px; margin-left:auto; margin-right: auto; margin-top: 50px">
-  <h1 style='margin-bottom: 30px'>Rechercher un code :</h1>
+  <h1 style='margin-bottom: 30px'>Rechercher un code ou un mot clé :</h1>
   <div id="the-basics">
     <input type="text" class="typeahead " placeholder="code">
   </div>
 </div>
 
 
+<div style="width: 600px; margin-left:auto; margin-right: auto; margin-top: 100px; text-align: center;">
+  <h2><a href="/containers">ou consulter les derniers J.O. officiels</a></h2>
+</div>
+
+
 <script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
 <script>
+
+
+
     var substringMatcher = function(strs) {
         return function findMatches(q, cb) {
             var matches, substringRegex;
@@ -105,22 +117,50 @@
         };
     };
 
-    var states = <%= raw @codes.to_json  %>;
+    var codes = <%= raw @codes.to_json  %>;
 
-    $('#the-basics .typeahead').typeahead({
-                hint: true,
-                highlight: true,
-                minLength: 1
-            },
-            {
-                name: 'states',
-                source: substringMatcher(states),
-                display: 'title'
+    $(function(){
+
+        var algolia = new AlgoliaSearch('P1QQB6BNNQ', 'cadea80b43b8c9a5640c44b240de7793');
+        var index = algolia.initIndex('JoKeywords');
+
+        var wrapper = function (query, cb, as) {
+
+            index.search(query, function(err, content) {
+                var well_formated = $.map(content.hits, function(el) { return el.label; });
+                as(well_formated);
             });
+        };
+
+        $('#the-basics .typeahead').typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                },
+                {
+                name: 'codes',
+                source: substringMatcher(codes),
+                display: 'title',
+                templates: {
+                    header: '<h3>Codes</h3>'
+                    }
+                },
+                {
+                    name: 'keyword',
+                    source: wrapper,
+                    templates: {
+                        header: '<h3>mots clés</h3>'
+                    }
+                });
 
 
-    $('#the-basics .typeahead').on('typeahead:select', function (ev, suggestion) {
-        window.location = '/codes/' + suggestion.escape_title;
+        $('#the-basics .typeahead').on('typeahead:select', function (ev, suggestion) {
+            if (suggestion.title) {
+                window.location = '/codes/' + suggestion.escape_title;
+            } else {
+                window.location = '/keywords/' + suggestion;
+            }
+        });
     });
 
 
