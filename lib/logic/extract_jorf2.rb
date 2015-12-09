@@ -21,10 +21,7 @@ class Extractor
       extract_full_container(jorfcont_path, path, daily_container)
     end
 
-    if daily_container
-      last_container = Jorfcont.where.not(publication_date: '2999-01-01 00:00:00.0').order(publication_date: :desc).first
-      mail_people([last_container])
-    end
+
   end
 
   def extract_full_container(jorfcont_path, path, daily_container)
@@ -76,6 +73,11 @@ class Extractor
     Jarticle.import(articles, validate: false)
 
     jorfcont
+  end
+
+  def mail_about_last_container
+      last_container = Jorfcont.where.not(publication_date: '2999-01-01 00:00:00.0').order(publication_date: :desc).first
+      mail_people([last_container])
   end
 
   def mail_people jcontainers
