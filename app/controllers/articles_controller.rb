@@ -28,10 +28,8 @@ class ArticlesController < ApplicationController
   def get_article_modificator
     @history_link_modif = HistoryLink.where(article_id: @article_2.id, text_type: ["MODIFICATION", "MODIFIE"]).first
     return nil if @history_link_modif.nil?
-
-    jarticle_modif = JtextJarticleLink.includes(:jtext).where(jtexts: { id_jorftext_origin: @history_link_modif.id_text_origin }, jtext_jarticle_links: { order: @history_link_modif.order }).first
-    return nil if jarticle_modif.nil?
-
-    Jarticle.find(jarticle_modif.jarticle_id)
+    jtext_modif = Jtext.find_by(id_jorftext_origin: @history_link_modif.id_text_origin)
+    return nil if jtext_modif.nil?
+    Jarticle.where(number: @history_link_modif.order, jtext_id: jtext_modif.id).first
   end
 end
