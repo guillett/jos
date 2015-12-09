@@ -1,16 +1,23 @@
-%h1 Votre profile
+%div.row
+  %div.col-md-9.col-md-offset-1
 
-%label Votre email
-= current_user.email
+    %h1 Votre profil
 
-%label Vos alertes
-TODO 
+    %label Votre email
+    = current_user.email
 
-= simple_form_for current_user do |f|
-  %h3 mot cles
-  #mot_cle
-    = f.simple_fields_for :keywords do |keyword|
-      = render 'keyword_fields', f: keyword
-    .links
-      = link_to_add_association 'ajouter les mots clefs', f, :keywords
-  = f.submit
+
+- current_keywords = current_user.keywords.map{|k| "<option selected='selected' value='#{k.label}'>#{k.label}</option>"}.join
+
+%div.row
+  %div.col-md-9.col-md-offset-1
+    %label Vos mots-clés
+    = form_tag user_path(current_user), :method => :patch do
+      = field_set_tag do
+        %div.select-wrapper
+          = select_tag "keywords", current_keywords.html_safe, :multiple => true
+        = submit_tag 'mettre à jour'
+
+:css
+  #keywords {width: 100%;}
+  .select-wrapper {margin: 15px;}

@@ -22,9 +22,9 @@ class UsersController < ApplicationController
 
   def update
     # {"label" => "", "_destroy" => "false"}
-    inputs = keyword_params.to_h.values[0].values.select{|i| i['_destroy'] == 'false' }
+    inputs = params['keywords'] || []
 
-    keywords = inputs.map{|k| Keyword.where(label: k["label"]).first }.compact
+    keywords = inputs.map{|k| Keyword.where(label: k).first }.compact
     current_user.update(keywords: keywords)
 
     redirect_to(current_user)

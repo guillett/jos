@@ -17,6 +17,9 @@
 //= require jquery.navgoco.0.2.1
 //= require_tree .
 //= require cocoon
+//= require algolia/algoliasearch.min
+//= require select2
+//= require select2_locale_fr
 
 $(document).ready(function() {
     // Initialize navgoco with default options

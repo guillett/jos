@@ -13,7 +13,7 @@ RSpec.describe UsersController, type: :controller do
       context 'with a already known keyword' do
         before do
           Keyword.create!(label:'sisi')
-          put :update, id: @user.id, "user" => {"keywords_attributes"=>{"1449591853754"=>{"label"=>"sisi", "_destroy"=>"false"}}}
+          put :update, id: @user.id, "keywords" =>["sisi"]
         end
 
         it "add the keyword to the user" do
@@ -26,7 +26,7 @@ RSpec.describe UsersController, type: :controller do
         before do
           k = Keyword.create!(label:'sisi')
           @user.keywords << k
-          put :update, id: @user.id, "user" => {"keywords_attributes"=>{"1449591853754"=>{"label"=>"sisi", "_destroy"=>"true"}}}
+          put :update, id: @user.id, "keywords" =>[]
         end
 
         it "removes the keywords" do
@@ -38,7 +38,7 @@ RSpec.describe UsersController, type: :controller do
         before do
           Keyword.create!(label:'sisi')
           Keyword.create!(label:'princesse')
-          put :update, id: @user.id, "user" => {"keywords_attributes"=>{"1449591853754"=>{"label"=>"sisi", "_destroy"=>"false"}, "17"=>{"label"=>"princesse", "_destroy"=>"false"}}}
+          put :update, id: @user.id, "keywords" =>["sisi", "princesse"]
         end
 
         it "add the keyword to the user" do
@@ -49,7 +49,7 @@ RSpec.describe UsersController, type: :controller do
 
       context 'with a unknown keyword' do
         before do
-          put :update, id: @user.id, "user" => {"keywords_attributes"=>{"1449591853754"=>{"label"=>"sisi", "_destroy"=>"false"}}}
+          put :update, id: @user.id, "keywords" =>["sisi"]
         end
 
         it "the keyword is not added" do
