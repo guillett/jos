@@ -22,6 +22,31 @@ RSpec.describe UsersController, type: :controller do
         end
       end
 
+      context 'when i remove a keyword' do
+        before do
+          k = Keyword.create!(label:'sisi')
+          @user.keywords << k
+          put :update, id: @user.id, "user" => {"keywords_attributes"=>{"1449591853754"=>{"label"=>"sisi", "_destroy"=>"true"}}}
+        end
+
+        it "removes the keywords" do
+          expect(subject.current_user.keywords.length).to eq(0)
+        end
+      end
+
+      context 'with 2 already known keywords' do
+        before do
+          Keyword.create!(label:'sisi')
+          Keyword.create!(label:'princesse')
+          put :update, id: @user.id, "user" => {"keywords_attributes"=>{"1449591853754"=>{"label"=>"sisi", "_destroy"=>"false"}, "17"=>{"label"=>"princesse", "_destroy"=>"false"}}}
+        end
+
+        it "add the keyword to the user" do
+          expect(subject.current_user.keywords.length).to eq(2)
+          expect(subject.current_user.keywords.first.label).to eq('sisi')
+        end
+      end
+
       context 'with a unknown keyword' do
         before do
           put :update, id: @user.id, "user" => {"keywords_attributes"=>{"1449591853754"=>{"label"=>"sisi", "_destroy"=>"false"}}}

@@ -14,13 +14,18 @@ class UsersController < ApplicationController
       redirect_to root_path, notice: "Vous ne pouvez voir que votre propre profil"
     else
 
+      sql = "select label from keywords group by label"
+      @keywords = ActiveRecord::Base.connection.execute(sql).values.flatten
+
     end
   end
 
   def update
-    keywords = keyword_params.to_h.values.map{|k| Keyword.where(label: k.values[0]["label"]).first }.compact
+    # {"label" => "", "_destroy" => "false"}
+    inputs = keyword_params.to_h.values[0].values.select{|i| i['_destroy'] == 'false' }
 
-    current_user.keywords += keywords
+    keywords = inputs.map{|k| Keyword.where(label: k["label"]).first }.compact
+    current_user.update(keywords: keywords)
 
     redirect_to(current_user)
   end
