@@ -17,8 +17,13 @@ class Extractor
 
   def extract_jorf2 path, daily_container=false
     jorfcont_paths = extract_conteneur_xml_paths(path)
-    Parallel.map(jorfcont_paths, in_processes: ENV['PARALLEL_PROCESSES'].try(:to_i), :progress => "Containers") do |jorfcont_path|
+    jcontainers = Parallel.map(jorfcont_paths, in_processes: ENV['PARALLEL_PROCESSES'].try(:to_i), :progress => "Containers") do |jorfcont_path|
       extract_full_container(jorfcont_path, path, daily_container)
+    end
+
+    if daily_container
+      last_container = Jorfcont.where.not(publication_date: '2999-01-01 00:00:00.0').order(publication_date: :desc).first
+      mail_people([last_container])
     end
   end
 
@@ -69,35 +74,41 @@ class Extractor
     end
     articles = jtexts.map(&:jarticles).flatten.compact
     Jarticle.import(articles, validate: false)
+
+    jorfcont
   end
 
   def mail_people jcontainers
-    # user: [jtext1, jtext2...]
+    # user: [{jtext: jtext, keywords: [keyw1, keyw2]}]
     users_h = {}
 
     jcontainers.each do |jcontainer|
       jcontainer.jtexts.each do |jtext|
-        keywords = jtext.keywords
-        users = User.joins(:keywords).where(keywords: {label: keywords.map(&:label)})
+        jtext_keyword_labels = jtext.keywords.map(&:label)
+        users = User.joins(:keywords).where(keywords: {label: jtext_keyword_labels})
         users.each do |user|
+
+          jtext_and_keywords = {jtext: jtext, keywords: user.keywords.map(&:label) & jtext_keyword_labels}
+
           if users_h[user].nil?
-            users_h[user] = [jtext]
+            users_h[user] = [jtext_and_keywords]
           else
-            users_h[user] << jtext
+            users_h[user] << jtext_and_keywords
           end
         end
       end
 
     end
 
-    users_h.each do |user, jtexts|
-      mail(user: user, jtexts: jtexts)
+    users_h.each do |user, jtext_and_keywords|
+      mail(user: user, jtext_and_keywords: jtext_and_keywords)
     end
 
   end
 
   def mail options
-
+    puts "mailing #{options[:user].email}"
+    UserMailer.notify_jtext(options[:user], options[:jtext_and_keywords]).deliver_now()
   end
 
   def extract_all_article_map_from_jstruct_map jstruct_map, path

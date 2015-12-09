@@ -176,8 +176,8 @@ describe 'extraction of text folders' do
           end
 
           it "mails to bob the right jo" do
-            expect(extractor).to receive(:mail).with(user:@bob, jtexts: [@jtext])
-            expect(extractor).to receive(:mail).with(user:@alice, jtexts: [@jtext])
+            expect(extractor).to receive(:mail).with(user:@bob, jtext_and_keywords: [{jtext: @jtext, keywords: ['ENVIRONMENT']}])
+            expect(extractor).to receive(:mail).with(user:@alice, jtext_and_keywords: [{jtext: @jtext, keywords: ['AGRICULTURE']}])
             extractor.mail_people [jcontainer]
           end
         end
@@ -202,8 +202,8 @@ describe 'extraction of text folders' do
           end
 
           it "mails the right jtext to the right person" do
-            expect(extractor).to receive(:mail).with(user:@bob, jtexts: [@env_jtext])
-            expect(extractor).to receive(:mail).with(user:@alice, jtexts: [@agri_jtext])
+            expect(extractor).to receive(:mail).with(user:@bob, jtext_and_keywords: [{jtext: @env_jtext, keywords: ['ENVIRONMENT']}])
+            expect(extractor).to receive(:mail).with(user:@alice, jtext_and_keywords: [{jtext: @agri_jtext, keywords: ['AGRICULTURE']}])
             extractor.mail_people [jcontainer]
           end
         end
@@ -216,7 +216,7 @@ describe 'extraction of text folders' do
           end
 
           it "mails the 2 jtexts to bob" do
-            expect(extractor).to receive(:mail).with(user:@bob, jtexts: [@env_jtext, @env_jtext2])
+            expect(extractor).to receive(:mail).with(user:@bob, jtext_and_keywords: [{jtext: @env_jtext, keywords: ['ENVIRONMENT']}, {jtext: @env_jtext2, keywords: ['ENVIRONMENT']}])
             extractor.mail_people [jcontainer]
           end
         end
@@ -232,7 +232,7 @@ describe 'extraction of text folders' do
           end
 
           it "mails the 2 jtexts to bob" do
-            expect(extractor).to receive(:mail).with(user:@bob, jtexts: [@env_jtext, @env_jtext2])
+            expect(extractor).to receive(:mail).with(user:@bob, jtext_and_keywords: [{jtext: @env_jtext, keywords: ['ENVIRONMENT']}, {jtext: @env_jtext2, keywords: ['ENVIRONMENT']}])
             extractor.mail_people [jcontainer, @jcontainer2]
           end
         end
