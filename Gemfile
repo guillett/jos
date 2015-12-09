@@ -46,6 +46,9 @@ gem 'activerecord-session_store'
 gem "cocoon"
 gem 'simple_form'
 
+gem 'algoliasearch-rails'
+gem 'select2-rails'
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

@@ -14,3 +14,12 @@ TODO
     .links
       = link_to_add_association 'ajouter les mots clefs', f, :keywords
   = f.submit
+
+%div.row
+  %div.col-md-9.col-md-offset-1
+    %select#toto
+      %option{:value => "a"}= "Alabama"
+      %option{:value => "b"}= "Wyoming"
+
+:css
+  #toto {width: 500px !important;}
