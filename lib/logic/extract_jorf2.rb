@@ -71,6 +71,35 @@ class Extractor
     Jarticle.import(articles, validate: false)
   end
 
+  def mail_people jcontainers
+    # user: [jtext1, jtext2...]
+    users_h = {}
+
+    jcontainers.each do |jcontainer|
+      jcontainer.jtexts.each do |jtext|
+        keywords = jtext.keywords
+        users = User.joins(:keywords).where(keywords: {label: keywords.map(&:label)})
+        users.each do |user|
+          if users_h[user].nil?
+            users_h[user] = [jtext]
+          else
+            users_h[user] << jtext
+          end
+        end
+      end
+
+    end
+
+    users_h.each do |user, jtexts|
+      mail(user: user, jtexts: jtexts)
+    end
+
+  end
+
+  def mail options
+
+  end
+
   def extract_all_article_map_from_jstruct_map jstruct_map, path
     articles = []
     if !jstruct_map.link_text_article_maps.nil?

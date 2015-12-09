@@ -133,6 +133,113 @@ describe 'extraction of text folders' do
 
     end
 
+    describe '#mail_people' do
+
+      let(:jcontainer) { Jorfcont.new() }
+
+      def new_user name, keyword
+        user = User.new(email: name + '@loulou.com', password: '12345678')
+        environment_keyword = Keyword.create(label: keyword);
+        user.keywords << environment_keyword
+        user.save()
+        return user
+      end
+
+      def new_jtext options
+        jtext = Jtext.new()
+        options[:keywords].each do |keyword|
+          jtext.keywords << Keyword.new(label: keyword)
+        end
+        jtext
+      end
+      
+      def new_container keywords
+        jcontainer = Jorfcont.new()
+        jtext = Jtext.new()
+        keywords.each do |keyword|
+          jtext.keywords << Keyword.new(label: keyword)
+        end
+        jcontainer.jtexts << jtext
+        jcontainer
+      end
+
+      context 'with bob who wants to be alerted on ENVIRONMENT, alice on AGRICULTURE' do
+        before do
+          @bob = new_user('bob', 'ENVIRONMENT')
+          @alice = new_user('alice', 'AGRICULTURE')
+        end
+
+        context 'when the new jo has a container with a jtext with the ENVIRONMENT and AGRICULTURE keyword' do
+          before do
+            @jtext = new_jtext(keywords: ['ENVIRONMENT', 'AGRICULTURE'])
+            jcontainer.jtexts << @jtext
+          end
+
+          it "mails to bob the right jo" do
+            expect(extractor).to receive(:mail).with(user:@bob, jtexts: [@jtext])
+            expect(extractor).to receive(:mail).with(user:@alice, jtexts: [@jtext])
+            extractor.mail_people [jcontainer]
+          end
+        end
+
+        context 'when the new jo has a container with a jtext with the plop keyword' do
+          before do
+            @jtext = new_jtext(keywords: ['PLOP'])
+            jcontainer.jtexts << @jtext
+          end
+
+          it "does not mail to bob" do
+            expect(extractor).to_not receive(:mail)
+            extractor.mail_people [jcontainer]
+          end
+        end
+
+        context 'when the new jo a jtext on ENVIRONMENT and another AGRICULTURE' do
+          before do
+            @env_jtext = new_jtext(keywords: ['ENVIRONMENT'])
+            @agri_jtext = new_jtext(keywords: ['AGRICULTURE'])
+            jcontainer.jtexts << @env_jtext << @agri_jtext
+          end
+
+          it "mails the right jtext to the right person" do
+            expect(extractor).to receive(:mail).with(user:@bob, jtexts: [@env_jtext])
+            expect(extractor).to receive(:mail).with(user:@alice, jtexts: [@agri_jtext])
+            extractor.mail_people [jcontainer]
+          end
+        end
+
+        context 'when the new jo has 2 jtexts on ENVIRONMENT' do
+          before do
+            @env_jtext = new_jtext(keywords: ['ENVIRONMENT'])
+            @env_jtext2 = new_jtext(keywords: ['ENVIRONMENT'])
+            jcontainer.jtexts << @env_jtext << @env_jtext2
+          end
+
+          it "mails the 2 jtexts to bob" do
+            expect(extractor).to receive(:mail).with(user:@bob, jtexts: [@env_jtext, @env_jtext2])
+            extractor.mail_people [jcontainer]
+          end
+        end
+
+        context 'when the new jo has 2 containers 2 jtexts on ENVIRONMENT' do
+          before do
+            @env_jtext = new_jtext(keywords: ['ENVIRONMENT'])
+            @env_jtext2 = new_jtext(keywords: ['ENVIRONMENT'])
+            jcontainer.jtexts << @env_jtext
+            @jcontainer2 = Jorfcont.new
+            @jcontainer2.jtexts << @env_jtext2
+
+          end
+
+          it "mails the 2 jtexts to bob" do
+            expect(extractor).to receive(:mail).with(user:@bob, jtexts: [@env_jtext, @env_jtext2])
+            extractor.mail_people [jcontainer, @jcontainer2]
+          end
+        end
+
+      end
+    end
+
   end
 
 end
