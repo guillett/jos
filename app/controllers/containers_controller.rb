@@ -1,6 +1,6 @@
 class ContainersController < ApplicationController
   def index
-    @containers = Jorfcont.order(publication_date: :desc).where("title LIKE ?", "%JORF%")
+    @containers = Jorfcont.where('publication_date <= ?', Date.today).order(publication_date: :desc).where("title LIKE ?", "%JORF%")
     @containers = @containers.page params[:page]
   end
 
