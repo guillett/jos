@@ -1,4 +1,7 @@
 %div.row
   %div.col-md-10.col-md-offset-1
     %h1=@jarticle.id_jarticle_origin
-    %p=@jarticle.text
+    - jtext = Jtext.find(@jarticle.jtext_id)
+    %p
+      %a{href: "/textes/#{jtext.id_jorftext_origin}"}="#{jtext.title_full}"
+    %p=raw(@jarticle_text)

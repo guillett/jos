@@ -16,7 +16,9 @@
       %h2 Articles
       %ul
         -@jtext.jarticles.each do |article|
-          %li=article.text
+          - jarticle_text = ""
+          - article.text.each_line {|line|  jarticle_text += line.strip + "\n"}
+          %li.margin-top=raw(jarticle_text.strip.chomp.gsub(/\n/, "<br/>").gsub(/« Art/, "<br/>« Art"))
 
     - if @jtext.keywords.size > 0
       %h2 Mots clés
@@ -24,3 +26,6 @@
       - @jtext.keywords.map(&:label).each do |label|
         %li
           %a{href: "/keywords/#{label}"}="#{label}"
+
+:css
+.margin-top {margin-top: 10px;}
