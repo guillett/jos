@@ -1,5 +1,7 @@
 %div.col-md-10.col-md-offset-1
-  %h1= "#{@keywords.count} JORFTEXTs"
+  %h1= "#{@keywords.total_count} JORFTEXTs"
   - @keywords.map(&:jtext).sort_by(&:publication_date).reverse.each do |jtext|
     %h2
       %a{href: "/textes/#{jtext.id_jorftext_origin}"}=jtext.title_full
+%div.col-md-6.col-md-offset-3
+  = paginate @keywords, :theme => 'twitter-bootstrap-3'

@@ -42,6 +42,8 @@ gem 'ruby-progressbar'
 gem 'devise'
 gem 'devise-bootstrap-views'
 gem 'activerecord-session_store'
+gem 'kaminari'
+gem 'bootstrap-kaminari-views'
 
 gem "cocoon"
 gem 'simple_form'

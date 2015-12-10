@@ -1,5 +1,8 @@
 %div.col-md-6.col-md-offset-3
-  %h1= "#{@containers.count} JORFs"
+  %h1= "#{@containers.total_count} JORFs"
   - @containers.each do |c|
     %h2
-      %a{href: "/containers/#{c.id_jorfcont_origin}"}=c.title
+      %a{href: "/containers/#{c.id_jorfcont_origin}"}= c.title
+
+%div.col-md-6.col-md-offset-3
+  = paginate @containers, :theme => 'twitter-bootstrap-3'
