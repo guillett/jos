@@ -8,7 +8,8 @@
       -unless article.nota.blank?
         %h3= "Nota "
         = raw format_article_text(article.nota)
-    %p.sub_sections
-      %strong
-        Sous-parties
-    = raw display_summary(@sub_sections, 'accordion')
+    - unless @sub_sections.empty?
+      %p.sub_sections
+        %strong
+          Sous-parties
+      = raw display_summary(@sub_sections, 'accordion')
