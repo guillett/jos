@@ -41,8 +41,8 @@ $(document).ready(function() {
                 }
 
             },
-            minimumInputLength: 2
-
+            minimumInputLength: 2,
+            language: "fr"
         });
 
     });
