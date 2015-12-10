@@ -5,4 +5,4 @@
       %a{href: "/containers/#{c.id_jorfcont_origin}"}= c.title
 
 %div.col-md-6.col-md-offset-3
-  = paginate @containers, :theme => 'twitter-bootstrap-3'
+  = paginate @containers, theme: 'twitter-bootstrap-3', pagination_class: "pagination-lg"

@@ -4,4 +4,4 @@
     %h2
       %a{href: "/textes/#{jtext.id_jorftext_origin}"}=jtext.title_full
 %div.col-md-6.col-md-offset-3
-  = paginate @keywords, :theme => 'twitter-bootstrap-3'
+  = paginate @keywords, :theme => 'twitter-bootstrap-3', pagination_class: "pagination-lg"
