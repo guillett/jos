@@ -13,10 +13,7 @@ class UsersController < ApplicationController
     if current_user.id != params[:id].to_i
       redirect_to root_path, notice: "Vous ne pouvez voir que votre propre profil"
     else
-
-      sql = "select label from keywords group by label"
-      @keywords = ActiveRecord::Base.connection.execute(sql).values.flatten
-
+      
     end
   end
 
