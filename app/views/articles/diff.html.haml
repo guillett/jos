@@ -22,11 +22,12 @@
       #{@article_2.start_date.strftime("%m/%d/%Y")} - #{@article_2.end_date.strftime("%m/%d/%Y")}
 - @diff_array.each do |line|
   - if line.first == " "
-    %div.col-md-10.col-md-offset-1.grey= raw(line[1, line.length])
+    %div.col-md-10.col-md-offset-1.grey{ :style => "margin-top:20px; margin-bottom:20px;" }= raw(line[1, line.length])
   - elsif line.first == "-"
     %div.col-md-5.col-md-offset-1.pink= raw(line[1, line.length])
   - elsif line.first == "+"
     %div.col-md-5.green= raw(line[1, line.length])
+
 - unless @jarticle_modif.nil?
   %div.col-md-10.col-md-offset-1
     %h3
