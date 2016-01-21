@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    var algolia = new AlgoliaSearch('P1QQB6BNNQ', 'cadea80b43b8c9a5640c44b240de7793');
+    var algolia = new AlgoliaSearch('OPDF62NBTT', '8dbfd6fefa239bbc0b5cb01267fb428d');
     var index = algolia.initIndex('JoKeywords');
 
     $.fn.select2.amd.require(['select2/selection/search'], function (Search) {
