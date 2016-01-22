@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   resources :users, only: [:show, :edit, :update]
   root 'home#index'
 
+  get '/admin' => 'admin#index'
+  get 'admin/send_emails' => 'admin#send_emails'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
